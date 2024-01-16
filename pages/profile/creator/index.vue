@@ -1,0 +1,57 @@
+<template>
+  <VApp>
+    <navbarView />
+    <VContainer>
+      <VRow no-gutters align="center" class="mt-n2">
+        <VCol cols="12" md="8" offset-md="2">
+          <headerCreator />
+          <VRow>
+            <VCol cols="6">
+              <NuxtLink to="creator/config/">
+                <VBtn min-height="35" block color="primary" class="text-capitalize">
+                  <v-icon size="16" class="ma-1">fa-gear</v-icon>Configurações
+                </VBtn></NuxtLink
+              >
+            </VCol>
+            <VCol cols="6">
+              <NuxtLink to="/analytics">
+                <VBtn
+                min-height="35"
+                class="text-capitalize"
+                block
+                variant="outlined"
+                color="primary"
+              >
+                <v-icon class="ma-1">mdi-chart-donut</v-icon>Analytics
+              </VBtn>
+              </NuxtLink>
+
+            </VCol>
+          </VRow>
+          <v-divider class="my-3"></v-divider>
+          <UploadwithPost />
+        </VCol>
+      </VRow>
+    </VContainer>
+  </VApp>
+</template>
+
+<script setup></script>
+
+<script>
+import UploadwithPost from "../../../components/post/UploadwithPost.vue";
+import headerCreator from "../../../components/creator/headerCreator";
+import navbarView from "../../../components/navbar";
+import createPost from "../../../components/post/createPost.vue";
+import uploadView from "../../../components/post/uploadPost.vue";
+
+export default {
+  components: {
+    headerCreator,
+    navbarView,
+    UploadwithPost,
+    uploadView,
+    createPost,
+  },
+};
+</script>
