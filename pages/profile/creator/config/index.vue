@@ -11,9 +11,9 @@
               </VBtn></NuxtLink
             >
           </VCol>
-            <VCol cols="6">
-              <NuxtLink to="/analytics">
-                <VBtn
+          <VCol cols="6">
+            <NuxtLink to="/analytics">
+              <VBtn
                 min-height="35"
                 class="text-capitalize"
                 block
@@ -22,8 +22,7 @@
               >
                 <v-icon class="ma-1">mdi-chart-donut</v-icon>Analytics
               </VBtn>
-              </NuxtLink>
-
+            </NuxtLink>
           </VCol>
         </VRow>
         <v-divider class="my-3"></v-divider>

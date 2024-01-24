@@ -1,24 +1,20 @@
 <template>
+  <div v-if="pending">Carregando...</div>
   <VCard class="rounded-lg" height="150">
     <template v-slot:image>
-      <VImg
-        eager
-        cover
-        position="center"
-        src="https://istoe.com.br/wp-content/uploads/2023/09/mel-maia-reproducao-instagram.jpg"
-      ></VImg>
+      <VImg eager cover position="center" :src="info.coverPicture"></VImg>
     </template>
   </VCard>
 
   <v-row align="start" no-gutters>
     <v-col cols="4" class="mt-2">
-      <v-btn fab color="primary" class="" variant="text">
+      <v-btn fab color="primary" :href="social_media.instagram" variant="text">
         <v-icon size="26">mdi-instagram</v-icon>
       </v-btn>
-      <v-btn fab color="primary" class="ml-n4" variant="text">
+      <v-btn fab color="primary" :href="social_media.telegram" class="ml-n4" variant="text">
         <v-icon size="26">mdi-send-circle</v-icon>
       </v-btn>
-      <v-btn fab color="primary" class="ml-n4" variant="text">
+      <v-btn fab color="primary" :href="social_media.twitter" class="ml-n4" variant="text">
         <v-icon size="26">mdi-twitter</v-icon>
       </v-btn>
     </v-col>
@@ -30,7 +26,7 @@
               style="border: 4px solid background"
               size="130"
               v-bind="props"
-              image="https://s2-marieclaire.glbimg.com/CLHEFcw4E8bb7Om13qj8giDhz9g=/0x0:1080x1350/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_51f0194726ca4cae994c33379977582d/internal_photos/bs/2023/Y/7/bWmMoOTfqO2RddlXWnbA/395075330-18400085974018181-2712285434829452427-n.jpg"
+              :image="info.profilePicture"
             ></VAvatar>
           </template>
           <v-card>
@@ -84,14 +80,69 @@
   <VRow>
     <VCol>
       <div class="text-center">
-        <h2 class="text-center">Mel Maia<v-icon size="25" class="ma-1" color="primary">mdi-check-decagram</v-icon></h2>
+        <h2 class="text-center">
+          {{ info.nome }}<v-icon size="25" class="ma-1" color="primary">mdi-check-decagram</v-icon>
+        </h2>
         <p class="text-center mt-n2 text-medium-emphasis text-caption">
-          Venham me conhecer meus amoressss s2<v-icon class="ma-1"
-            >mdi-dots-horizontal-circle</v-icon
-          >
+          {{ info.bio }}<v-icon class="ma-1">mdi-dots-horizontal-circle</v-icon>
         </p>
-          <v-chip color="primary" class="ma-1" bg-color="primary" item-color="primary" prepend-icon="mdi-sign">2.6 mil assinantes</v-chip>
+        <v-chip
+          color="primary"
+          class="ma-1"
+          bg-color="primary"
+          item-color="primary"
+          prepend-icon="mdi-sign"
+          >2.6 mil assinantes</v-chip
+        >
       </div>
     </VCol>
   </VRow>
 </template>
+<script setup>
+import { onMounted, ref } from "vue";
+
+const cookie = useCookie("token");
+const token = cookie.value;
+
+const social_media = ref({
+  instagram: null,
+  telegram: null,
+  twitter: null,
+});
+
+const info = ref({
+  nome: null,
+  user: null,
+  bio: null,
+});
+
+onMounted(async () => {
+  try {
+    const { data: fetchData } = await useFetch("https://api.seduvibe.com/creator_list", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    social_media.value = {
+      instagram: "https://instagram/" + fetchData?._rawValue?.social_media[0]?.instagram,
+      telegram: "https://t.me/@" + fetchData?._rawValue?.social_media[0]?.telegram,
+      twitter: "https://x.com/" + fetchData?._rawValue?.social_media[0]?.twitter,
+    };
+
+    info.value = {
+      nome: fetchData?._rawValue?.users[0]?.name,
+      user: fetchData?._rawValue?.users[0]?.user,
+      bio: fetchData?._rawValue?.users[0]?.bio,
+      coverPicture: fetchData?._rawValue?.users[0]?.coverPicture,
+      profilePicture: fetchData?._rawValue?.users[0]?.profilePicture,
+    };
+
+    console.log("Requisição realizada com sucesso:", fetchData);
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+});
+</script>

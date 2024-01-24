@@ -1,126 +1,130 @@
 <template>
-  <v-container>
-    <v-col cols="12" md="8" offset-md="2">
-      <SideBar />
-      <v-toolbar color="rgb(0,0,0,0)" height="50"></v-toolbar>
-      <v-container>
-        <v-row justify="center" align="center" class="d-flex" style="max-height: 100vh">
-          <v-col cols="6" sm="6" md="6">
-            <v-card color="transparent" flat>
-              <p class="text-caption text-medium-emphasis">Saldo disponível</p>
-              <v-btn color="primary">
-                R<v-icon size="12">mdi-currency-usd</v-icon>
-                <h2>
-                  &nbsp;{{
-                    analyticsDate && analyticsDate.creatorData
-                      ? analyticsDate.creatorData.balance_available.toLocaleString("pt-BR", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })
-                      : "N/A"
-                  }}
-                </h2>
-              </v-btn>
-            </v-card>
-          </v-col>
+  <v-app>
+    <v-container>
+      <v-col cols="12" md="8" offset-md="2">
+        <SideBar />
+        <v-toolbar color="rgb(0,0,0,0)" height="50"></v-toolbar>
+        <v-container>
+          <v-row justify="center" align="center" class="d-flex" style="max-height: 100vh">
+            <v-col cols="6" sm="6" md="6">
+              <v-card color="transparent" flat>
+                <p class="text-caption text-medium-emphasis">Saldo disponível</p>
+                <v-btn color="primary">
+                  R<v-icon size="12">mdi-currency-usd</v-icon>
+                  <h2>
+                    &nbsp;{{
+                      analyticsDate && analyticsDate.creatorData
+                        ? analyticsDate.creatorData.balance_available.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })
+                        : "N/A"
+                    }}
+                  </h2>
+                </v-btn>
+              </v-card>
+            </v-col>
 
-          <v-col cols="6" sm="6" md="6">
-            <v-card color="transparent" flat>
-              <p class="text-caption text-medium-emphasis">Aguardando liberação</p>
-              <v-btn color="input_color">
-                R<v-icon size="12">mdi-currency-usd</v-icon>
-                <h2>
-                  &nbsp;{{
-                    analyticsDate && analyticsDate.creatorData
-                      ? analyticsDate.creatorData.total_balance.toLocaleString("pt-BR", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })
-                      : "N/A"
-                  }}
-                </h2>
-              </v-btn>
-            </v-card>
-          </v-col>
-        </v-row>
+            <v-col cols="6" sm="6" md="6">
+              <v-card color="transparent" flat>
+                <p class="text-caption text-medium-emphasis">Aguardando liberação</p>
+                <v-btn color="input_color">
+                  R<v-icon size="12">mdi-currency-usd</v-icon>
+                  <h2>
+                    &nbsp;{{
+                      analyticsDate && analyticsDate.creatorData
+                        ? analyticsDate.creatorData.total_balance.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })
+                        : "N/A"
+                    }}
+                  </h2>
+                </v-btn>
+              </v-card>
+            </v-col>
+          </v-row>
 
-        <v-card class="mt-10 rounded-xl" dark color="purple">
-          <v-card-title>
-            <v-toolbar-title>Selecione o tipo de transferência</v-toolbar-title>
-          </v-card-title>
-          <v-list>
-            <v-list-item v-for="(item, index) in items" :key="item.title">
-              <v-list-item-content>
-                <v-list-item-title @click="showContent(index)">{{ item.title }} </v-list-item-title>
-                <v-expand-transition>
-                  <div v-if="activeIndex === index">
-                    <v-form v-if="item.formType === 'pix'" ref="pixForm">
-                      <PixForm
-                        :executeFetch="fetchAnalyticsList"
-                        :historyFetch="fetchHistoryWithdraw"
-                      />
-                    </v-form>
+          <v-card class="mt-10 rounded-xl" dark color="purple">
+            <v-card-title>
+              <v-toolbar-title>Selecione o tipo de transferência</v-toolbar-title>
+            </v-card-title>
+            <v-list>
+              <v-list-item v-for="(item, index) in items" :key="item.title">
+                <v-list-item-content>
+                  <v-list-item-title @click="showContent(index)"
+                    >{{ item.title }}
+                  </v-list-item-title>
+                  <v-expand-transition>
+                    <div v-if="activeIndex === index">
+                      <v-form v-if="item.formType === 'pix'" ref="pixForm">
+                        <PixForm
+                          :executeFetch="fetchAnalyticsList"
+                          :historyFetch="fetchHistoryWithdraw"
+                        />
+                      </v-form>
 
-                    <v-form v-if="item.formType === 'ted'" ref="tedForm">
-                      <TedForm :executeFetch="fetchAnalyticsList" />
-                    </v-form>
-                  </div>
-                </v-expand-transition>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-card>
-        <p class="text-medium-emphasis text-caption mt-2">
-          Todas as transferências serão enviadas para o CPF cadastrado na plataforma.
-        </p>
-        <v-row align="center">
-          <v-col class="mt-4">
-            <h2>Histórico de saque</h2>
-            <v-card class="rounded-xl">
-              <v-data-table
-                class="rounded-xl"
-                :headers="headers"
-                :items="historyWithdraw || []"
-                :footer-props="{
-                  'items-per-page-text': 'Saques por página',
-                }"
-                :no-data-text="noDataText"
-              >
-                <template v-slot:[`item.amount`]="{ item }">
-                  <v-btn outlined fab color="purple" x-small
-                    ><v-icon size="16">mdi-currency-usd</v-icon></v-btn
-                  >&nbsp;&nbsp;&nbsp;R$
-                  {{
-                    item.amount.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })
-                  }}
-                </template>
-                <template v-slot:[`item.createdAt`]="{ item }">
-                  {{ formatDaysPassed(item.createdAt) }}
-                </template>
-                <template v-slot:[`item.method`]="{ item }">
-                  {{ item.method }}
-                </template>
-                <template v-slot:[`item.statusName`]="{ item }">
-                  <v-chip small :class="getStatusClass(item.statusName)">
-                    <v-icon size="16" left>{{ getIcon(item.statusName) }}</v-icon>
-                    {{ getStatusText(item.statusName) }}
-                  </v-chip>
-                </template>
-                <template v-slot:[`item.info`]>
-                  <v-btn color="purple" dark rounded x-small
-                    ><v-icon size="16">mdi-plus</v-icon>VER MAIS</v-btn
-                  >
-                </template>
-              </v-data-table>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-col>
-  </v-container>
+                      <v-form v-if="item.formType === 'ted'" ref="tedForm">
+                        <TedForm :executeFetch="fetchAnalyticsList" />
+                      </v-form>
+                    </div>
+                  </v-expand-transition>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-card>
+          <p class="text-medium-emphasis text-caption mt-2">
+            Todas as transferências serão enviadas para o CPF cadastrado na plataforma.
+          </p>
+          <v-row align="center">
+            <v-col class="mt-4">
+              <h2>Histórico de saque</h2>
+              <v-card class="rounded-xl">
+                <v-data-table
+                  class="rounded-xl"
+                  :headers="headers"
+                  :items="historyWithdraw || []"
+                  :footer-props="{
+                    'items-per-page-text': 'Saques por página',
+                  }"
+                  :no-data-text="noDataText"
+                >
+                  <template v-slot:[`item.amount`]="{ item }">
+                    <v-btn outlined fab color="purple" x-small
+                      ><v-icon size="16">mdi-currency-usd</v-icon></v-btn
+                    >&nbsp;&nbsp;&nbsp;R$
+                    {{
+                      item.amount.toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })
+                    }}
+                  </template>
+                  <template v-slot:[`item.createdAt`]="{ item }">
+                    {{ formatDaysPassed(item.createdAt) }}
+                  </template>
+                  <template v-slot:[`item.method`]="{ item }">
+                    {{ item.method }}
+                  </template>
+                  <template v-slot:[`item.statusName`]="{ item }">
+                    <v-chip small :class="getStatusClass(item.statusName)">
+                      <v-icon size="16" left>{{ getIcon(item.statusName) }}</v-icon>
+                      {{ getStatusText(item.statusName) }}
+                    </v-chip>
+                  </template>
+                  <template v-slot:[`item.info`]>
+                    <v-btn color="purple" dark rounded x-small
+                      ><v-icon size="16">mdi-plus</v-icon>VER MAIS</v-btn
+                    >
+                  </template>
+                </v-data-table>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-col>
+    </v-container>
+  </v-app>
 </template>
 
 <script>

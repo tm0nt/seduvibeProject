@@ -16,16 +16,15 @@
             <VCol cols="6">
               <NuxtLink to="/analytics">
                 <VBtn
-                min-height="35"
-                class="text-capitalize"
-                block
-                variant="outlined"
-                color="primary"
-              >
-                <v-icon class="ma-1">mdi-chart-donut</v-icon>Analytics
-              </VBtn>
+                  min-height="35"
+                  class="text-capitalize"
+                  block
+                  variant="outlined"
+                  color="primary"
+                >
+                  <v-icon class="ma-1">mdi-chart-donut</v-icon>Analytics
+                </VBtn>
               </NuxtLink>
-
             </VCol>
           </VRow>
           <v-divider class="my-3"></v-divider>
@@ -35,8 +34,6 @@
     </VContainer>
   </VApp>
 </template>
-
-<script setup></script>
 
 <script>
 import UploadwithPost from "../../../components/post/UploadwithPost.vue";

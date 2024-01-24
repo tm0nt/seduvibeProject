@@ -1,24 +1,22 @@
 <template>
-  <v-bottom-navigation mode="shift" color="buttonNavColor" bg-color="navbarcolor">
-    <v-btn to="/home">
-      <v-icon size="30">mdi-home</v-icon>
-      <span>Home</span>
+  <v-bottom-navigation color="buttonNavColor" bg-color="input_color" class="elevation-4">
+    <v-btn class="my-btn" to="/home">
+      <v-icon size="24">mdi-home</v-icon>
     </v-btn>
-    <v-btn to="/notification">
-      <v-icon size="30">mdi-heart</v-icon>
-      <span>Notificações</span>
+    <v-btn class="my-btn" to="/notification">
+      <v-icon size="24">mdi-heart</v-icon>
     </v-btn>
-    <v-btn to="/search">
-      <v-icon size="30">mdi-magnify</v-icon>
-      <span>Pesquisar</span>
+    <v-btn to="/search" class="my-btn">
+      <v-icon size="24">mdi-magnify</v-icon>
     </v-btn>
-    <v-btn value="planos">
-      <v-icon size="30">mdi-currency-usd</v-icon>
-      <span>Plano</span>
+    <v-btn to="/payment" class="my-btn">
+      <v-icon size="24">mdi-currency-usd</v-icon>
     </v-btn>
-    <v-btn to="/chat">
-      <v-icon size="30">mdi-chat</v-icon>
-      <span>Chat</span>
+    <v-btn to="/chat" class="my-btn">
+      <v-icon size="24">mdi-chat</v-icon>
+    </v-btn>
+    <v-btn to="/profile" class="my-btn">
+      <v-icon size="24">mdi-account</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>
@@ -30,3 +28,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.v-btn.my-btn {
+  min-width: 15px !important;
+}
+</style>

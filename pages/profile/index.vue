@@ -1,0 +1,29 @@
+<template></template>
+
+<script setup>
+import { onMounted, ref } from "vue";
+
+const redirectUser = ref(null);
+
+onMounted(async () => {
+  try {
+    const cookie = useCookie("token");
+    const token = cookie.value;
+
+    const { data: creator } = await useFetch("https://api.seduvibe.com/", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (creator._rawValue.users[0].creator === 1) {
+      redirectUser.value = "/profile/creator";
+    } else {
+      redirectUser.value = "/profile/user";
+    }
+
+    // Navegar para a rota após o onMounted
+    navigateTo(redirectUser.value);
+  } catch (e) {
+    console.error("Ocorreu um erro durante a execução do script:", e);
+  }
+});
+</script>

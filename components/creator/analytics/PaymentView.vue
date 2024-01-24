@@ -1,14 +1,14 @@
 <template>
   <v-row>
-      <v-card color="input_color" width="500" rounded="xl" class="mt-n6 pa-2" flat>
-        <span class="text-caption">Cartão/Pix</span><br />
-        <h6 class="mb-4">Recebido</h6>
+    <v-card color="input_color" width="500" rounded="xl" class="mt-n6 pa-2" flat>
+      <span class="text-caption">Cartão/Pix</span><br />
+      <h6 class="mb-4">Recebido</h6>
 
-        <h4 class="text-medium-emphasis text-caption">Nenhuma venda realizada!</h4>
-        <v-btn block color="primary" class="mt-1" @click="moreVendas"
-          ><v-icon>mdi-dots-horizontal</v-icon></v-btn
-        >
-      </v-card>
+      <h4 class="text-medium-emphasis text-caption">Nenhuma venda realizada!</h4>
+      <v-btn block color="primary" class="mt-1" @click="moreVendas"
+        ><v-icon>mdi-dots-horizontal</v-icon></v-btn
+      >
+    </v-card>
     <v-dialog v-model="moreVendasDialog" width="800">
       <v-data-table
         :headers="headers"

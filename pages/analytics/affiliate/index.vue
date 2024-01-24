@@ -1,4 +1,5 @@
 <template>
+  <v-app>
     <v-container>
       <v-col cols="12" md="8" offset-md="2">
         <SideBar />
@@ -22,23 +23,23 @@
         </v-container>
       </v-col>
     </v-container>
-  </template>
-  
-  <script>
-  import SideBar from "../../../components/creator/analytics/SidebarView.vue";
-  import TabelaAfiliados from "../../../components/creator/analytics/affiliate/TabelaAfiliados.vue";
-  import ConfigAfiliados from "../../../components/creator/analytics/affiliate/ConfigAfiliados.vue";
-  import FaturamentoView from "../../../components/creator/analytics/affiliate/FaturamentoView.vue";
-  export default {
-    data: () => ({
-      pedidosAfiliados: null,
-    }),
-    components: {
-      SideBar,
-      TabelaAfiliados,
-      ConfigAfiliados,
-      FaturamentoView,
-    },
-  };
-  </script>
-  
+  </v-app>
+</template>
+
+<script>
+import SideBar from "../../../components/creator/analytics/SidebarView.vue";
+import TabelaAfiliados from "../../../components/creator/analytics/affiliate/TabelaAfiliados.vue";
+import ConfigAfiliados from "../../../components/creator/analytics/affiliate/ConfigAfiliados.vue";
+import FaturamentoView from "../../../components/creator/analytics/affiliate/FaturamentoView.vue";
+export default {
+  data: () => ({
+    pedidosAfiliados: null,
+  }),
+  components: {
+    SideBar,
+    TabelaAfiliados,
+    ConfigAfiliados,
+    FaturamentoView,
+  },
+};
+</script>

@@ -1,6 +1,6 @@
 <template>
   <VCol class="hidden-md-and-down" md="6" lg="4">
-    <VCarousel touch  hide-delimiter-background hide-delimiters :show-arrows="false" cycle>
+    <VCarousel touch hide-delimiter-background hide-delimiters :show-arrows="false" cycle>
       <VCarouselItem transition="scale-transition" v-for="(item, index) in items" :key="index">
         <VCard width="350" height="500" class="rounded-xl elevation-0" flat>
           <VImg :src="item.imgSrc" cover class="h-100 rounded-xl d-flex justify-center">

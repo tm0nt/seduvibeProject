@@ -49,7 +49,6 @@ import Publicacoes from "../../components/post/postView.vue";
 import Galeria from "../../components/post/galleryView.vue";
 import Mimos from "../components/creator/public/mimos.vue";
 
-
 export default {
   computed: {
     currentComponent() {
@@ -58,19 +57,17 @@ export default {
           return "Publicacoes";
         case 1:
           return "Galeria";
-          case 2:
+        case 2:
           return "Mimos";
         default:
           return null;
       }
     },
   },
-  data:()=>{
-    return{
+  data: () => {
+    return {
       selectedTab: null,
-
-    }
-
+    };
   },
   components: {
     headerCreator,

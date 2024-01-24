@@ -9,11 +9,11 @@
           <v-row>
             <v-col class="align-center text-center mt-6 justify-center d-flex">
               <v-chip-group color="primary" filter v-model="selectedTab">
-                <v-chip value="0">Meu perfil</v-chip>
-                <v-chip value="1">Assinaturas</v-chip>
-                <v-chip value="2">Favoritos</v-chip>
-                <v-chip value="3">Pagamentos</v-chip>
-                <v-chip value="4">Afiliados</v-chip>
+                <v-chip append-icon="mdi-account" value="0">Meu perfil</v-chip>
+                <v-chip value="1" append-icon="mdi-certificate">Assinaturas</v-chip>
+                <v-chip value="2" append-icon="mdi-heart">Favoritos</v-chip>
+                <v-chip value="3" append-icon="mdi-credit-card">Pagamentos</v-chip>
+                <v-chip value="4" append-icon="mdi-account-group">Afiliados</v-chip>
               </v-chip-group>
             </v-col>
           </v-row>
@@ -46,15 +46,15 @@ export default {
   computed: {
     currentComponent() {
       switch (this.selectedTab) {
-        case '0':
+        case "0":
           return ProfileComponent;
-        case '1':
+        case "1":
           return SubscriptionsComponent;
-        case '2':
+        case "2":
           return FavoritesComponent;
-        case '3':
+        case "3":
           return PaymentsComponent;
-        case '4':
+        case "4":
           return AffiliatesComponent;
         default:
           return null;

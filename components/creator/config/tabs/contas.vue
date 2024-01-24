@@ -2,11 +2,11 @@
   <v-container>
     <h2>Minhas contas</h2>
     <p class="text-caption text-medium-emphasis">Adicione contas bancárias à sua conta</p>
-    <v-btn block @click="adicionarConta" color="primary">
+    <v-btn block @click="toggleCampos" color="primary">
       <v-icon v-if="!mostrarCampos">mdi-plus</v-icon>
       <v-icon v-else>mdi-minus</v-icon>
     </v-btn>
-    <v-divider color="white"></v-divider>
+    <v-divider></v-divider>
     <v-form>
       <v-row v-if="mostrarCampos" class="mt-5">
         <v-col cols="12">
@@ -24,13 +24,14 @@
             bg-color="input_color"
             class="mt-n2"
             variant="solo"
-            :items="banks"
+            :items="['Caixa']"
             prepend-inner-icon="mdi-bank"
           ></v-select>
         </v-col>
         <v-col cols="6" class="mt-n8">
           <v-text-field
             placeholder="Agência"
+            v-model="agency"
             bg-color="input_color"
             prepend-inner-icon="mdi-bank-outline"
           ></v-text-field>
@@ -39,6 +40,7 @@
           <v-text-field
             placeholder="Conta"
             bg-color="input_color"
+            v-model="conta_number"
             prepend-inner-icon="mdi-credit-card"
           ></v-text-field>
         </v-col>
@@ -78,54 +80,52 @@
             <strong>Conta:</strong> {{ conta.conta }}
           </v-card-text>
         </v-card>-->
-    <v-snackbar rounded="pill" centered v-model="snackbar" :color="snackbarColor" timeout="3000">
-      {{ snackbarText }}
-    </v-snackbar>
   </v-container>
 </template>
+<script setup>
+import { ref } from "vue";
 
-<script>
-export default {
-  data() {
-    return {
-      mostrarCampos: false,
-      name_account: "",
-      snackbar: false,
-      bank_name: null,
-      snackbarColor: "",
-      snackbarText: "",
-      number_account: "",
-      agency_account: "",
-      banks: ["Banco A", "Banco B", "Banco C"],
-    };
-  },
-  methods: {
-    async fetchData() {},
-    adicionarConta() {
-      this.mostrarCampos = !this.mostrarCampos;
-    },
-    async registrarConta() {
-      try {
-        await userService.registerBank(
-          this.name_account,
-          this.bank_name,
-          this.number_account,
-          this.agency_account
-        );
-        this.snackbar = true;
-        this.snackbarColor = "success";
-        this.snackbarText = "Conta adicionada com sucesso!";
-        this.fetchData();
-      } catch (error) {
-        console.log(error);
-        this.snackbar = true;
-        this.snackbarColor = "red";
-        this.snackbarText = "Aconteceu algum erro!";
-      }
-    },
-    removerConta(index) {
-      this.contas.splice(index, 1);
-    },
-  },
+const mostrarCampos = ref(false);
+const name_account = ref("");
+const bank_name = ref("");
+const agency = ref("");
+const conta_number = ref("");
+
+const toggleCampos = () => {
+  mostrarCampos.value = !mostrarCampos.value;
+};
+
+const registrarConta = async () => {
+  const cookie = useCookie("token");
+  const token = cookie.value;
+
+  const payload = {
+    name_account: name_account.value,
+    bank_name: bank_name.value,
+    agency_account: agency.value,
+    number_account: conta_number.value,
+  };
+
+  try {
+    const response = await fetch("https://api.seduvibe.com/register_banking_data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      console.log("Conta bancária registrada com sucesso!");
+      // Adicione lógica adicional se necessário
+    } else {
+      console.error("Erro ao registrar conta bancária:", response);
+      // Trate o erro de acordo com suas necessidades
+    }
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+    // Trate o erro de acordo com suas necessidades
+  }
 };
 </script>
