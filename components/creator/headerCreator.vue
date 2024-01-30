@@ -86,7 +86,7 @@
       </div>
     </v-col>
     <v-col cols="4" class="text-caption mt-2">
-      <v-chip small class="text-capitalize ml-4" color="primary"
+      <v-chip small class="text-capitalize ml-4" size="large" color="primary"
         ><v-icon color="primary" class="ma-1">mdi-heart</v-icon>265</v-chip
       >
       <!---   <v-btn variant="text" class="ml-n2" color="primary"
