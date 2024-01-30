@@ -10,7 +10,7 @@ const url = "https://vuetify3nuxt3starter.behonbaker.com/";
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   // import styles
-  css: ["@/assets/main.scss", "@fortawesome/fontawesome-svg-core/styles.css"],
+  css: ["@/assets/main.scss"],
   devtools: { enabled: true },
   // enable takeover mode
   typescript: { shim: false },

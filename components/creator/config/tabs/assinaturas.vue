@@ -5,16 +5,6 @@
     <v-form ref="assinaturasForm">
       <v-row>
         <v-col cols="12" class="mt-5">
-          <v-select
-            v-model="selectedCurrency"
-            :items="['Real brasileiro']"
-            label="Escolha sua moeda"
-            prepend-inner-icon="mdi-coin"
-            variant="solo"
-            class="mb-n6"
-            bg-color="input_color"
-            :disabled="true"
-          ></v-select>
         </v-col>
       </v-row>
 
@@ -105,7 +95,6 @@ const assinaturas = ref({
 
 const cookie = useCookie("token");
 const token = cookie.value;
-const selectedCurrency = "BRL";
 const assinaturasForm = ref(null);
 
 const subscriptionIdMap = {
