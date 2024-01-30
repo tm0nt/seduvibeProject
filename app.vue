@@ -6,7 +6,7 @@
     <VDialog persistent v-model="dialogOpen" width="400">
       <VCard color="background" class="rounded-xl">
         <VContainer>
-          <VCardTitle class="text-primary font-weight-bold">Boas-vindas a Seduvibe</VCardTitle>
+          <VCardTitle class="text-primary font-weight-bold">Boas-vindas a Seduvibe<v-icon color="primary" class="ma-2">mdi-all-inclusive</v-icon></VCardTitle>
           <VCardText>
             <p class="text-caption mb-2 mt-n4">
               Para deixar sua experiência personalizada, escolha o modo do tema.
