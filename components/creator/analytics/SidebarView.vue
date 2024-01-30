@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation color="buttonNavColor" bg-color="input_color" class="elevation-4">
+  <v-bottom-navigation color="primary" bg-color="background" class="elevation-6">
     <v-btn class="my-btn" to="/analytics">
       <v-icon size="24">mdi-home</v-icon>
     </v-btn>

@@ -1,4 +1,12 @@
 <template>
+  <v-btn
+    prepend-icon="mdi-home"
+    class="mb-5 ml-6"
+    variant="outlined"
+    color="primary"
+    to="/profile/creator"
+    >DASHBOARD</v-btn
+  >
   <v-container>
     <v-row>
       <v-col cols="6" sm="6" class="mt-n10">

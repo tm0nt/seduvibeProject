@@ -2,15 +2,14 @@
   <v-container>
     <h2>Minhas assinaturas</h2>
     <p class="text-caption text-medium-emphasis mt-n2">Defina o valor de suas assinaturas</p>
-    <v-form>
+    <v-form ref="assinaturasForm">
       <v-row>
-        <v-col cols="12">
-          <v-checkbox color="purple" :disabled="true" label="Meu conteúdo é gratuito"></v-checkbox>
-
+        <v-col cols="12" class="mt-5">
           <v-select
             v-model="selectedCurrency"
             :items="['Real brasileiro']"
             label="Escolha sua moeda"
+            prepend-inner-icon="mdi-coin"
             variant="solo"
             class="mb-n6"
             bg-color="input_color"
@@ -25,17 +24,23 @@
             v-model="assinaturas.mensal.value"
             placeholder="Mensal"
             label="Mensal"
+            type="number"
             bg-color="input_color"
-            prepend-inner-icon="mdi-currency-usd"
+            hide-spin-buttons
+            prepend-inner-icon="mdi-coin"
+            :rules="[requiredRule, rangeRule]"
           ></v-text-field>
         </v-col>
         <v-col cols="6">
           <v-text-field
             v-model="assinaturas.trimestral.value"
             placeholder="Trimestral"
+            type="number"
             bg-color="input_color"
             label="Trimestral"
-            prepend-inner-icon="mdi-currency-usd"
+            hide-spin-buttons
+            prepend-inner-icon="mdi-coin"
+            :rules="[requiredRule, rangeRule]"
           ></v-text-field>
         </v-col>
         <v-col cols="6">
@@ -44,30 +49,53 @@
             v-model="assinaturas.semestral.value"
             placeholder="Semestral"
             label="Semestral"
-            prepend-inner-icon="mdi-currency-usd"
+            prepend-inner-icon="mdi-coin"
+            type="number"
+            hide-spin-buttons
             bg-color="input_color"
+            :rules="[requiredRule, rangeRule]"
           ></v-text-field>
         </v-col>
         <v-col cols="6">
           <v-text-field
             placeholder="Anual"
-            prepend-inner-icon="mdi-currency-usd"
+            prepend-inner-icon="mdi-coin"
             class="mt-n5"
+            hide-spin-buttons
+            type="number"
             label="Anual"
             bg-color="input_color"
             v-model="assinaturas.anual.value"
+            :rules="[requiredRule, rangeRule]"
           ></v-text-field>
         </v-col>
       </v-row>
 
-      <v-btn class="text-capitalize" color="primary" min-height="40" block>Salvar</v-btn>
+      <v-btn
+        @click="validateAndSave"
+        class="text-capitalize"
+        color="primary"
+        min-height="40"
+        block
+        :disabled="isSaveButtonDisabled"
+        >Salvar</v-btn
+      >
     </v-form>
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      rounded="pill"
+      :timeout="snackbar.timeout"
+      top
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
   </v-container>
 </template>
+
 <script setup>
 import { onMounted, ref } from "vue";
 
-// Define a ref for assinaturas
 const assinaturas = ref({
   trimestral: { value: null },
   mensal: { value: null },
@@ -78,8 +106,70 @@ const assinaturas = ref({
 const cookie = useCookie("token");
 const token = cookie.value;
 const selectedCurrency = "BRL";
+const assinaturasForm = ref(null);
 
-onMounted(async () => {
+const subscriptionIdMap = {
+  mensal: 2,
+  semestral: 1,
+  anual: 3,
+  trimestral: 4,
+};
+
+const isSaveButtonDisabled = ref(false);
+const saveSubscriptions = async () => {
+  const subscriptionsData = {
+    subscriptions: Object.keys(assinaturas.value).map((key) => ({
+      value: assinaturas.value[key].value,
+      subscriptionId: subscriptionIdMap[key],
+    })),
+  };
+  try {
+    const { data: saveSubscription } = await useFetch(
+      "https://api.seduvibe.com/subscription/choose_subscriptions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(subscriptionsData),
+      }
+    );
+    console.log(saveSubscription);
+    showSnackbar("Dados atualizados!", "success");
+    fetchData();
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+};
+
+const requiredRule = (value) => !!value || "O campo é obrigatório";
+
+const rangeRule = (value) => {
+  const isValidRange = parseFloat(value) >= 10 && parseFloat(value) <= 100;
+
+  isSaveButtonDisabled.value = !isValidRange;
+
+  return isValidRange || "De R$10,00 até R$ 100,00";
+};
+
+const snackbar = ref({
+  show: false,
+  message: "",
+  color: "success",
+  timeout: 4000,
+});
+
+const showSnackbar = (message, color) => {
+  snackbar.value = {
+    show: true,
+    message,
+    color,
+    timeout: 6000,
+  };
+};
+
+const fetchData = async () => {
   try {
     const { data: fetchData } = await useFetch(
       "https://api.seduvibe.com/subscription/list_values_subs",
@@ -99,20 +189,28 @@ onMounted(async () => {
 
           if (assinaturas.value.hasOwnProperty(subscription.name)) {
             assinaturas.value[subscription.name].value =
-              subscriptionData.value !== undefined ? formatCurrency(subscriptionData.value) : null;
+              subscriptionData.value !== undefined ? subscriptionData.value : null;
           }
         }
       });
     }
-
     console.log("Requisição realizada com sucesso:", fetchData);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
-});
+};
 
-// Function to format currency with BRL locale
-function formatCurrency(value) {
-  return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
+const validateAndSave = async () => {
+  const isFormValid = assinaturasForm.value.validate();
+
+  if (isFormValid) {
+    saveSubscriptions();
+  } else {
+    showSnackbar("Por favor, corrija os erros no formulário.", "error");
+  }
+};
+
+onMounted(async () => {
+  await fetchData();
+});
 </script>

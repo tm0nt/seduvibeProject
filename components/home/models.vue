@@ -1,21 +1,35 @@
 <template>
   <v-row>
     <v-col cols="12" class="mt-5 mb-5 d-flex align-center justify-center">
-      <v-btn @click="openSidebarFilter()" color="primary" class="text-capitalize">
-        Filtros
-        <v-icon class="ma-1">mdi-filter</v-icon>
-      </v-btn>
+      <v-chip-group filter>
+        <v-chip @click="getData" color="primary">
+          Todos
+        </v-chip>
+        <v-chip
+          v-for="tribo in tribes"
+          :key="tribo.id"
+          @click="updateFilter([tribo.id])"
+          :color="tribo.isSelected ? 'primary' : undefined"
+        >
+          {{ tribo.name }}
+        </v-chip>
+      </v-chip-group>
     </v-col>
     <template v-if="seduvibe.length === 0">
       <v-col>
         <p class="text-caption mt-5 text-medium-emphasis text-center">
-          Não existe nenhum(a) criador(a) cadastrado!
+          Nenhum criador encontrado!
         </p>
       </v-col>
     </template>
     <template v-else>
       <v-col cols="12" sm="6" md="4" lg="4" v-for="user in seduvibe" :key="user.id">
-        <v-card class="mx-auto mt-n5 my-5 rounded-xl" width="250" color="input_color" @click="">
+        <v-card
+          class="mx-auto mt-n5 my-5 rounded-xl elevation-6"
+          width="250"
+          color="background"
+          @click=""
+        >
           <v-img width="300" height="150" cover :src="user.coverPicture"></v-img>
           <div class="d-flex align-center justify-center" style="height: 100%">
             <v-avatar class="elevation-8" size="100" style="position: absolute">
@@ -46,42 +60,55 @@
       block
       @click="loadMoreItems"
     >
-      {{ isLoading ? "Procurando..." : "Ver Mais" }}</v-btn
-    >
-    <v-navigation-drawer
-      v-model="openSidebarRight"
-      right
-      class="elevation-2"
-      color="input_color"
-      temporary
-      app
-    >
-      <v-container>
-        <p class="mt-5 mb-5 text-overline">TRIBOS</p>
-        <v-checkbox
-          v-for="filtro in listaFiltros"
-          :key="filtro.id"
-          class="mt-n5 mt-5"
-          v-model="filtro.selected"
-          :label="filtro.name"
-          color="purple"
-          dark
-        ></v-checkbox>
-      </v-container>
-    </v-navigation-drawer>
+      {{ isLoading ? "Procurando..." : "Ver Mais" }}
+    </v-btn>
   </v-row>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
 
+const tribes = ref([]);
 const seduvibe = ref([]);
+const selectedTribeIds = ref([]);
 
-onMounted(async () => {
+const getData = async () => {
   try {
     const { data: creators } = await useFetch("https://api.seduvibe.com/find_creator");
     seduvibe.value = creators?._rawValue.users || [];
+    console.log(creators._rawValue);
+
+    const { data: tribesData } = await useFetch("https://api.seduvibe.com/list_tribos");
+    tribes.value = tribesData?._rawValue.tribos || [];
+
+    // Inicialize selectedTribeIds com todos os IDs de tribos
+    selectedTribeIds.value = tribes.value.map(tribe => tribe.id);
   } catch (error) {
     console.error("Erro ao carregar os dados:", error);
   }
-});
+};
+
+const updateFilter = (ids) => {
+  tribes.value.forEach(tribo => {
+    tribo.isSelected = ids.includes(tribo.id);
+  });
+
+  filterUsers(ids);
+};
+
+const filterUsers = async (ids) => {
+  try {
+    const url = ids.length === 0 ? "https://api.seduvibe.com/find_creator" : "https://api.seduvibe.com/filter";
+    const { data: filteredUsers } = await useFetch(url, {
+      method: "POST",
+      body: JSON.stringify({ tribeIds: ids }),
+      headers: { "Content-Type": "application/json" }
+    });
+
+    seduvibe.value = filteredUsers?._rawValue.users || [];
+  } catch (error) {
+    console.error("Erro ao filtrar os usuários:", error);
+  }
+};
+
+onMounted(getData);
 </script>

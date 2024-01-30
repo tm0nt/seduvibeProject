@@ -1,8 +1,13 @@
 <template>
-  <div v-if="pending">Carregando...</div>
   <VCard class="rounded-lg" height="150">
     <template v-slot:image>
-      <VImg eager cover position="center" :src="info.coverPicture"></VImg>
+      <VImg eager cover position="center" :src="info.coverPicture">
+        <div class="ml-4 mt-4">
+          <VBtn @click="changeInfoData.cover = true" color="primary" class="text-capitalize">
+            <v-icon>mdi-camera</v-icon>
+          </VBtn>
+        </div></VImg
+      >
     </template>
   </VCard>
 
@@ -20,7 +25,7 @@
     </v-col>
     <v-col cols="4">
       <div class="text-center mt-n15">
-        <v-menu width="180" height="250" rounded>
+        <v-menu width="250" height="250">
           <template v-slot:activator="{ props }">
             <VAvatar
               style="border: 4px solid background"
@@ -29,13 +34,19 @@
               :image="info.profilePicture"
             ></VAvatar>
           </template>
-          <v-card>
+          <v-card color="background" class="elevation-4 rounded-xl overflow-y-visible">
             <v-card-text>
               <div class="mx-auto text-center">
-                <h3>Mel Maia</h3>
-                <p class="text-caption mt-1">@melmaia</p>
+                <h3>{{ info.nome }}</h3>
+                <p class="text-caption mt-n1">@{{ info.user }}</p>
                 <v-divider class="my-3"></v-divider>
-                <v-btn rounded class="text-capitalize" variant="text" append-icon="mdi-image">
+                <v-btn
+                  rounded
+                  class="text-capitalize"
+                  @click="changeInfoData.profile = true"
+                  variant="text"
+                  append-icon="mdi-image"
+                >
                   Alterar perfil
                 </v-btn>
                 <v-divider class="my-3"></v-divider>
@@ -44,6 +55,7 @@
                   append-icon="mdi-theme-light-dark"
                   class="text-capitalize"
                   variant="text"
+                  @click="toggleTheme"
                 >
                   Trocar tema
                 </v-btn>
@@ -53,11 +65,18 @@
                   append-icon="mdi-share-variant"
                   class="text-capitalize"
                   variant="text"
+                  @click="shareProfile.value = true"
                 >
                   Compartilhar
                 </v-btn>
                 <v-divider class="my-3"></v-divider>
-                <v-btn rounded append-icon="mdi-logout" class="text-capitalize" variant="text">
+                <v-btn
+                  @click="logout"
+                  rounded
+                  append-icon="mdi-logout"
+                  class="text-capitalize"
+                  variant="text"
+                >
                   Sair
                 </v-btn>
               </div>
@@ -76,6 +95,107 @@
     </v-col>
   </v-row>
 
+  <VDialog persistent v-model="shareProfile.value" width="500">
+    <VCard color="background" title="Compartilhe seu perfil" class="rounded-xl" flat>
+      <template v-slot:prepend>
+        <v-icon @click="shareProfile.value = false">mdi-close</v-icon>
+      </template>
+      <VTextField
+        readonly
+        bg-color="input_color"
+        class="ma-4"
+        @click="copyToClipboard"
+        label="URL"
+        v-model="shareProfile.url"
+      >
+        <template v-slot:append-inner>
+          <v-icon @click="copyToClipboard">mdi-content-copy</v-icon>
+        </template>
+      </VTextField>
+    </VCard>
+  </VDialog>
+
+  <VDialog persistent v-model="changeInfoData.cover" width="500">
+    <VCard color="background" title="Alterar sua capa" class="rounded-xl" flat>
+      <template v-slot:prepend>
+        <v-icon @click="changeInfoData.cover = false">mdi-close</v-icon>
+      </template>
+      <v-form class="ma-4">
+        <v-file-input
+          show-size
+          bg-color="input_color"
+          label="Capa"
+          placeholder="Envie sua capa"
+          rounded="xl"
+          counter
+          v-model="PicturesUser.cover"
+          variant="solo"
+          :prepend-icon="false"
+          chips
+          prepend-inner-icon="mdi-camera"
+        ></v-file-input>
+        <VBtn
+          class="text-capitalize"
+          block
+          color="primary"
+          @click="handleUploadCover"
+          min-height="40"
+          >Alterar</VBtn
+        >
+      </v-form>
+    </VCard>
+  </VDialog>
+
+  <VDialog persistent v-model="changeInfoData.profile" width="500">
+    <VCard color="background" title="Alterar seu perfil" class="rounded-xl" flat>
+      <template v-slot:prepend>
+        <v-icon @click="changeInfoData.profile = false">mdi-close</v-icon>
+      </template>
+      <v-form class="ma-4">
+        <v-file-input
+          show-size
+          label="Perfil"
+          placeholder="Envie sua foto de perfil"
+          bg-color="input_color"
+          rounded="xl"
+          v-model="PicturesUser.profile"
+          counter
+          variant="solo"
+          :prepend-icon="false"
+          chips
+          prepend-inner-icon="mdi-camera"
+        ></v-file-input>
+        <VBtn class="text-capitalize" @click="createItem()" block color="primary" min-height="40"
+          >Alterar</VBtn
+        >
+      </v-form>
+    </VCard>
+  </VDialog>
+
+  <VDialog persistent v-model="changeInfoData.bio" width="500">
+    <VCard color="background" title="Alterar sua descrição" class="rounded-xl" flat>
+      <template v-slot:prepend>
+        <v-icon @click="changeInfoData.bio = false">mdi-close</v-icon>
+      </template>
+      <v-form class="ma-4">
+        <VTextField
+          bg-color="input_color"
+          label="Descrição"
+          v-model="info.bio"
+          placeholder="Descrição"
+        ></VTextField>
+        <VBtn
+          class="text-capitalize"
+          @click="changeDescription"
+          block
+          color="primary"
+          min-height="40"
+          >Alterar</VBtn
+        >
+      </v-form>
+    </VCard>
+  </VDialog>
+
   <VToolbar flat color="rgb(0,0,0,0)" height="15"></VToolbar>
   <VRow>
     <VCol>
@@ -84,39 +204,188 @@
           {{ info.nome }}<v-icon size="25" class="ma-1" color="primary">mdi-check-decagram</v-icon>
         </h2>
         <p class="text-center mt-n2 text-medium-emphasis text-caption">
-          {{ info.bio }}<v-icon class="ma-1">mdi-dots-horizontal-circle</v-icon>
+          {{ info.bio
+          }}<v-icon class="ma-1" @click="changeInfoData.bio = true"
+            >mdi-dots-horizontal-circle</v-icon
+          >
         </p>
-        <v-chip
-          color="primary"
-          class="ma-1"
-          bg-color="primary"
-          item-color="primary"
-          prepend-icon="mdi-sign"
-          >2.6 mil assinantes</v-chip
-        >
       </div>
     </VCol>
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      rounded="pill"
+      :timeout="snackbar.timeout"
+      top
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
   </VRow>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
+import { setData } from "nuxt-storage/local-storage";
+import { useTheme } from "vuetify";
+const theme = useTheme();
 
+const changeInfoData = ref({
+  cover: false,
+  profile: false,
+  bio: false,
+});
+
+const PicturesUser = ref({
+  cover: null,
+  profile: null,
+});
+
+const snackbar = ref({
+  show: false,
+  message: "",
+  color: "success",
+  timeout: 4000,
+});
+
+const showSnackbar = (message, color) => {
+  snackbar.value = {
+    show: true,
+    message,
+    color,
+    timeout: 4000,
+  };
+};
+
+const shareProfile = ref({
+  value: false,
+  url: "https://seduvibe.com/@lais",
+});
 const cookie = useCookie("token");
 const token = cookie.value;
-
 const social_media = ref({
   instagram: null,
   telegram: null,
   twitter: null,
 });
-
 const info = ref({
   nome: null,
   user: null,
   bio: null,
 });
 
-onMounted(async () => {
+const toggleTheme = () => {
+  try {
+    theme.global.name.value = theme.global.name.value === "dark" ? "light" : "dark";
+    setData("theme", theme.global.name.value);
+  } catch (error) {
+    console.error("Error during theme toggle:", error);
+  }
+};
+
+const logout = () => {
+  try {
+    showSnackbar("Você saiu da sua conta!", "success");
+    setTimeout(() => {
+      cookie.value = null;
+      localStorage.clear();
+      navigateTo("/");
+    }, 2000);
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
+};
+
+const changeDescription = async () => {
+  try {
+    const { data } = await useFetch("https://api.seduvibe.com/change_user_data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        bio: info.value.bio,
+      }),
+    });
+    fetchDataFromAPI();
+    showSnackbar("Sua descrição foi atualizada!", "success");
+    changeInfoData.value.bio = false;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+async function createItem() {
+  const formData = new FormData();
+  formData.append("profilePicture", PicturesUser.value.profile);
+  await fetch("https//api.seduvibe.com/uploadPicture", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    method: "POST",
+    body: formData,
+  });
+}
+
+const handleUploadCover = async () => {
+  const filePath = "./image.jpg";
+
+  const formData = new FormData();
+  formData.append("profileCover", filePath);
+  console.log(formData.has("profileCover"));
+
+  try {
+    console.log(formData);
+    const options = {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await fetch("https://api.seduvibe.com/uploadCover", options);
+    delete options.headers["Content-Type"];
+    const data = await response.json();
+    console.log("Resposta do servidor:", data);
+
+    if (response.ok) {
+      console.log("Imagem enviada com sucesso!");
+    } else {
+      console.error("Erro ao enviar imagem:", data.error);
+    }
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+};
+
+const handleUploadProfile = async () => {
+  if (PicturesUser.value.profile) {
+    const formData = new FormData();
+    formData.append("profilePicture", PicturesUser.value.profile);
+    console.log(PicturesUser.value.profile);
+
+    try {
+      await useFetch("https://api.seduvibe.com/uploadPicture", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      showSnackbar("Sua capa foi atualizada!", "success");
+      fetchDataFromAPI();
+      changeInfoData.value.profile = false;
+    } catch (error) {
+      console.error("Erro ao fazer upload:", error);
+    }
+  }
+};
+
+const copyToClipboard = () => {
+  navigator.clipboard.writeText(shareProfile.value.url);
+  showSnackbar("Link copiado com sucesso!", "success");
+};
+const fetchDataFromAPI = async () => {
   try {
     const { data: fetchData } = await useFetch("https://api.seduvibe.com/creator_list", {
       method: "GET",
@@ -144,5 +413,9 @@ onMounted(async () => {
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
+};
+
+onMounted(() => {
+  fetchDataFromAPI();
 });
 </script>

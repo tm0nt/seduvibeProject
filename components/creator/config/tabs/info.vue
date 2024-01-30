@@ -4,7 +4,7 @@
     <p class="text-caption mt-n2 text-medium-emphasis">
       Aqui estão suas informações para faturamento
     </p>
-    <v-form @submit.prevent="">
+    <v-form @submit.prevent="submitForm" class="mt-5">
       <v-row>
         <v-col cols="12" class="mt-2">
           <v-text-field
@@ -12,7 +12,10 @@
             placeholder="Nome"
             bg-color="input_color"
             color="primary"
+            label="Seu nome"
+            disabled
             required
+            prepend-inner-icon="mdi-account"
           ></v-text-field>
         </v-col>
         <v-col cols="12" class="mt-n8">
@@ -20,9 +23,10 @@
             v-model="info.cpf"
             placeholder="CPF"
             color="primary"
+            label="CPF"
             required
             bg-color="input_color"
-            maxlength="14"
+            prepend-inner-icon="mdi-card-account-details"
           ></v-text-field>
         </v-col>
         <v-col cols="12" md="6" class="mt-n8">
@@ -32,6 +36,7 @@
             placeholder="Celular"
             maxlength="12"
             required
+            label="Celular"
             color="primary"
             prepend-inner-icon="mdi-cellphone"
           ></v-text-field>
@@ -40,6 +45,7 @@
           <v-text-field
             v-model="info.dataNascimento"
             placeholder="Nascimento"
+            label="Nascimento"
             color="primary"
             required
             prepend-inner-icon="mdi-calendar-blank-outline"
@@ -50,18 +56,24 @@
           <v-text-field
             v-model="info.endereco"
             placeholder="Endereço"
+            label="Endereço"
             bg-color="input_color"
             required
             color="primary"
+            prepend-inner-icon="mdi-map-marker"
           ></v-text-field>
         </v-col>
         <v-col cols="12" md="6" class="mt-n8">
           <v-text-field
             v-model="info.cep"
+            v-maska
+            data-maska="#####-###"
             bg-color="input_color"
+            label="CEP"
             placeholder="CEP"
             color="primary"
             required
+            prepend-inner-icon="mdi-post"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -82,6 +94,15 @@
         </v-col>
       </v-row>
     </v-form>
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      rounded="pill"
+      :timeout="snackbar.timeout"
+      top
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -124,4 +145,40 @@ onMounted(async () => {
     console.error("Erro durante a requisição:", error);
   }
 });
+const snackbar = ref({
+  show: false,
+  message: "",
+  color: "success",
+  timeout: 4000,
+});
+const showSnackbar = (message, color) => {
+  snackbar.value = {
+    show: true,
+    message,
+    color,
+    timeout: 6000,
+  };
+};
+const submitForm = async () => {
+  try {
+    const { data: saveData } = await useFetch("https://api.seduvibe.com/change_personal_data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        cpf: info.value.cpf,
+        phone: info.value.phone,
+        dateOfBirth: info.value.dataNascimento,
+        street: info.value.endereco,
+        cep: info.value.cep,
+      }),
+    });
+    showSnackbar("Dados atualizados!", "success");
+    console.log("Informações salvas com sucesso:", saveData);
+  } catch (error) {
+    console.error("Erro ao salvar informações:", error);
+  }
+};
 </script>

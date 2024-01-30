@@ -4,7 +4,7 @@
       <NuxtPage />
     </NuxtLayout>
     <VDialog persistent v-model="dialogOpen" width="400">
-      <VCard height="150" color="background" class="rounded-xl">
+      <VCard color="background" class="rounded-xl">
         <VContainer>
           <VCardTitle class="text-primary font-weight-bold">Boas-vindas a Seduvibe</VCardTitle>
           <VCardText>
@@ -13,15 +13,27 @@
             </p>
             <VRow>
               <VCol>
-                <VBtn @click="selectTheme('light')" color="primary" class="text-capitalize">
+                <VBtn
+                  @click="selectTheme('light')"
+                  block
+                  color="primary"
+                  min-height="40"
+                  class="text-capitalize"
+                >
                   <VIcon size="16" class="ma-1">mdi-brightness-5</VIcon>
-                  Tema Claro
+                  Claro
                 </VBtn>
               </VCol>
               <VCol>
-                <VBtn @click="selectTheme('dark')" color="primary" class="text-capitalize">
+                <VBtn
+                  @click="selectTheme('dark')"
+                  block
+                  color="primary"
+                  min-height="40"
+                  class="text-capitalize"
+                >
                   <VIcon size="16" class="ma-1">mdi-brightness-3</VIcon>
-                  Tema Escuro
+                  Escuro
                 </VBtn>
               </VCol>
             </VRow>
@@ -31,15 +43,17 @@
     </VDialog>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useTheme } from "vuetify";
+import { setData, getData } from "nuxt-storage/local-storage";
 
 const dialogOpen = ref(false);
 const theme = useTheme();
 
 onMounted(() => {
-  const storedTheme = localStorage.getItem("theme");
+  const storedTheme = getData("theme");
   if (storedTheme) {
     theme.global.name.value = storedTheme;
   } else {
@@ -49,7 +63,7 @@ onMounted(() => {
 
 const selectTheme = (selectedTheme) => {
   theme.global.name.value = selectedTheme;
-  localStorage.setItem("theme", selectedTheme);
+  setData("theme", selectedTheme);
   dialogOpen.value = false;
 };
 </script>

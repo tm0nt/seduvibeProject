@@ -45,7 +45,7 @@
 <script>
 import headerCreator from "../../components/creator/public/navbarHeader.vue";
 import navbarView from "../../components/navbar";
-import Publicacoes from "../../components/post/postView.vue";
+import Publicacoes from "../../components/post/postViewCreator.vue";
 import Galeria from "../../components/post/galleryView.vue";
 import Mimos from "../components/creator/public/mimos.vue";
 

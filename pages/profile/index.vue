@@ -19,8 +19,6 @@ onMounted(async () => {
     } else {
       redirectUser.value = "/profile/user";
     }
-
-    // Navegar para a rota após o onMounted
     navigateTo(redirectUser.value);
   } catch (e) {
     console.error("Ocorreu um erro durante a execução do script:", e);

@@ -21,7 +21,7 @@
   </v-container>
 </template>
 <script>
-import Publicacoes from "./postView.vue";
+import Publicacoes from "./postViewCreator.vue";
 import Galeria from "./galleryView.vue";
 export default {
   computed: {

@@ -22,9 +22,6 @@
         &nbsp;Vídeos&nbsp;
         <v-icon append>mdi-video</v-icon>
       </v-chip>
-      <v-chip>Exclusivo&nbsp;
-        <v-icon append>mdi-checkbox-blank-badge</v-icon>
-      </v-chip>
     </v-chip-group>
     <v-card
       v-for="post in filteredPosts"
@@ -46,6 +43,9 @@
         <v-spacer></v-spacer>
 
         <p class="text-caption text-medium-emphasis">{{ formatDate(post.createdAt) }}</p>
+        <v-btn variant="text" class="ma-4" @click="deleteDialog = true">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
         <v-dialog v-model="deleteDialog" width="600" persistent>
           <v-card
             class="rounded-xl elevation-4"
@@ -125,7 +125,7 @@
             <v-icon
               @click="deleteDialogComment = true"
               class="ml-auto"
-              v-if="comment?.commenter.userId === 14"
+              v-if="comment?.length !== 0"
               size="16"
               >mdi-delete</v-icon
             >
@@ -162,22 +162,6 @@
           </template>
         </v-text-field>
       </v-card-text>
-    </v-card>
-    <v-card v-if="shouldDisplayRandomUser" class="rounded-xl elevation-4 mt-4 mx-auto" width="600" height="180" color="postBackground">
-      <template v-slot:title>
-        <v-icon v-for="i in 3" color="primary">mdi-fire</v-icon>
-      </template>
-      <v-img :src="randomUser.coverPicture" width="100%" cover>
-      <v-row>
-        <v-col cols="12" class="mx-auto  mt-6 ml-3">
-            <v-btn :to="'/@'+randomUser.user" class="text-capitalize mt-10" size="large" color="primary">{{ randomUser.name }}</v-btn>
-            <v-spacer class=""></v-spacer>
-        </v-col>
-
-        <v-col>
-        </v-col>
-      </v-row>
-    </v-img>
     </v-card>
   </v-row>
   <v-snackbar
@@ -304,28 +288,6 @@ const newComment = async (id) => {
   }
 };
 
-const randomUser = ref({});
-const shouldDisplayRandomUser = ref(false);
-let iterationCount = 0;
-
-const fetchRandomUser = async () => {
-  try {
-    const { data } = await useFetch("https://api.seduvibe.com/find_creator");
-    
-    // Se houver usuários na resposta, escolha aleatoriamente um usuário
-    if (data._rawValue.users && data._rawValue.users.length > 0) {
-      const randomIndex = Math.floor(Math.random() * data._rawValue.users.length);
-      randomUser.value = data._rawValue.users[randomIndex];
-
-      // Atualize a propriedade para exibir o usuário aleatório a cada duas iterações
-      shouldDisplayRandomUser.value = iterationCount % 2 === 0;
-      iterationCount++;
-    }
-  } catch (error) {
-    console.error("Erro ao buscar usuário aleatório:", error);
-  }
-};
-
 const newLike = async (id) => {
   try {
     const { data, error } = await useFetch(`https://api.seduvibe.com/posts/like/${id}`, {
@@ -358,6 +320,22 @@ const deleteLike = async (id) => {
     //
   }
 };
+const deletePost = async (id) => {
+  try {
+    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/delete_post/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    deleteDialog.value = false;
+    showSnackbar("Postagem deletada com sucesso!", "success");
+    fetchPosts();
+    console.log(data);
+  } catch {
+    //
+  }
+};
 const deleteComment = async (id) => {
   try {
     const { data, error } = await useFetch(`https://api.seduvibe.com/posts/delete_comment/${id}`, {
@@ -377,13 +355,13 @@ const deleteComment = async (id) => {
 
 //Fetch Post
 const fetchPosts = async () => {
-  const { data: postData } = await useFetch("https://api.seduvibe.com/posts/list_post_subs_active", {
+  const { data: postData } = await useFetch("https://api.seduvibe.com/posts/list_all/14", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(postData._rawValue);
-  posts.value = postData?._rawValue.posts|| [];
+
+  posts.value = postData?._rawValue.reverse() || [];
   totalPosts.value = posts?.value?.length;
   imagePosts.value = posts.value.filter((post) => post.content.endsWith(".jpg")).length;
   videoPosts.value = posts.value.filter((post) => post.content.endsWith(".mp4")).length;
@@ -394,8 +372,5 @@ const isCurrentUserLiked = (likes) => {
   return likes.some((like) => like.userId === 14);
 };
 
-onMounted(() => {
-  fetchPosts();
-  fetchRandomUser();
-});
+onMounted(fetchPosts);
 </script>

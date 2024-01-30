@@ -10,11 +10,6 @@
     </v-container>
   </v-app>
 </template>
-<script setup>
-definePageMeta({
-  middleware: "check-auth",
-});
-</script>
 <script>
 import SearchBar from "../../components/search/searchbar.vue";
 import menuNav from "../../components/navbar.vue";

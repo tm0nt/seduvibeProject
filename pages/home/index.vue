@@ -6,7 +6,7 @@
         <v-tabs v-model="selectedTab" color="primary" align-tabs="center">
           <v-tab><v-icon color="purple">mdi-compass</v-icon>&nbsp;&nbsp;Explorar </v-tab>
           <v-tab
-            ><v-icon>mdi-checkbox-marked-circle-plus-outline</v-icon>&nbsp;&nbsp;Disponível</v-tab
+            ><v-icon>mdi-checkbox-marked-circle-plus-outline</v-icon>&nbsp;&nbsp;Conteúdo</v-tab
           >
         </v-tabs>
         <v-row v-if="selectedTab === 0">

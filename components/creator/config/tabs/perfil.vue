@@ -2,11 +2,12 @@
   <v-container>
     <h2>Meu perfil</h2>
     <p class="text-caption text-medium-emphasis mt-n2">Edite alguns de seus dados</p>
-    <form>
+    <v-form class="mt-5">
       <v-text-field
         v-model="info.usuario"
         placeholder="Usuário"
         bg-color="input_color"
+        label="Usuário"
         prepend-inner-icon="mdi-at"
         disabled
         color="primary"
@@ -15,6 +16,8 @@
         v-model="info.email"
         placeholder="Email"
         class="mt-n2"
+        disabled
+        label="Email"
         color="primary"
         prepend-inner-icon="mdi-email"
         bg-color="input_color"
@@ -32,13 +35,11 @@
       </v-dialog>
 
       <v-row>
-        <!-- Coluna 1 -->
-
-        <!-- Coluna 2 -->
         <v-col cols="6" class="mt-n2">
           <v-text-field
             outlined
             v-model="social_media.twitter"
+            label="Twitter"
             placeholder="Twitter"
             prepend-inner-icon="mdi-twitter"
             bg-color="input_color"
@@ -46,21 +47,21 @@
           ></v-text-field>
         </v-col>
 
-        <!-- Coluna 3 -->
         <v-col cols="6" class="mt-n2">
           <v-text-field
             v-model="social_media.instagram"
             placeholder="Instagram"
+            label="Instagram"
             prepend-inner-icon="mdi-instagram"
             color="primary"
             bg-color="input_color"
           ></v-text-field>
         </v-col>
 
-        <!-- Coluna 4 -->
         <v-col cols="6" class="mt-n8">
           <v-text-field
             v-model="social_media.telegram"
+            label="Telegram"
             placeholder="Telegram"
             color="primary"
             prepend-inner-icon="mdi-send-circle"
@@ -68,18 +69,20 @@
           ></v-text-field>
         </v-col>
 
-        <!-- Coluna 5 -->
         <v-col cols="6" class="mt-n8">
           <v-text-field
             v-model="social_media.wishlist"
             placeholder="Wishlist Amazon"
             prepend-inner-icon="mdi-web"
+            label="Amazon Wishlist"
             color="primary"
             bg-color="input_color"
           ></v-text-field>
         </v-col>
         <v-col cols="6">
-          <v-btn color="primary" block class="text-capitalize" min-height="40">Salvar</v-btn>
+          <v-btn color="primary" @click="saveChanges" block class="text-capitalize" min-height="40"
+            >Salvar</v-btn
+          >
         </v-col>
         <v-col cols="6">
           <v-btn color="primary" block class="text-capitalize" min-height="40" variant="outlined"
@@ -87,7 +90,16 @@
           >
         </v-col>
       </v-row>
-    </form>
+    </v-form>
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      rounded="pill"
+      :timeout="snackbar.timeout"
+      top
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
   </v-container>
 </template>
 <script setup>
@@ -117,7 +129,6 @@ onMounted(async () => {
       },
     });
 
-    // Atualiza as refs com os dados obtidos da API
     info.value = {
       usuario: fetchData?._rawValue?.users[0]?.user,
       email: fetchData?._rawValue?.users[0]?.email,
@@ -135,4 +146,40 @@ onMounted(async () => {
     console.error("Erro durante a requisição:", error);
   }
 });
+const snackbar = ref({
+  show: false,
+  message: "",
+  color: "success",
+  timeout: 4000,
+});
+const showSnackbar = (message, color) => {
+  snackbar.value = {
+    show: true,
+    message,
+    color,
+    timeout: 6000,
+  };
+};
+
+const saveChanges = async () => {
+  try {
+    const { data: saveData } = await useFetch("https://api.seduvibe.com/change_social_media", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        instagram: social_media.value.instagram,
+        telegram: social_media.value.telegram,
+        twitter: social_media.value.twitter,
+        wishlist: social_media.value.wishlist,
+      }),
+    });
+    showSnackbar("Dados atualizados!", "success");
+    console.log("Changes saved successfully:", saveData);
+  } catch (error) {
+    console.error("Error while saving changes:", error);
+  }
+};
 </script>
