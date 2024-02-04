@@ -1,5 +1,5 @@
 <template>
-  <VCard class="rounded-lg" height="150">
+  <VCard class="rounded-lg" flat height="150">
     <template v-slot:image>
       <VImg eager cover position="center" :src="info.coverPicture">
         <div class="ml-4 mt-4">
@@ -224,7 +224,7 @@
 </template>
 <script setup>
 import nuxtStorage from 'nuxt-storage';
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useTheme } from "vuetify";
 const theme = useTheme();
 
@@ -415,7 +415,5 @@ const fetchDataFromAPI = async () => {
   }
 };
 
-onMounted(() => {
-  fetchDataFromAPI();
-});
+fetchDataFromAPI();
 </script>
