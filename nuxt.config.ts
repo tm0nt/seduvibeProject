@@ -3,9 +3,9 @@ import vuetify from "vite-plugin-vuetify";
 // PWA Config
 const title = "Seduvibe";
 const shortTitle = "Seduvibe";
-const description = "Template to get you up and running with Nuxt 3 & Vuetify 3";
-const image = "https://vuetify3nuxt3starter.behonbaker.com/starter.png";
-const url = "https://vuetify3nuxt3starter.behonbaker.com/";
+const description = "Venda com taxa zero! A melhor plataforma de distribuição de conteúdo!";
+const image = "./assets/pwa.png";
+const url = "https://seduvibe.com/";
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
@@ -94,16 +94,18 @@ export default defineNuxtConfig({
     },
   },
   pwa: {
+    icon: {
+      fileName: './assets/pwa.png'},
     meta: {
       name: shortTitle,
-      author: "Behon Baker",
-      theme_color: "#4f46e5",
+      author: "Tássio Montenegro",
+      theme_color: "#A020F0",
       description: description,
     },
     manifest: {
       name: shortTitle,
       short_name: shortTitle,
-      theme_color: "#4f46e5",
+      theme_color: "#A020F0",
       description: description,
     },
   },
