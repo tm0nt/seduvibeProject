@@ -1,253 +1,401 @@
 <template>
   <v-app>
+    <SideBar />
     <v-container>
       <v-col cols="12" md="8" offset-md="2">
-        <SideBar />
-        <v-toolbar color="rgb(0,0,0,0)" height="50"></v-toolbar>
         <v-container>
-          <v-row justify="center" align="center" class="d-flex" style="max-height: 100vh">
-            <v-col cols="6" sm="6" md="6">
-              <v-card color="transparent" flat>
-                <p class="text-caption text-medium-emphasis">Saldo disponível</p>
-                <v-btn color="primary">
-                  R<v-icon size="12">mdi-currency-usd</v-icon>
-                  <h2>
-                    &nbsp;{{
-                      analyticsDate && analyticsDate.creatorData
-                        ? analyticsDate.creatorData.balance_available.toLocaleString("pt-BR", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })
-                        : "N/A"
-                    }}
-                  </h2>
-                </v-btn>
-              </v-card>
-            </v-col>
-
-            <v-col cols="6" sm="6" md="6">
-              <v-card color="transparent" flat>
-                <p class="text-caption text-medium-emphasis">Aguardando liberação</p>
-                <v-btn color="input_color">
-                  R<v-icon size="12">mdi-currency-usd</v-icon>
-                  <h2>
-                    &nbsp;{{
-                      analyticsDate && analyticsDate.creatorData
-                        ? analyticsDate.creatorData.total_balance.toLocaleString("pt-BR", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })
-                        : "N/A"
-                    }}
-                  </h2>
-                </v-btn>
-              </v-card>
-            </v-col>
-          </v-row>
-
-          <v-card class="mt-10 rounded-xl" dark color="purple">
-            <v-card-title>
-              <v-toolbar-title>Selecione o tipo de transferência</v-toolbar-title>
-            </v-card-title>
-            <v-list>
-              <v-list-item v-for="(item, index) in items" :key="item.title">
-                <v-list-item-content>
-                  <v-list-item-title @click="showContent(index)"
-                    >{{ item.title }}
-                  </v-list-item-title>
-                  <v-expand-transition>
-                    <div v-if="activeIndex === index">
-                      <v-form v-if="item.formType === 'pix'" ref="pixForm">
-                        <PixForm
-                          :executeFetch="fetchAnalyticsList"
-                          :historyFetch="fetchHistoryWithdraw"
-                        />
-                      </v-form>
-
-                      <v-form v-if="item.formType === 'ted'" ref="tedForm">
-                        <TedForm :executeFetch="fetchAnalyticsList" />
-                      </v-form>
-                    </div>
-                  </v-expand-transition>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
+          <h2>
+            <NuxtLink to="/profile"
+              ><v-icon size="26" color="primary">mdi-chevron-left-circle</v-icon></NuxtLink
+            >&nbsp;Carteira
+          </h2>
+          <p class="text-caption text-medium-emphasis mt-n1">Atualizações a todo instante.</p>
+          <v-card
+            color="input_color"
+            rounded="xl"
+            class="mt-4 d-flex justify-center align-center"
+            flat
+          >
+            <v-row class="ma-2" align="center" justify="center">
+              <v-col cols="12" md="4" lg="4">
+                <div class="d-flex align-center">
+                  <v-icon color="primary" size="24">mdi-cash</v-icon>
+                  <div class="ml-2">
+                    <p class="text-caption text-medium-emphasis">Saldo disponível</p>
+                    <h3>R$ 256,00</h3>
+                  </div>
+                </div>
+              </v-col>
+              <v-col cols="12" md="4" lg="4">
+                <div class="d-flex align-center">
+                  <v-icon color="primary" size="24">mdi-clock</v-icon>
+                  <div class="ml-2">
+                    <p class="text-caption text-medium-emphasis">Aguardando</p>
+                    <h3>125.475,00</h3>
+                  </div>
+                </div>
+              </v-col>
+              <v-col cols="12" md="4" lg="4">
+                <div class="d-flex align-center">
+                  <v-icon color="primary" size="24">mdi-lock</v-icon>
+                  <div class="ml-2">
+                    <p class="text-caption text-medium-emphasis">Saldo bloqueado</p>
+                    <h3>R$ 10.454,00</h3>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
           </v-card>
-          <p class="text-medium-emphasis text-caption mt-2">
-            Todas as transferências serão enviadas para o CPF cadastrado na plataforma.
-          </p>
-          <v-row align="center">
-            <v-col class="mt-4">
-              <h2>Histórico de saque</h2>
-              <v-card class="rounded-xl">
-                <v-data-table
-                  class="rounded-xl"
-                  :headers="headers"
-                  :items="historyWithdraw || []"
-                  :footer-props="{
-                    'items-per-page-text': 'Saques por página',
-                  }"
-                  :no-data-text="noDataText"
-                >
-                  <template v-slot:[`item.amount`]="{ item }">
-                    <v-btn outlined fab color="purple" x-small
-                      ><v-icon size="16">mdi-currency-usd</v-icon></v-btn
-                    >&nbsp;&nbsp;&nbsp;R$
-                    {{
-                      item.amount.toLocaleString("pt-BR", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })
-                    }}
-                  </template>
-                  <template v-slot:[`item.createdAt`]="{ item }">
-                    {{ formatDaysPassed(item.createdAt) }}
-                  </template>
-                  <template v-slot:[`item.method`]="{ item }">
-                    {{ item.method }}
-                  </template>
-                  <template v-slot:[`item.statusName`]="{ item }">
-                    <v-chip small :class="getStatusClass(item.statusName)">
-                      <v-icon size="16" left>{{ getIcon(item.statusName) }}</v-icon>
-                      {{ getStatusText(item.statusName) }}
-                    </v-chip>
-                  </template>
-                  <template v-slot:[`item.info`]>
-                    <v-btn color="purple" dark rounded x-small
-                      ><v-icon size="16">mdi-plus</v-icon>VER MAIS</v-btn
-                    >
-                  </template>
-                </v-data-table>
+          <v-card class="rounded-xl mt-4" color="input_color" flat>
+            <v-container class="ma-2">
+              <h4>Pedir um saque</h4>
+              <p class="text-caption text-medium-emphasis">
+                A velocidade do saque depende do seu plano de assinatura.
+              </p>
+              <v-tabs v-model="tab" bg-color="transparent" color="basil" grow class="mt-4">
+                <v-tab v-for="item in items" :key="item" :value="item" color="primary" rounded="xl">
+                  {{ item }}
+                </v-tab>
+              </v-tabs>
+              <v-window v-model="tab">
+                <v-window-item v-for="item in items" :key="item" :value="item">
+                  <v-form>
+                    <v-card color="input_color" rounded="xl" flat>
+                      <v-row v-if="item === 'PIX'">
+                        <v-col class="ma-4">
+                          <v-text-field
+                            label="CPF"
+                            :disabled="true"
+                            :readonly="true"
+                            color="input_color"
+                            outlined
+                          ></v-text-field>
+                          <v-btn color="primary" @click="submitForm" class="text-capitalize"
+                            >Sacar</v-btn
+                          >
+                        </v-col>
+                      </v-row>
+
+                      <v-row v-if="item === 'TED'">
+                        <v-col class="ma-4">
+                          <v-card
+                            class="mx-auto my-5 rounded-xl elevation-0"
+                            title="Conta principal"
+                            variant="tonal"
+                            color="primary"
+                            flat
+                          >
+                            <template v-slot:prepend>
+                              <v-icon color="primary">mdi-bank</v-icon>
+                            </template>
+                            <template v-slot:subtitle>Lais</template>
+                            <v-card-text
+                              ><p>Caixa</p>
+                              <p>Agência 45454 | Conta 555454</p>
+                            </v-card-text>
+                          </v-card>
+                          <v-btn color="primary" @click="submitForm" class="text-capitalize"
+                            >Sacar</v-btn
+                          >
+                        </v-col>
+                      </v-row>
+                    </v-card>
+                  </v-form>
+                </v-window-item>
+              </v-window>
+            </v-container>
+          </v-card>
+          <v-row>
+            <v-col cols="12" md="12" lg="12" class="mt-4">
+              <v-card class="transparent rounded-xl">
+                <v-data-table :headers="headers" :items="vegetables" theme="dark">
+                <template v-slot:item.calories="{ value }">
+                  <v-chip color="success">
+                    {{ value }}
+                  </v-chip>
+                </template>
+              </v-data-table>
               </v-card>
+             
             </v-col>
           </v-row>
         </v-container>
       </v-col>
     </v-container>
+    <v-toolbar flat height="50" color="rgb(0,0,0,0)"></v-toolbar>
   </v-app>
 </template>
 
+<script setup></script>
+
 <script>
-import SideBar from "../../../components/creator/analytics/SidebarView.vue";
-import PixForm from "../../../components/creator/analytics/wallet/PixForm.vue";
-import TedForm from "../../../components/creator/analytics/wallet/TedForm.vue";
+import SideBar from "../../components/creator/analytics/SidebarView.vue";
 
 export default {
-  data: () => ({
-    historyWithdraw: null,
-    noDataText: "Nenhum saque realizado",
-    headers: [
-      { text: "Valor", value: "amount" },
-      { text: "Data", value: "createdAt" },
-      { text: "Status", value: "statusName" },
-      { text: "Tipo", value: "method" },
-      { text: "Informações", value: "info" },
-    ],
-    items: [
-      { title: "Transferência via Pix", formType: "pix" },
-      { title: "Transferência via Ted", formType: "ted" },
-    ],
-    activeIndex: null,
-    analyticsDate: null,
-    intro: "Aqui você pode fazer saques e consultar seu histórico de saque.",
-  }),
-
-  methods: {
-    getIcon(statusName) {
-      switch (statusName) {
-        case "pending":
-          return "mdi-clock";
-        case "aproved":
-          return "mdi-check";
-        case "reproved":
-          return "mdi-close";
-        default:
-          return "";
-      }
-    },
-    getStatusText(statusName) {
-      switch (statusName) {
-        case "pending":
-          return "Aguardando";
-        case "aproved":
-          return "Aprovado";
-        case "reproved":
-          return "Reprovado";
-        default:
-          return statusName;
-      }
-    },
-    getStatusClass(statusName) {
-      switch (statusName) {
-        case "pending":
-          return "purple";
-        case "aproved":
-          return "purple";
-        case "reproved":
-          return "purple";
-        default:
-          return ""; // Pode ser uma classe padrão se necessário
-      }
-    },
-    formatDaysPassed(dateString) {
-      const currentDate = new Date();
-      const providedDate = new Date(dateString);
-      const timeDifference = currentDate - providedDate;
-      const daysPassed = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-      if (daysPassed === 0) {
-        return "Hoje";
-      } else if (daysPassed === 1) {
-        return "1 dia atrás";
-      } else {
-        return `${daysPassed} dias atrás`;
-      }
-    },
-    formatDate(dateString) {
-      // Função para formatar a data, se necessário
-      const options = { year: "numeric", month: "numeric", day: "numeric" };
-      return new Date(dateString).toLocaleDateString("pt-BR", options);
-    },
-    daysPassed(dateString) {
-      // Função para calcular quantos dias se passaram desde a data fornecida até hoje
-      const currentDate = new Date();
-      const providedDate = new Date(dateString);
-      const timeDifference = currentDate - providedDate;
-      const daysPassed = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-      return daysPassed;
-    },
-    async fetchHistoryWithdraw() {
-      try {
-        const response = await withdrawService.listWithdraw();
-        this.historyWithdraw = response.data.withdrawals.reverse();
-        console.log(this.historyWithdraw);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    async fetchAnalyticsList() {
-      try {
-        const response = await analyticsService.analyticsList();
-        this.analyticsDate = response;
-        console.log("Resposta do analyticsList:", this.analyticsDate);
-      } catch (error) {
-        console.error("Erro ao chamar analyticsList:", error);
-      }
-    },
-    navigate(to) {
-      this.$router.push({ name: to });
-      this.drawer = false;
-    },
-    showContent(index) {
-      this.activeIndex = this.activeIndex === index ? null : index;
-    },
-    generateData() {},
-  },
-
   components: {
     SideBar,
-    PixForm,
-    TedForm,
+  },
+  data() {
+    return {
+      tab: "PIX",
+      items: ["PIX", "TED"],
+      headers: [
+        { title: "Vegetable (100g serving)", key: "name" },
+        { title: "Calories", key: "calories" },
+        { title: "Fat (g)", key: "fat" },
+        { title: "Carbs (g)", key: "carbs" },
+        { title: "Protein (g)", key: "protein" },
+        { title: "Iron (%)", key: "iron" },
+      ],
+      vegetables: [
+        {
+          name: "Spinach",
+          calories: 23,
+          fat: 0.4,
+          carbs: 3.6,
+          protein: 2.9,
+          iron: "15%",
+        },
+        {
+          name: "Kael",
+          calories: 49,
+          fat: 0.9,
+          carbs: 8.8,
+          protein: 4.3,
+          iron: "16%",
+        },
+        {
+          name: "Broccoli",
+          calories: 34,
+          fat: 0.4,
+          carbs: 6.6,
+          protein: 2.8,
+          iron: "6%",
+        },
+        {
+          name: "Brussels Sprouts",
+          calories: 43,
+          fat: 0.3,
+          carbs: 8.9,
+          protein: 3.4,
+          iron: "9%",
+        },
+        {
+          name: "Avocado",
+          calories: 160,
+          fat: 15,
+          carbs: 9,
+          protein: 2,
+          iron: "3%",
+        },
+        {
+          name: "Sweet Potato",
+          calories: 86,
+          fat: 0.1,
+          carbs: 20.1,
+          protein: 1.6,
+          iron: "3%",
+        },
+        {
+          name: "Corn",
+          calories: 96,
+          fat: 1.5,
+          carbs: 21,
+          protein: 3.4,
+          iron: "2%",
+        },
+        {
+          name: "Potato",
+          calories: 77,
+          fat: 0.1,
+          carbs: 17.5,
+          protein: 2,
+          iron: "8%",
+        },
+        {
+          name: "Butternut Squash",
+          calories: 45,
+          fat: 0.1,
+          carbs: 11.7,
+          protein: 1,
+          iron: "4%",
+        },
+        {
+          name: "Beetroot",
+          calories: 43,
+          fat: 0.2,
+          carbs: 10,
+          protein: 1.6,
+          iron: "6%",
+        },
+        {
+          name: "Parsnip",
+          calories: 75,
+          fat: 0.3,
+          carbs: 18,
+          protein: 1.2,
+          iron: "4%",
+        },
+        {
+          name: "Yam",
+          calories: 118,
+          fat: 0.2,
+          carbs: 27.9,
+          protein: 1.5,
+          iron: "4%",
+        },
+        {
+          name: "Acorn Squash",
+          calories: 40,
+          fat: 0.1,
+          carbs: 10,
+          protein: 1,
+          iron: "5%",
+        },
+        {
+          name: "Artichoke",
+          calories: 47,
+          fat: 0.2,
+          carbs: 10.5,
+          protein: 3.3,
+          iron: "7%",
+        },
+        {
+          name: "Peas",
+          calories: 81,
+          fat: 0.4,
+          carbs: 14.5,
+          protein: 5.4,
+          iron: "25%",
+        },
+        {
+          name: "Green Beans",
+          calories: 31,
+          fat: 0.1,
+          carbs: 6.9,
+          protein: 1.8,
+          iron: "8%",
+        },
+        {
+          name: "Red Bell Pepper",
+          calories: 26,
+          fat: 0.2,
+          carbs: 6.0,
+          protein: 1.0,
+          iron: "3%",
+        },
+        {
+          name: "Cauliflower",
+          calories: 25,
+          fat: 0.1,
+          carbs: 5.0,
+          protein: 1.9,
+          iron: "4%",
+        },
+        {
+          name: "Zucchini",
+          calories: 17,
+          fat: 0.3,
+          carbs: 3.1,
+          protein: 1.2,
+          iron: "3%",
+        },
+        {
+          name: "Asparagus",
+          calories: 20,
+          fat: 0.1,
+          carbs: 3.9,
+          protein: 2.2,
+          iron: "16%",
+        },
+        {
+          name: "Eggplant",
+          calories: 25,
+          fat: 0.2,
+          carbs: 6,
+          protein: 1,
+          iron: "1%",
+        },
+        {
+          name: "Pumpkin",
+          calories: 26,
+          fat: 0.1,
+          carbs: 6.5,
+          protein: 1,
+          iron: "4%",
+        },
+        {
+          name: "Celery",
+          calories: 16,
+          fat: 0.2,
+          carbs: 3,
+          protein: 0.7,
+          iron: "1%",
+        },
+        {
+          name: "Cucumber",
+          calories: 15,
+          fat: 0.1,
+          carbs: 3.6,
+          protein: 0.7,
+          iron: "2%",
+        },
+        {
+          name: "Leek",
+          calories: 61,
+          fat: 0.3,
+          carbs: 14.2,
+          protein: 1.5,
+          iron: "12%",
+        },
+        {
+          name: "Fennel",
+          calories: 31,
+          fat: 0.2,
+          carbs: 7,
+          protein: 1.2,
+          iron: "6%",
+        },
+        {
+          name: "Green Peas",
+          calories: 81,
+          fat: 0.4,
+          carbs: 14.5,
+          protein: 5.4,
+          iron: "25%",
+        },
+        {
+          name: "Okra",
+          calories: 33,
+          fat: 0.2,
+          carbs: 7.5,
+          protein: 1.9,
+          iron: "3%",
+        },
+        {
+          name: "Chard",
+          calories: 19,
+          fat: 0.2,
+          carbs: 3.7,
+          protein: 1.8,
+          iron: "22%",
+        },
+        {
+          name: "Collard Greens",
+          calories: 32,
+          fat: 0.6,
+          carbs: 5.4,
+          protein: 3,
+          iron: "2%",
+        },
+      ],
+    };
+  },
+  methods: {
+    submitForm() {
+      // Lógica para enviar o formulário
+      console.log("Formulário enviado!");
+    },
   },
 };
 </script>

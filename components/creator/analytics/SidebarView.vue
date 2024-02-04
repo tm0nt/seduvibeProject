@@ -1,16 +1,16 @@
 <template>
-  <v-bottom-navigation color="primary" bg-color="background" class="elevation-6">
+  <v-bottom-navigation color="primary" bg-color="background" class="elevation-8">
     <v-btn class="my-btn" to="/analytics">
-      <v-icon size="24">mdi-home</v-icon>
+      <v-icon size="26">mdi-home</v-icon>
     </v-btn>
     <v-btn class="my-btn" to="/analytics/wallet">
-      <v-icon size="24">mdi-wallet</v-icon>
+      <v-icon size="26">mdi-wallet</v-icon>
     </v-btn>
     <v-btn class="my-btn" to="/analytics/affiliate">
-      <v-icon size="24">mdi-account-group</v-icon>
+      <v-icon size="26">mdi-account-group</v-icon>
     </v-btn>
     <v-btn class="my-btn" to="/analytics/metrics">
-      <v-icon size="24">mdi-file-chart-outline</v-icon>
+      <v-icon size="26">mdi-file-chart-outline</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>
