@@ -361,7 +361,7 @@ const fetchPosts = async () => {
     },
   });
 
-  posts.value = postData?._rawValue.reverse() || [];
+  posts.value = postData?._rawValue?.reverse() || [];
   totalPosts.value = posts?.value?.length;
   imagePosts.value = posts.value.filter((post) => post.content.endsWith(".jpg")).length;
   videoPosts.value = posts.value.filter((post) => post.content.endsWith(".mp4")).length;

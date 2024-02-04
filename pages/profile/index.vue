@@ -14,7 +14,7 @@ onMounted(async () => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    if (creator._rawValue.users[0].creator === 1) {
+    if (creator._rawValue?.users[0].creator === 1) {
       redirectUser.value = "/profile/creator";
     } else {
       redirectUser.value = "/profile/user";
