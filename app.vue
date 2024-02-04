@@ -47,13 +47,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useTheme } from "vuetify";
-import { setData, getData } from "nuxt-storage/local-storage";
+import nuxtStorage from 'nuxt-storage';
 
 const dialogOpen = ref(false);
 const theme = useTheme();
 
 onMounted(() => {
-  const storedTheme = getData("theme");
+  const storedTheme = nuxtStorage.localStorage.getData("theme");
   if (storedTheme) {
     theme.global.name.value = storedTheme;
   } else {
@@ -63,7 +63,7 @@ onMounted(() => {
 
 const selectTheme = (selectedTheme) => {
   theme.global.name.value = selectedTheme;
-  setData("theme", selectedTheme);
+  nuxtStorage.localStorage.setData("theme", selectedTheme);
   dialogOpen.value = false;
 };
 </script>

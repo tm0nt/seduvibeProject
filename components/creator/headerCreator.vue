@@ -223,8 +223,8 @@
   </VRow>
 </template>
 <script setup>
+import nuxtStorage from 'nuxt-storage';
 import { onMounted, ref } from "vue";
-import { setData } from "nuxt-storage/local-storage";
 import { useTheme } from "vuetify";
 const theme = useTheme();
 
@@ -275,7 +275,7 @@ const info = ref({
 const toggleTheme = () => {
   try {
     theme.global.name.value = theme.global.name.value === "dark" ? "light" : "dark";
-    setData("theme", theme.global.name.value);
+    nuxtStorage.localStorage.setData("theme", theme.global.name.value);
   } catch (error) {
     console.error("Error during theme toggle:", error);
   }
