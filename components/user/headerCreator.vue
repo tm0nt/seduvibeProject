@@ -14,7 +14,7 @@
               style="border: 4px solid background"
               size="130"
               v-bind="props"
-              :image="info.profilePicture"
+              image="https://i.imgur.com/h2xyV29.png"
             ></VAvatar>
           </template>
           <v-card color="background" class="elevation-4 rounded-xl overflow-y-visible">

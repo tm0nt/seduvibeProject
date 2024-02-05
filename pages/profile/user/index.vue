@@ -8,7 +8,7 @@
           <v-divider class="my-3"></v-divider>
           <v-row>
             <v-col class="align-center text-center mt-6 justify-center d-flex">
-              <v-chip-group color="primary" filter v-model="selectedTab">
+              <v-chip-group color="primary" mandatory filter v-model="selectedTab">
                 <v-chip append-icon="mdi-account" value="0">Meu perfil</v-chip>
                 <v-chip value="1" append-icon="mdi-certificate">Assinaturas</v-chip>
                 <v-chip value="2" append-icon="mdi-heart">Favoritos</v-chip>
@@ -57,7 +57,7 @@ export default {
         case "4":
           return AffiliatesComponent;
         default:
-          return null;
+          return 0;
       }
     },
   },
