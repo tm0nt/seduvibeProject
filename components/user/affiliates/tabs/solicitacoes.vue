@@ -1,70 +1,74 @@
 <template>
-  <v-table fixed-header height="300px" theme="dark">
-    <thead>
-      <tr>
-        <th class="text-left">ID</th>
-        <th class="text-left">Nome</th>
-        <th class="text-left">Data</th>
-        <th class="text-left">Ação</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="item in desserts" :key="item.name">
-        <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.data }}</td>
-        <td>{{ item.acao }}</td>
-      </tr>
-    </tbody>
-  </v-table>
+  <v-data-table
+    :headers="headers"
+    :items="affiliateRequests && affiliateRequests.length ? affiliateRequests : []"
+    :header-props="headerProps"
+    items-per-page-text="Solicitações"
+    :hide-default-footer="true"
+    class="elevation-0 rounded-xl"
+  >
+    <template v-slot:no-data>
+      <div class="px-4 text-caption text-medium-emphasis">Você não possui requisições.</div>
+    </template>
+    <template v-slot:item.createdAt="{value}">
+      {{ formatDate(value) }}
+    </template>
+    <template v-slot:item.status="{value}">
+      {{ value.toUpperCase() }}
+    </template>
+  </v-data-table>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      desserts: [
-        {
-          id: "2",
-          name: "Lais",
-          data: "há 2 dias",
-        },
-        {
-          id: "2",
-          name: "Lais",
-          data: "há 2 dias",
-        },
-        {
-          id: "2",
-          name: "Lais",
-          data: "há 2 dias",
-        },
-        {
-          id: "2",
-          name: "Lais",
-          data: "há 2 dias",
-        },
-        {
-          id: "2",
-          name: "Lais",
-          data: "há 2 dias",
-        },
-        {
-          id: "2",
-          name: "Lais",
-          data: "há 2 dias",
-        },
-        {
-          id: "2",
-          name: "Lais",
-          data: "há 2 dias",
-        },
-        {
-          id: "2",
-          name: "Lais",
-          data: "há 2 dias",
-        },
-      ],
-    };
-  },
+<script setup>
+const formatDate = (dateString) => {
+  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+  const formattedDate = new Date(dateString).toLocaleDateString("pt-BR", options);
+  return formattedDate;
 };
+const headers = [
+  {
+    title: "Identificador",
+    key: "id",
+  },
+  {
+    title: "Criador(a)",
+    key: "creator",
+  },
+  {
+    title: "Status",
+    key: "status",
+  },
+  {
+    title: "Pedido em",
+    key: "createdAt",
+  },
+];
+
+const headerProps = {
+  ripple: false,
+};
+import { onMounted, ref } from "vue";
+
+const cookie = useCookie("token");
+const token = cookie.value;
+
+const affiliateRequests = ref(null);
+
+onMounted(async () => {
+  try {
+    const { data: fetchData } = await useFetch(
+      "https://api.seduvibe.com/afiliates/user-affiliate-requests",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    affiliateRequests.value = fetchData._rawValue;
+    console.log(fetchData);
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+});
 </script>

@@ -3,16 +3,16 @@
     <v-container>
       <h2>Assinaturas</h2>
       <p class="text-caption text-medium-emphesis">Essas são suas assinaturas ativas</p>
-      <v-sheet class="mx-auto">
+      <v-sheet class="mx-auto" color="background">
         <v-slide-group class="pa-4">
-          <v-slide-item v-for="(item, index) in favoriteItems" :key="index" class="pa-2">
+          <v-slide-item v-if="subscriptionCreator && subscriptionCreator.length > 0" v-for="(item, index) in subscriptionCreator" :key="index" class="pa-2">
             <v-row align="center" justify="center">
               <v-col>
-                <v-card color="input_color" class="rounded-xl mx-auto my-12" width="200">
-                  <v-img cover height="250" :src="item.imageUrl"></v-img>
-
+                <NuxtLink :to="'/@'+item.creatorUser">
+                <v-card color="input_color" class="rounded-xl my-12" width="200">
+                  <v-img cover height="250" :src="item.creatorProfilePicture"></v-img>
                   <v-card-item>
-                    <v-card-title>{{ item.title }}</v-card-title>
+                    <v-card-title>{{ item.creator }}</v-card-title>
 
                     <v-card-subtitle>
                       <span class="text-caption text-medium-emphesis me-1">{{
@@ -25,71 +25,49 @@
                   <v-card-text>
                     <v-row align="center" class="mx-0 ma-2">
                       <div>
-                        {{ item.description }}
+                        {{ item.bio }}
                       </div>
                     </v-row>
                   </v-card-text>
                 </v-card>
+              </NuxtLink>
               </v-col>
             </v-row>
           </v-slide-item>
+          <!-- Adicione a mensagem para quando o array está vazio -->
+          <v-row v-else class="text-center">
+            <v-col>
+              <p class="text-caption text-medium-emphasis">Nenhuma assinatura ativa no momento.</p>
+            </v-col>
+          </v-row>
         </v-slide-group>
       </v-sheet>
     </v-container>
   </v-app>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      // Exemplo de dados para os v-cards
-      favoriteItems: [
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        // Adicione mais itens conforme necessário
-      ],
-    };
-  },
-};
+<script setup>
+import { onMounted, ref } from "vue";
+
+const cookie = useCookie("token");
+const token = cookie.value;
+
+const subscriptionCreator = ref(null);
+
+onMounted(async () => {
+  try {
+    const { data: fetchData } = await useFetch("https://api.seduvibe.com/subscription/list_subscriptions_users_active", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    subscriptionCreator.value = fetchData._rawValue;
+    console.log(fetchData);
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+});
+
 </script>

@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import HeaderCreator from "../../../components/creator/headerCreator";
+import HeaderCreator from "../../../components/user/headerCreator";
 import ProfileComponent from "../../../components/user/profile/ProfileComponent";
 import SubscriptionsComponent from "../../../components/user/subscriptions/SubscriptionsComponent";
 import FavoritesComponent from "../../../components/user/favorites/FavoritesComponent";
