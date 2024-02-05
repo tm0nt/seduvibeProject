@@ -9,12 +9,15 @@
           :loading="loading"
           type="list-item-two-line"
         >
-              <VImg
+              <NuxtImg
                 src="https://i.imgur.com/BrTfYSp.png"
                 width="60"
                 alt="Plataforma para vender conteúdo exclusivo"
                 class="mx-auto mb-10"
-              ></VImg>
+                format="webp"
+                loading="lazy" 
+                preload
+              ></NuxtImg>
               <h2 class="text-headline mt-15">Login</h2>
               <p class="mt-n2 text-medium-emphasis text-caption mb-4">
                 Entre para apoiar seus criadores

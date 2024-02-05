@@ -3,7 +3,7 @@
     <VCarousel touch hide-delimiter-background hide-delimiters :show-arrows="false" cycle>
       <VCarouselItem transition="scale-transition" v-for="(item, index) in items" :key="index">
         <VCard width="350" height="500" class="rounded-xl elevation-0" flat>
-          <NuxtImg :src="item.imgSrc" cover loading="lazy" preload class="h-100 rounded-xl d-flex justify-center">
+          <NuxtImg format="webp" :src="item.imgSrc" cover loading="lazy" preload class="h-100 rounded-xl d-flex justify-center">
             <div class="ml-4 mt-4">
               <NuxtLink to="/@user"
                 ><VBtn color="primary" variant="elevated" rounded class="text-capitalize">
