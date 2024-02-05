@@ -6,7 +6,11 @@
     <VDialog persistent v-model="dialogOpen" width="400">
       <VCard color="background" class="rounded-xl">
         <VContainer>
-          <VCardTitle class="text-primary font-weight-bold">Boas-vindas a Seduvibe<v-icon color="primary" class="ma-2">mdi-all-inclusive</v-icon></VCardTitle>
+          <VCardTitle class="text-primary font-weight-bold"
+            >Boas-vindas a Seduvibe<v-icon color="primary" class="ma-2"
+              >mdi-all-inclusive</v-icon
+            ></VCardTitle
+          >
           <VCardText>
             <p class="text-caption mb-2 mt-n4">
               Para deixar sua experiência personalizada, escolha o modo do tema.
@@ -47,7 +51,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useTheme } from "vuetify";
-import nuxtStorage from 'nuxt-storage';
+import nuxtStorage from "nuxt-storage";
 
 const dialogOpen = ref(false);
 const theme = useTheme();

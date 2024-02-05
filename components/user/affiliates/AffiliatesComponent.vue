@@ -45,20 +45,22 @@ const subscriptionCreator = ref(null);
 
 onMounted(async () => {
   try {
-    const { data: fetchData } = await useFetch("https://api.seduvibe.com/subscription/list_subscriptions_users_active", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data: fetchData } = await useFetch(
+      "https://api.seduvibe.com/subscription/list_subscriptions_users_active",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     subscriptionCreator.value = fetchData._rawValue;
     console.log(fetchData);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
 });
-
 </script>
 <script>
 import afiliacaoAtiva from "./tabs/afiliacaoativa.vue";
@@ -73,7 +75,6 @@ export default {
       { text: "Solicitação de afiliação", icon: "mdi-file-document-plus", component: solicitacoes },
       { text: "Quero me afiliar", icon: "mdi-account-group", component: meafiliar },
       { text: "Financeiro", icon: "mdi-cash", component: financeiro },
-
     ],
     selectedComponent: null,
   }),

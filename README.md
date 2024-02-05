@@ -2,10 +2,9 @@
 
 ## Descrição
 
-Uma plataforma de distribuição de conteúdo construída com Nuxt.js. 
+Uma plataforma de distribuição de conteúdo construída com Nuxt.js.
 
 ## Capturas de Tela
-
 
 ## Tecnologias Utilizadas
 

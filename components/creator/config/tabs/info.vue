@@ -25,7 +25,7 @@
             color="primary"
             label="CPF"
             type="number"
-              hide-spin-buttons
+            hide-spin-buttons
             required
             bg-color="input_color"
             prepend-inner-icon="mdi-card-account-details"
@@ -38,7 +38,7 @@
             placeholder="Celular"
             maxlength="12"
             type="number"
-              hide-spin-buttons
+            hide-spin-buttons
             required
             label="Celular"
             color="primary"
@@ -51,7 +51,7 @@
             placeholder="Nascimento"
             label="Nascimento"
             type="date"
-              hide-spin-buttons
+            hide-spin-buttons
             color="primary"
             required
             prepend-inner-icon="mdi-calendar-blank-outline"
@@ -78,7 +78,7 @@
             label="CEP"
             placeholder="CEP"
             type="number"
-              hide-spin-buttons
+            hide-spin-buttons
             color="primary"
             required
             prepend-inner-icon="mdi-post"

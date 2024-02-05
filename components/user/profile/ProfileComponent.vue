@@ -5,7 +5,7 @@
       <p class="text-caption text-medium-emphesis">Aqui estão suas informações</p>
       <v-row align="center" justify="center" class="mt-6">
         <v-col>
-          <v-form  @submit.prevent="saveChanges">
+          <v-form @submit.prevent="saveChanges">
             <v-text-field
               v-model="info.usuario"
               placeholder="Usuário"

@@ -2,9 +2,7 @@
   <v-row>
     <v-col cols="12" class="mt-5 mb-5 d-flex align-center justify-center">
       <v-chip-group filter>
-        <v-chip @click="getData" color="primary">
-          Todos
-        </v-chip>
+        <v-chip @click="getData" color="primary"> Todos </v-chip>
         <v-chip
           v-for="tribo in tribes"
           :key="tribo.id"
@@ -17,9 +15,7 @@
     </v-col>
     <template v-if="seduvibe.length === 0">
       <v-col>
-        <p class="text-caption mt-5 text-medium-emphasis text-center">
-          Nenhum criador encontrado!
-        </p>
+        <p class="text-caption mt-5 text-medium-emphasis text-center">Nenhum criador encontrado!</p>
       </v-col>
     </template>
     <template v-else>
@@ -81,14 +77,14 @@ const getData = async () => {
     tribes.value = tribesData?._rawValue.tribos || [];
 
     // Inicialize selectedTribeIds com todos os IDs de tribos
-    selectedTribeIds.value = tribes.value.map(tribe => tribe.id);
+    selectedTribeIds.value = tribes.value.map((tribe) => tribe.id);
   } catch (error) {
     console.error("Erro ao carregar os dados:", error);
   }
 };
 
 const updateFilter = (ids) => {
-  tribes.value.forEach(tribo => {
+  tribes.value.forEach((tribo) => {
     tribo.isSelected = ids.includes(tribo.id);
   });
 
@@ -97,11 +93,14 @@ const updateFilter = (ids) => {
 
 const filterUsers = async (ids) => {
   try {
-    const url = ids.length === 0 ? "https://api.seduvibe.com/find_creator" : "https://api.seduvibe.com/filter";
+    const url =
+      ids.length === 0
+        ? "https://api.seduvibe.com/find_creator"
+        : "https://api.seduvibe.com/filter";
     const { data: filteredUsers } = await useFetch(url, {
       method: "POST",
       body: JSON.stringify({ tribeIds: ids }),
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
 
     seduvibe.value = filteredUsers?._rawValue.users || [];

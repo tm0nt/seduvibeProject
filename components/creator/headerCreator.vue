@@ -223,7 +223,7 @@
   </VRow>
 </template>
 <script setup>
-import nuxtStorage from 'nuxt-storage';
+import nuxtStorage from "nuxt-storage";
 import { ref } from "vue";
 import { useTheme } from "vuetify";
 const theme = useTheme();

@@ -4,29 +4,29 @@
       <h2>Favoritos</h2>
       <p class="text-caption text-medium-emphesis">Estes são seus favoritos</p>
       <v-sheet class="mx-auto" color="background">
-        <v-row v-if="favorites && favorites.length > 0" >
+        <v-row v-if="favorites && favorites.length > 0">
           <v-col v-for="(item, index) in favorites" :key="index">
-            <NuxtLink :to="'/@'+item.user">
-            <v-card color="input_color" class="rounded-xl my-12" width="200">
-              <v-img cover height="250" :src="item.profilePicture"></v-img>
+            <NuxtLink :to="'/@' + item.user">
+              <v-card color="input_color" class="rounded-xl my-12" width="200">
+                <v-img cover height="250" :src="item.profilePicture"></v-img>
 
-              <v-card-item>
-                <v-card-title>{{ item.name }}</v-card-title>
+                <v-card-item>
+                  <v-card-title>{{ item.name }}</v-card-title>
 
-                <v-card-subtitle>
-                  <span class="text-caption text-medium-emphesis me-1"></span>
-                  <v-icon color="primary" icon="mdi-fire-circle" size="small"></v-icon>
-                </v-card-subtitle>
-              </v-card-item>
+                  <v-card-subtitle>
+                    <span class="text-caption text-medium-emphesis me-1"></span>
+                    <v-icon color="primary" icon="mdi-fire-circle" size="small"></v-icon>
+                  </v-card-subtitle>
+                </v-card-item>
 
-              <v-card-text>
-                <v-row align="center" class="mx-0 ma-2">
-                  <div>
-                    {{ item.bio }}
-                  </div>
-                </v-row>
-              </v-card-text>
-            </v-card>
+                <v-card-text>
+                  <v-row align="center" class="mx-0 ma-2">
+                    <div>
+                      {{ item.bio }}
+                    </div>
+                  </v-row>
+                </v-card-text>
+              </v-card>
             </NuxtLink>
           </v-col>
         </v-row>
@@ -63,5 +63,4 @@ onMounted(async () => {
     console.error("Erro durante a requisição:", error);
   }
 });
-
 </script>

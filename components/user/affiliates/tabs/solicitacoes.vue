@@ -10,10 +10,10 @@
     <template v-slot:no-data>
       <div class="px-4 text-caption text-medium-emphasis">Você não possui requisições.</div>
     </template>
-    <template v-slot:item.createdAt="{value}">
+    <template v-slot:item.createdAt="{ value }">
       {{ formatDate(value) }}
     </template>
-    <template v-slot:item.status="{value}">
+    <template v-slot:item.status="{ value }">
       {{ value.toUpperCase() }}
     </template>
   </v-data-table>

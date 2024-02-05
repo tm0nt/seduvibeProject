@@ -13,7 +13,9 @@
                   <v-card-title>{{ item.creator }}</v-card-title>
 
                   <v-card-subtitle>
-                    <span class="text-caption text-medium-emphesis me-1">D0 - {{ formatDate(item.createdAt) }}</span>
+                    <span class="text-caption text-medium-emphesis me-1"
+                      >D0 - {{ formatDate(item.createdAt) }}</span
+                    >
                     <v-icon color="primary" icon="mdi-fire-circle" size="small"></v-icon>
                   </v-card-subtitle>
                 </v-card-item>
@@ -49,18 +51,20 @@ const affiliateActive = ref(null);
 
 onMounted(async () => {
   try {
-    const { data: fetchData } = await useFetch("https://api.seduvibe.com/afiliates/user-affiliate-requests-approved", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data: fetchData } = await useFetch(
+      "https://api.seduvibe.com/afiliates/user-affiliate-requests-approved",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     affiliateActive.value = fetchData._rawValue;
     console.log(fetchData);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
 });
-
 </script>

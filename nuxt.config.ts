@@ -95,7 +95,8 @@ export default defineNuxtConfig({
   },
   pwa: {
     icon: {
-      fileName: './assets/pwa.png'},
+      fileName: "./assets/pwa.png",
+    },
     meta: {
       name: shortTitle,
       author: "Tássio Montenegro",

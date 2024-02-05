@@ -109,14 +109,13 @@
             <v-col cols="12" md="12" lg="12" class="mt-4">
               <v-card class="transparent rounded-xl">
                 <v-data-table :headers="headers" :items="vegetables" theme="dark">
-                <template v-slot:item.calories="{ value }">
-                  <v-chip color="success">
-                    {{ value }}
-                  </v-chip>
-                </template>
-              </v-data-table>
+                  <template v-slot:item.calories="{ value }">
+                    <v-chip color="success">
+                      {{ value }}
+                    </v-chip>
+                  </template>
+                </v-data-table>
               </v-card>
-             
             </v-col>
           </v-row>
         </v-container>

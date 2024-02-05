@@ -22,7 +22,8 @@
         &nbsp;Vídeos&nbsp;
         <v-icon append>mdi-video</v-icon>
       </v-chip>
-      <v-chip>Exclusivo&nbsp;
+      <v-chip
+        >Exclusivo&nbsp;
         <v-icon append>mdi-checkbox-blank-badge</v-icon>
       </v-chip>
     </v-chip-group>
@@ -163,21 +164,32 @@
         </v-text-field>
       </v-card-text>
     </v-card>
-    <v-card v-if="shouldDisplayRandomUser" class="rounded-xl elevation-4 mt-4 mx-auto" width="600" height="180" color="postBackground">
+    <v-card
+      v-if="shouldDisplayRandomUser"
+      class="rounded-xl elevation-4 mt-4 mx-auto"
+      width="600"
+      height="180"
+      color="postBackground"
+    >
       <template v-slot:title>
         <v-icon v-for="i in 3" color="primary">mdi-fire</v-icon>
       </template>
       <v-img :src="randomUser.coverPicture" width="100%" cover>
-      <v-row>
-        <v-col cols="12" class="mx-auto  mt-6 ml-3">
-            <v-btn :to="'/@'+randomUser.user" class="text-capitalize mt-10" size="large" color="primary">{{ randomUser.name }}</v-btn>
+        <v-row>
+          <v-col cols="12" class="mx-auto mt-6 ml-3">
+            <v-btn
+              :to="'/@' + randomUser.user"
+              class="text-capitalize mt-10"
+              size="large"
+              color="primary"
+              >{{ randomUser.name }}</v-btn
+            >
             <v-spacer class=""></v-spacer>
-        </v-col>
+          </v-col>
 
-        <v-col>
-        </v-col>
-      </v-row>
-    </v-img>
+          <v-col> </v-col>
+        </v-row>
+      </v-img>
     </v-card>
   </v-row>
   <v-snackbar
@@ -311,7 +323,7 @@ let iterationCount = 0;
 const fetchRandomUser = async () => {
   try {
     const { data } = await useFetch("https://api.seduvibe.com/find_creator");
-    
+
     // Se houver usuários na resposta, escolha aleatoriamente um usuário
     if (data._rawValue.users && data._rawValue.users.length > 0) {
       const randomIndex = Math.floor(Math.random() * data._rawValue.users.length);
@@ -377,13 +389,16 @@ const deleteComment = async (id) => {
 
 //Fetch Post
 const fetchPosts = async () => {
-  const { data: postData } = await useFetch("https://api.seduvibe.com/posts/list_post_subs_active", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const { data: postData } = await useFetch(
+    "https://api.seduvibe.com/posts/list_post_subs_active",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
   console.log(postData._rawValue);
-  posts.value = postData?._rawValue.posts|| [];
+  posts.value = postData?._rawValue.posts || [];
   totalPosts.value = posts?.value?.length;
   imagePosts.value = posts.value.filter((post) => post.content.endsWith(".jpg")).length;
   videoPosts.value = posts.value.filter((post) => post.content.endsWith(".mp4")).length;

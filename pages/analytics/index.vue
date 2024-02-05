@@ -41,9 +41,7 @@
           <v-card class="rounded-xl mt-4" color="input_color" flat>
             <v-container class="ma-2">
               <h4>Vendas por dia</h4>
-              <p class="text-caption text-medium-emphasis">
-                Meios de pagamentos mais utilizados.
-              </p>
+              <p class="text-caption text-medium-emphasis">Meios de pagamentos mais utilizados.</p>
             </v-container>
           </v-card>
           <v-row>
@@ -101,7 +99,8 @@
                         :rotate="360"
                         model-value="50"
                         color="primary"
-                      >50%</v-progress-circular>
+                        >50%</v-progress-circular
+                      >
                     </v-col>
                     <v-col cols="auto" class="justify-center align-center d-flex">
                       <div>
@@ -118,7 +117,6 @@
       </v-col>
     </v-container>
     <v-toolbar flat height="50" color="rgb(0,0,0,0)"></v-toolbar>
-
   </v-app>
 </template>
 <script setup></script>

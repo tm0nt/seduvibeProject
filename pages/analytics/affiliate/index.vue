@@ -34,25 +34,17 @@
           <v-card class="rounded-xl mt-4" color="input_color" flat>
             <v-container class="ma-2">
               <h4>Gerencie afiliados</h4>
-              <p class="text-caption text-medium-emphasis">
-                Visualize, aprove e remova afiliados
-              </p>
+              <p class="text-caption text-medium-emphasis">Visualize, aprove e remova afiliados</p>
               <v-tabs color="primary" grow>
-                <v-tab>
-                  Ativos
-                </v-tab>
-                <v-tab>
-                  Pedidos
-                </v-tab>
+                <v-tab> Ativos </v-tab>
+                <v-tab> Pedidos </v-tab>
               </v-tabs>
             </v-container>
           </v-card>
           <v-card class="rounded-xl mt-4" color="input_color" flat>
             <v-container class="ma-2">
               <h4>Sua comissão</h4>
-              <p class="text-caption text-medium-emphasis">
-                Acompanhe o volume de suas comissões.
-              </p>
+              <p class="text-caption text-medium-emphasis">Acompanhe o volume de suas comissões.</p>
             </v-container>
           </v-card>
           <v-row>
@@ -102,20 +94,23 @@
                 <v-container class="ma-2">
                   <h4>Ranking</h4>
                   <p class="text-caption text-medium-emphasis">Mais vendas realizadas</p>
-                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal">Manoel Gomes</v-chip>
-                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal">Manoel Gomes</v-chip>
-                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal">Manoel Gomes</v-chip>
+                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal"
+                    >Manoel Gomes</v-chip
+                  >
+                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal"
+                    >Manoel Gomes</v-chip
+                  >
+                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal"
+                    >Manoel Gomes</v-chip
+                  >
                 </v-container>
               </v-card>
             </v-col>
           </v-row>
-        
-          
         </v-container>
       </v-col>
     </v-container>
     <v-toolbar flat height="50" color="rgb(0,0,0,0)"></v-toolbar>
-
   </v-app>
 </template>
 <script setup></script>
