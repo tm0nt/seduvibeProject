@@ -20,7 +20,11 @@
           <v-row>
             <v-col cols="12" class="mt-6">
               <div v-if="selectedTab === null">
-                <p class="text-caption text-medium-emphasis text-center">Por favor, selecione uma opção acima.</p>
+                <p class="text-caption text-medium-emphasis text-center">
+                  Por favor, selecione uma opção acima.&nbsp;<v-icon color="primary"
+                    >mdi-chevron-up-circle</v-icon
+                  >
+                </p>
               </div>
               <component v-else :is="currentComponent" />
             </v-col>
@@ -38,7 +42,7 @@ import SubscriptionsComponent from "../../../components/user/subscriptions/Subsc
 import FavoritesComponent from "../../../components/user/favorites/FavoritesComponent";
 import PaymentsComponent from "../../../components/user/payments/PaymentsComponent";
 import AffiliatesComponent from "../../../components/user/affiliates/AffiliatesComponent";
-import NavbarView from "../../../components/navbar";
+import NavbarView from "../../../components/navbar_user";
 
 export default {
   data() {

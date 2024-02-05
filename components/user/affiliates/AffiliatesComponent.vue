@@ -5,7 +5,7 @@
       <p class="text-caption text-medium-emphesis">Este é o painel de afiliados</p>
       <v-row>
         <VCol cols="12" md="6" lg="6">
-          <v-card color="background" rounded="xl">
+          <v-card color="background" rounded="xl" class="elevation-0" flat>
             <v-card-text>
               <v-list bg-color="background">
                 <v-list-subheader>PAINEL</v-list-subheader>

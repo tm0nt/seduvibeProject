@@ -3,7 +3,13 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    <VDialog persistent v-model="dialogOpen" width="400">
+    <VDialog
+      persistent
+      aria-labelledby="Mudança de tema"
+      aria-describedby="Personalize sua experiência mudando seu tema "
+      v-model="dialogOpen"
+      width="400"
+    >
       <VCard color="background" class="rounded-xl">
         <VContainer>
           <VCardTitle class="text-primary font-weight-bold"

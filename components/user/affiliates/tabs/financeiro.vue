@@ -3,11 +3,11 @@
     <v-row class="ma-2" align="center" justify="center">
       <v-col cols="12" md="6" lg="6">
         <p class="text-caption text-medium-emphasis">Saldo disponível</p>
-        <h3>R$ 256,00&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+        <h3>R$ 256,00<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
       </v-col>
       <v-col cols="12" md="6" lg="6">
         <p class="text-caption text-medium-emphasis">Total em vendas</p>
-        <h3>R$ 10.454,00&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+        <h3>R$ 10.454,00<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
       </v-col>
     </v-row>
   </v-card>
@@ -41,7 +41,7 @@
 
               <v-row v-if="item === 'TED'">
                 <v-col class="ma-4">
-                  <v-card
+                  <!--     <v-card
                     class="mx-auto my-5 rounded-xl elevation-0"
                     title="Conta principal"
                     variant="tonal"
@@ -56,8 +56,10 @@
                       ><p>Caixa</p>
                       <p>Agência 45454 | Conta 555454</p>
                     </v-card-text>
-                  </v-card>
-                  <v-btn color="primary" @click="submitForm" class="text-capitalize">Sacar</v-btn>
+                  </v-card> -->
+                  <p class="text-center text-caption text-medium-emphasis mt-4 mb-4">
+                    Estamos processando os pagamentos via ted.
+                  </p>
                 </v-col>
               </v-row>
             </v-card>

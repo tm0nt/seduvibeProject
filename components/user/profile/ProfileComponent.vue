@@ -70,6 +70,7 @@
                 <v-btn
                   type="submit2"
                   variant="outlined"
+                  @click="changePassword = true"
                   block
                   color="primary"
                   min-height="40"
@@ -83,6 +84,30 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      rounded="pill"
+      :timeout="snackbar.timeout"
+      top
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
+    <v-dialog v-model="changePassword" persisent width="600">
+      <v-card
+        class="rounded-xl elevation-6"
+        color="background"
+        title="Te enviamos um e-mail"
+        prepend-icon="mdi-check"
+      >
+        <v-card-text class="text-medium-emphasis text-caption">
+          Enviamos um e-mail para sua caixa de entrada para efetuação da troca de senha!
+        </v-card-text>
+        <v-card-actions>
+          <v-btn variant="text" color="primary" @click="changePassword = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 <script setup>
@@ -90,6 +115,8 @@ import { onMounted, ref } from "vue";
 
 const cookie = useCookie("token");
 const token = cookie.value;
+
+const changePassword = ref(false);
 
 const info = ref({
   usuario: null,

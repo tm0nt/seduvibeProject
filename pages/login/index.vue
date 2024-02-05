@@ -5,7 +5,12 @@
         <VRow no-gutters align="center" justify="center">
           <VCol cols="9" md="6">
             <div class="text-surface">
-              <VImg src="https://i.imgur.com/BrTfYSp.png" width="60" class="mx-auto mb-10"></VImg>
+              <VImg
+                src="https://i.imgur.com/BrTfYSp.png"
+                width="60"
+                alt="Plataforma para vender conteúdo exclusivo"
+                class="mx-auto mb-10"
+              ></VImg>
               <h2 class="text-headline mt-15">Login</h2>
               <p class="mt-n2 text-medium-emphasis text-caption mb-4">
                 Entre para apoiar seus criadores

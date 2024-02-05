@@ -21,7 +21,7 @@
             <v-card-text>
               <div class="mx-auto text-center">
                 <h3>{{ info.nome }}</h3>
-                <v-btn class="mt-2 text-capitalize" color="primary">Me tornar criador</v-btn>
+                <p class="text-caption mt-n1">@{{ info.user }}</p>
                 <v-divider class="my-3"></v-divider>
                 <v-btn
                   rounded
@@ -33,6 +33,17 @@
                   Trocar tema
                 </v-btn>
                 <v-divider class="my-3"></v-divider>
+                <v-btn
+                  @click="changeCreatorId"
+                  rounded
+                  append-icon="mdi-swap-horizontal"
+                  class="text-capitalize"
+                  variant="text"
+                >
+                  Quero ser criador
+                </v-btn>
+                <v-divider class="my-3"></v-divider>
+
                 <v-btn
                   @click="logout"
                   rounded
@@ -56,6 +67,9 @@
         <h2 class="text-center">
           {{ info.nome }}
         </h2>
+        <p class="text-center text-caption text-medium-emphasis">
+          Clique em sua foto do perfil para ver mais opções de conta
+        </p>
       </div>
     </VCol>
     <v-snackbar
