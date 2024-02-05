@@ -19,7 +19,10 @@
           </v-row>
           <v-row>
             <v-col cols="12" class="mt-6">
-              <component :is="currentComponent" />
+              <div v-if="selectedTab === null">
+                <p class="text-caption text-medium-emphasis text-center">Por favor, selecione uma opção acima.</p>
+              </div>
+              <component v-else :is="currentComponent" />
             </v-col>
           </v-row>
         </v-col>

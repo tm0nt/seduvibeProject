@@ -21,7 +21,7 @@
             <v-card-text>
               <div class="mx-auto text-center">
                 <h3>{{ info.nome }}</h3>
-                <p class="text-caption mt-n1">@{{ info.user }}</p>
+                <v-btn class="mt-2 text-capitalize" color="primary">Me tornar criador</v-btn>
                 <v-divider class="my-3"></v-divider>
                 <v-btn
                   rounded
