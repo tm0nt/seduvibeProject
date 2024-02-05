@@ -5,6 +5,10 @@
         <VRow no-gutters align="center" justify="center">
           <VCol cols="9" md="6">
             <div class="text-surface">
+              <v-skeleton-loader
+          :loading="loading"
+          type="list-item-two-line"
+        >
               <VImg
                 src="https://i.imgur.com/BrTfYSp.png"
                 width="60"
@@ -15,6 +19,7 @@
               <p class="mt-n2 text-medium-emphasis text-caption mb-4">
                 Entre para apoiar seus criadores
               </p>
+              </v-skeleton-loader>
             </div>
 
             <VForm @submit.prevent="submit" class="mt-2">
