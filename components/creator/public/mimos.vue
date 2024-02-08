@@ -55,10 +55,10 @@
     >
       {{ snackbar.message }}
     </v-snackbar>
-    <v-dialog v-model="DonationMetaDialog.visible" width="600">
+    <v-dialog v-model="DonationMetaDialog.visible" width="600" persistent>
       <v-card class="rounded-xl elevation-6"  flat>
         <v-card-title><v-icon @click="DonationMetaDialog.visible = false">mdi-close</v-icon></v-card-title>
-        <v-card-text>Contribua com o objetivo: {{ DonationMetaDialog.item.name}}</v-card-text>
+        <v-card-text class="text-center">Contribua com o objetivo: {{ DonationMetaDialog.item.name}}</v-card-text>
         <PaymentMethod/>
       </v-card>
     </v-dialog>
