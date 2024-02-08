@@ -54,25 +54,18 @@
                     class="elevation-0 rounded-xl"
                     v-for="(not, index) in filteredNotifs"
                     :key="index"
+                    link
                     cols="12"
                   >
-                    <v-container>
-                      <v-row>
-                        <v-col cols="auto">
-                          <v-avatar color="primary"><v-icon>mdi-coin</v-icon></v-avatar>
-                        </v-col>
-                        <v-col>
-                          <v-card-text class="mt-n3 ml-n6">
-                            <v-list-item-title>{{ not.message }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ not.message }}</v-list-item-subtitle>
-                          </v-card-text>
-                        </v-col>
-                        <v-col class="text-right">
-                          <v-list-item-subtitle class="caption">há 2 dias</v-list-item-subtitle>
-                        </v-col>
-                      </v-row>
-                      <v-divider v-if="filteredNotifs?.length > 1"></v-divider>
-                    </v-container>
+                    <template v-slot:title>
+                      <p class="text-capitalize">{{ not.source }}</p>
+                    </template>
+                    <template v-slot:subtitle>
+                      <p>{{ not.message }}</p>
+                    </template>
+                    <template v-slot:prepend>
+                      <v-avatar color="primary"> <v-icon icon="mdi-coin"></v-icon></v-avatar>
+                    </template>
                   </v-card>
                 </v-col>
               </v-row>
@@ -91,12 +84,12 @@
   </v-app>
 </template>
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { ref, computed } from "vue";
 
 const notifs = ref([]);
 const selectedFilter = ref(0);
 
-onMounted(async () => {
+const fetchData = async () => {
   const cookie = useCookie("token");
   const token = cookie.value;
 
@@ -117,7 +110,7 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error fetching notifications:", error);
   }
-});
+};
 
 const filteredNotifs = computed(() => {
   if (selectedFilter.value === 0) {
@@ -127,12 +120,7 @@ const filteredNotifs = computed(() => {
   }
 });
 
-const filterNotifications = () => {
-  // You may need to add logic here to handle the filter based on selectedFilter
-  // For example, you can update the filteredNotifs in response to changes in selectedFilter
-  // You can console.log to check if this function is triggered when clicking on v-chips
-  console.log("Filtering notifications...", selectedFilter.value);
-};
+fetchData();
 </script>
 
 <script>

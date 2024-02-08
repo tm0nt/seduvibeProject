@@ -1,7 +1,9 @@
 <template>
+        <p class="text-caption  mt-5 text-center text-medium-emphasis">Escolha tribos específicas</p>
   <v-row>
-    <v-col cols="12" class="mt-5 mb-5 d-flex align-center justify-center">
+    <v-col cols="12" class="mt-1 mb-5 d-flex align-center justify-center">
       <v-chip-group filter>
+        
         <v-chip @click="getData" color="primary"> Todos </v-chip>
         <v-chip
           v-for="tribo in tribes"
@@ -19,12 +21,12 @@
       </v-col>
     </template>
     <template v-else>
-      <v-col cols="12" sm="6" md="4" lg="4" v-for="user in seduvibe" :key="user.id">
+      <v-col cols="12" sm="4" md="4" lg="4" v-for="user in seduvibe" :key="user.id">
+        <NuxtLink :to="'/@'+user.user">
         <v-card
           class="mx-auto mt-n5 my-5 rounded-xl elevation-6"
           width="250"
           color="background"
-          @click=""
         >
           <v-img width="300" height="150" cover :src="user.coverPicture"></v-img>
           <div class="d-flex align-center justify-center" style="height: 100%">
@@ -45,6 +47,7 @@
             </v-card-title>
           </v-card-text>
         </v-card>
+      </NuxtLink>
       </v-col>
     </template>
     <v-btn
@@ -109,5 +112,5 @@ const filterUsers = async (ids) => {
   }
 };
 
-onMounted(getData);
+getData();
 </script>
