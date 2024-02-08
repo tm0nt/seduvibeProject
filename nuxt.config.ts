@@ -97,7 +97,7 @@ export default defineNuxtConfig({
   },
   pwa: {
     icon: {
-      fileName: "./assets/pwa.png",
+      fileName: "pwa.png",
     },
     meta: {
       name: shortTitle,
