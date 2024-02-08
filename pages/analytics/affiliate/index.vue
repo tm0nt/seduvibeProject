@@ -19,15 +19,34 @@
             <v-row class="ma-2" align="center" justify="center">
               <v-col cols="12" md="4" lg="4">
                 <p class="text-caption text-medium-emphasis">Pedidos de afiliação</p>
-                <h3>256&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+                <h3>
+                  {{ affiliateFetch?.pendingAffiliateRequests?.length }}&nbsp;<v-icon
+                    color="primary"
+                    size="26"
+                    >mdi-chevron-up</v-icon
+                  >
+                </h3>
               </v-col>
               <v-col cols="12" md="4" lg="4">
                 <p class="text-caption text-medium-emphasis">Afiliados ativas</p>
-                <h3>125&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+                <h3>
+                  {{ affiliateFetch?.activeAffiliates?.length }}&nbsp;<v-icon
+                    color="primary"
+                    size="26"
+                    >mdi-chevron-up</v-icon
+                  >
+                </h3>
               </v-col>
               <v-col cols="12" md="4" lg="4">
                 <p class="text-caption text-medium-emphasis">Total em vendas(afiliados)</p>
-                <h3>R$ 10.454,00&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+                <h3>
+                  {{
+                    coin?.totalEarnings?.totalEarnings?.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })
+                  }}&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon>
+                </h3>
               </v-col>
             </v-row>
           </v-card>
@@ -35,10 +54,28 @@
             <v-container class="ma-2">
               <h4>Gerencie afiliados</h4>
               <p class="text-caption text-medium-emphasis">Visualize, aprove e remova afiliados</p>
-              <v-tabs color="primary" grow>
-                <v-tab> Ativos </v-tab>
-                <v-tab> Pedidos </v-tab>
+              <v-tabs v-model="tab" bg-color="transparent" color="basil" grow class="mt-4">
+                <v-tab v-for="item in items" :key="item" :value="item" color="primary" rounded="xl">
+                  {{ item }}
+                </v-tab>
               </v-tabs>
+              <v-window v-model="tab">
+                <v-window-item v-for="item in items" :key="item" :value="item">
+                  <v-form>
+                    <v-card color="input_color" rounded="xl" flat>
+                      <v-row v-if="item === 'ATIVO'" class="ma-1">
+                        <ativoAffiliate />
+                      </v-row>
+
+                      <v-row v-if="item === 'PEDIDOS'">
+                        <v-col class="ma-1">
+                          <pedidosAffiliate />
+                        </v-col>
+                      </v-row>
+                    </v-card>
+                  </v-form>
+                </v-window-item>
+              </v-window>
             </v-container>
           </v-card>
           <v-card class="rounded-xl mt-4" color="input_color" flat>
@@ -48,61 +85,24 @@
             </v-container>
           </v-card>
           <v-row>
-            <v-col>
-              <v-card class="rounded-xl mt-4" color="input_color" flat>
-                <v-container class="ma-2">
-                  <h4>Vendas por método</h4>
-                  <p class="text-caption mb-2">Meios de pagamentos mais utilizados</p>
-
-                  <!-- Cartão -->
-                  <v-row align="center">
-                    <v-col cols="6">
-                      <v-icon color="primary">mdi-credit-card</v-icon>
-                      Cartão
-                    </v-col>
-                    <v-col cols="6" class="text-right">
-                      <span class="ml-auto">60%</span>
-                    </v-col>
-                  </v-row>
-
-                  <!-- Pix -->
-                  <v-row align="center">
-                    <v-col cols="6">
-                      <v-icon color="primary">mdi-flash</v-icon>
-                      Pix
-                    </v-col>
-                    <v-col cols="6" class="text-right">
-                      <span class="ml-auto">30%</span>
-                    </v-col>
-                  </v-row>
-
-                  <!-- Cripto -->
-                  <v-row align="center">
-                    <v-col cols="6">
-                      <v-icon color="primary">mdi-bitcoin</v-icon>
-                      Cripto
-                    </v-col>
-                    <v-col cols="6" class="text-right">
-                      <span class="ml-auto">10%</span>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="6" lg="6">
+            <v-col cols="12" md="12" lg="12">
               <v-card class="rounded-xl mt-4" color="input_color" flat>
                 <v-container class="ma-2">
                   <h4>Ranking</h4>
                   <p class="text-caption text-medium-emphasis">Mais vendas realizadas</p>
-                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal"
-                    >Manoel Gomes</v-chip
-                  >
-                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal"
-                    >Manoel Gomes</v-chip
-                  >
-                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal"
-                    >Manoel Gomes</v-chip
-                  >
+                  <template v-for="(affiliate, index) in coin.rankingAffiliate" :key="index">
+                    <v-chip
+                      class="mt-2 mr-2"
+                      :color="index === 0 ? 'primary' : ''"
+                      size="large"
+                      prepend-icon="mdi-medal"
+                    >
+                      {{ affiliate.affiliateName }}
+                    </v-chip>
+                  </template>
+                  <p class="text-caption text-medium-emphasis mt-2">
+                    Estes são os usuários do checkout
+                  </p>
                 </v-container>
               </v-card>
             </v-col>
@@ -113,12 +113,85 @@
     <v-toolbar flat height="50" color="rgb(0,0,0,0)"></v-toolbar>
   </v-app>
 </template>
-<script setup></script>
+<script setup>
+const cookie = useCookie("token");
+const token = cookie.value;
+const affiliateFetch = ref(null);
+const coin = ref({
+  totalEarnings: null,
+  rankingAffiliate: null,
+});
+const fetchAffiliate = async () => {
+  try {
+    const { data, error } = await useFetch("https://api.seduvibe.com/analytics", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(data);
+    affiliateFetch.value = data._rawValue;
+  } catch (error) {
+    console.error(error);
+  }
+};
+const totalEarnings = async () => {
+  try {
+    const { data, error } = await useFetch(
+      "https://api.seduvibe.com/afiliates/total_affiliate_earnings",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(data);
+    coin.value.totalEarnings = data._rawValue;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const rankingAffiliate = async () => {
+  try {
+    const { data, error } = await useFetch(
+      "https://api.seduvibe.com/afiliates/top_affiliate_earnings",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(data);
+    coin.value.rankingAffiliate = data._rawValue;
+  } catch (error) {
+    console.error(error);
+  }
+};
+fetchAffiliate();
+totalEarnings();
+rankingAffiliate();
+</script>
 <script>
 import SideBar from "../../components/creator/analytics/SidebarView.vue";
+import ativoAffiliate from "../../components/creator/affiliate/ativo.vue";
+import pedidosAffiliate from "../../components/creator/affiliate/pedidos.vue";
+
 export default {
+  data() {
+    return {
+      tab: "ATIVO",
+      items: ["ATIVO", "PEDIDOS"],
+    };
+  },
   components: {
     SideBar,
+    ativoAffiliate,
   },
 };
 </script>

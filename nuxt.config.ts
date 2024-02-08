@@ -17,7 +17,8 @@ export default defineNuxtConfig({
   build: { transpile: ["vuetify"] },
   modules: [
     "@pinia/nuxt",
-    '@nuxt/image',
+    "@nuxt/image",
+    "nuxt-highcharts",
     "@kevinmarrec/nuxt-pwa",
     async (options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {

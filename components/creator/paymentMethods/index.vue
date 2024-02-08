@@ -1,7 +1,5 @@
 <template>
-  <p class="text-center text-caption text-medium-emphasis">
-    Todas as transações serão feitas para seu CPF cadastrado!
-  </p>
+
   <v-expansion-panels variant="popout" class="mb-4 mt-5">
     <v-expansion-panel bg-color="background" class="rounded-xl">
       <v-expansion-panel-title expand-icon="mdi-credit-card" collapse-icon="mdi-credit-card-check">

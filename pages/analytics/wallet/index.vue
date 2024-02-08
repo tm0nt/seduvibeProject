@@ -22,7 +22,13 @@
                   <v-icon color="primary" size="24">mdi-cash</v-icon>
                   <div class="ml-2">
                     <p class="text-caption text-medium-emphasis">Saldo disponível</p>
-                    <h3>R$ 256,00</h3>
+                    <h3>
+                      {{
+                        Math.abs(
+                            parseFloat(balance?.creatorData?.balance_available)
+                        ).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+                      }}
+                    </h3>
                   </div>
                 </div>
               </v-col>
@@ -31,7 +37,14 @@
                   <v-icon color="primary" size="24">mdi-clock</v-icon>
                   <div class="ml-2">
                     <p class="text-caption text-medium-emphasis">Aguardando</p>
-                    <h3>125.475,00</h3>
+                    <h3>
+                      {{
+                        Math.abs(
+                          parseFloat(balance?.creatorData?.total_balance) -
+                            parseFloat(balance?.creatorData?.balance_available)
+                        ).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+                      }}
+                    </h3>
                   </div>
                 </div>
               </v-col>
@@ -40,7 +53,14 @@
                   <v-icon color="primary" size="24">mdi-lock</v-icon>
                   <div class="ml-2">
                     <p class="text-caption text-medium-emphasis">Saldo bloqueado</p>
-                    <h3>R$ 10.454,00</h3>
+                    <h3>
+                      {{
+                        parseFloat(balance?.creatorData?.balance_blocked).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })
+                      }}
+                    </h3>
                   </div>
                 </div>
               </v-col>
@@ -67,10 +87,24 @@
                             label="CPF"
                             :disabled="true"
                             :readonly="true"
+                            type="number"
+                            hide-spin-buttons
                             color="input_color"
                             outlined
                           ></v-text-field>
-                          <v-btn color="primary" @click="submitForm" class="text-capitalize"
+                          <v-text-field
+                            label="Valor"
+                            prepend-inner-icon="mdi-cash"
+                            hide-spin-buttons
+                            color="input_color"
+                            v-model="withdraw.pix.amount"
+                            type="number"
+                            outlined
+                          ></v-text-field>
+                          <v-btn
+                            color="primary"
+                            @click="withdrawRequest(withdraw.pix.id, withdraw.pix.amount)"
+                            class="text-capitalize"
                             >Sacar</v-btn
                           >
                         </v-col>
@@ -78,14 +112,14 @@
 
                       <v-row v-if="item === 'TED'">
                         <v-col class="ma-4">
-                          <v-card
+                          <!----   <v-card
                             class="mx-auto my-5 rounded-xl elevation-0"
                             title="Conta principal"
                             variant="tonal"
                             color="primary"
                             flat
                           >
-                            <template v-slot:prepend>
+                           <template v-slot:prepend>
                               <v-icon color="primary">mdi-bank</v-icon>
                             </template>
                             <template v-slot:subtitle>Lais</template>
@@ -94,9 +128,15 @@
                               <p>Agência 45454 | Conta 555454</p>
                             </v-card-text>
                           </v-card>
-                          <v-btn color="primary" @click="submitForm" class="text-capitalize"
+                          <v-btn
+                            color="primary"
+                            @click="withdrawRequest(withdraw.ted.id)"
+                            class="text-capitalize"
                             >Sacar</v-btn
-                          >
+                          >-->
+                          <p class="text-caption text-center text-medium-emphasis">
+                            Estamos processando o saque via TED
+                          </p>
                         </v-col>
                       </v-row>
                     </v-card>
@@ -108,11 +148,23 @@
           <v-row>
             <v-col cols="12" md="12" lg="12" class="mt-4">
               <v-card class="transparent rounded-xl">
-                <v-data-table :headers="headers" :items="vegetables" theme="dark">
-                  <template v-slot:item.calories="{ value }">
-                    <v-chip color="success">
-                      {{ value }}
+                <v-data-table
+                  :headers="headers"
+                  no-data-text="Nenhum saque encontrado"
+                  items-per-page-text="Saques"
+                  :items="historyWithdraw && historyWithdraw.length ? historyWithdraw : []"
+                  theme="dark"
+                >
+                  <template v-slot:item.statusName="{ value }">
+                    <v-chip :color="getStatusColor(value)">
+                      {{ getStatusLabel(value) }}
                     </v-chip>
+                  </template>
+                  <template v-slot:item.createdAt="{ value }">
+                    {{ formatRelativeTime(value) }}
+                  </template>
+                  <template v-slot:item.amount="{ value }">
+                    {{ value?.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}
                   </template>
                 </v-data-table>
               </v-card>
@@ -122,279 +174,177 @@
       </v-col>
     </v-container>
     <v-toolbar flat height="50" color="rgb(0,0,0,0)"></v-toolbar>
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      rounded="pill"
+      :timeout="snackbar.timeout"
+      top
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
   </v-app>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+const cookie = useCookie("token");
+const token = cookie.value;
+
+const snackbar = ref({
+  show: false,
+  message: "",
+  color: "success",
+  timeout: 4000,
+});
+
+const formatRelativeTime = (dateString) => {
+  const date = new Date(dateString);
+  const today = new Date();
+  const diffInDays = Math.floor((today - date) / (24 * 60 * 60 * 1000));
+
+  if (diffInDays === 0) {
+    return "Hoje";
+  } else if (diffInDays === 1) {
+    return "Ontem";
+  } else {
+    return `há ${diffInDays} dias`;
+  }
+};
+
+const getStatusColor = (status) => {
+  switch (status) {
+    case "approved":
+      return "success";
+    case "rejected":
+      return "error";
+    case "pending":
+      return "warning";
+    default:
+      return "";
+  }
+};
+
+const getStatusLabel = (status) => {
+  switch (status) {
+    case "approved":
+      return "Aprovado";
+    case "rejected":
+      return "Rejeitado";
+    case "pending":
+      return "Pendente";
+    default:
+      return "";
+  }
+};
+
+const showSnackbar = (message, color) => {
+  snackbar.value = {
+    show: true,
+    message,
+    color,
+    timeout: 6000,
+  };
+};
+const historyWithdraw = ref(null);
+const withdraw = ref({
+  pix: { id: 1, amount: null },
+});
+
+const headers = [
+  {
+    title: "Identificador",
+    key: "id",
+  },
+  { title: "Status", key: "statusName" },
+  {
+    title: "Valor",
+    key: "amount",
+  },
+  { title: "Data", key: "createdAt" },
+];
+
+const balance = ref(null);
+
+const withdrawRequest = async (id, amount) => {
+  try {
+    // Verifica se o valor do saque é maior que o saldo disponível
+    const availableBalance = parseFloat(balance?.value.creatorData?.balance_available);
+    const requestedAmount = amount;
+
+    if (isNaN(availableBalance) || isNaN(requestedAmount) || requestedAmount > availableBalance) {
+      showSnackbar("Saldo insuficiente para realizar o saque", "error");
+      return;
+    }
+
+    const { data, error } = await useFetch("https://api.seduvibe.com/request_withdraw", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        method: id,
+        amount: amount,
+      }),
+    });
+
+    withdraw.value.pix.amount = null;
+    showSnackbar("Seu saque foi pedido e vai ser processado!", "success");
+    fetchBalance();
+    fetchWithdraw();
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+};
+
+const fetchWithdraw = async () => {
+  try {
+    const { data, error } = await useFetch("https://api.seduvibe.com/withdraw_list", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    historyWithdraw.value = data?._rawValue?.withdrawals.reverse();
+    console.log(historyWithdraw);
+  } catch (error) {
+    console.error("Erro", error);
+  }
+};
+
+const fetchBalance = async () => {
+  try {
+    const { data, error } = await useFetch("https://api.seduvibe.com/analytics", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    balance.value = data._rawValue;
+    console.log(data);
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+};
+fetchBalance();
+fetchWithdraw();
+</script>
 
 <script>
 import SideBar from "../../components/creator/analytics/SidebarView.vue";
 
 export default {
-  components: {
-    SideBar,
-  },
   data() {
     return {
       tab: "PIX",
       items: ["PIX", "TED"],
-      headers: [
-        { title: "Vegetable (100g serving)", key: "name" },
-        { title: "Calories", key: "calories" },
-        { title: "Fat (g)", key: "fat" },
-        { title: "Carbs (g)", key: "carbs" },
-        { title: "Protein (g)", key: "protein" },
-        { title: "Iron (%)", key: "iron" },
-      ],
-      vegetables: [
-        {
-          name: "Spinach",
-          calories: 23,
-          fat: 0.4,
-          carbs: 3.6,
-          protein: 2.9,
-          iron: "15%",
-        },
-        {
-          name: "Kael",
-          calories: 49,
-          fat: 0.9,
-          carbs: 8.8,
-          protein: 4.3,
-          iron: "16%",
-        },
-        {
-          name: "Broccoli",
-          calories: 34,
-          fat: 0.4,
-          carbs: 6.6,
-          protein: 2.8,
-          iron: "6%",
-        },
-        {
-          name: "Brussels Sprouts",
-          calories: 43,
-          fat: 0.3,
-          carbs: 8.9,
-          protein: 3.4,
-          iron: "9%",
-        },
-        {
-          name: "Avocado",
-          calories: 160,
-          fat: 15,
-          carbs: 9,
-          protein: 2,
-          iron: "3%",
-        },
-        {
-          name: "Sweet Potato",
-          calories: 86,
-          fat: 0.1,
-          carbs: 20.1,
-          protein: 1.6,
-          iron: "3%",
-        },
-        {
-          name: "Corn",
-          calories: 96,
-          fat: 1.5,
-          carbs: 21,
-          protein: 3.4,
-          iron: "2%",
-        },
-        {
-          name: "Potato",
-          calories: 77,
-          fat: 0.1,
-          carbs: 17.5,
-          protein: 2,
-          iron: "8%",
-        },
-        {
-          name: "Butternut Squash",
-          calories: 45,
-          fat: 0.1,
-          carbs: 11.7,
-          protein: 1,
-          iron: "4%",
-        },
-        {
-          name: "Beetroot",
-          calories: 43,
-          fat: 0.2,
-          carbs: 10,
-          protein: 1.6,
-          iron: "6%",
-        },
-        {
-          name: "Parsnip",
-          calories: 75,
-          fat: 0.3,
-          carbs: 18,
-          protein: 1.2,
-          iron: "4%",
-        },
-        {
-          name: "Yam",
-          calories: 118,
-          fat: 0.2,
-          carbs: 27.9,
-          protein: 1.5,
-          iron: "4%",
-        },
-        {
-          name: "Acorn Squash",
-          calories: 40,
-          fat: 0.1,
-          carbs: 10,
-          protein: 1,
-          iron: "5%",
-        },
-        {
-          name: "Artichoke",
-          calories: 47,
-          fat: 0.2,
-          carbs: 10.5,
-          protein: 3.3,
-          iron: "7%",
-        },
-        {
-          name: "Peas",
-          calories: 81,
-          fat: 0.4,
-          carbs: 14.5,
-          protein: 5.4,
-          iron: "25%",
-        },
-        {
-          name: "Green Beans",
-          calories: 31,
-          fat: 0.1,
-          carbs: 6.9,
-          protein: 1.8,
-          iron: "8%",
-        },
-        {
-          name: "Red Bell Pepper",
-          calories: 26,
-          fat: 0.2,
-          carbs: 6.0,
-          protein: 1.0,
-          iron: "3%",
-        },
-        {
-          name: "Cauliflower",
-          calories: 25,
-          fat: 0.1,
-          carbs: 5.0,
-          protein: 1.9,
-          iron: "4%",
-        },
-        {
-          name: "Zucchini",
-          calories: 17,
-          fat: 0.3,
-          carbs: 3.1,
-          protein: 1.2,
-          iron: "3%",
-        },
-        {
-          name: "Asparagus",
-          calories: 20,
-          fat: 0.1,
-          carbs: 3.9,
-          protein: 2.2,
-          iron: "16%",
-        },
-        {
-          name: "Eggplant",
-          calories: 25,
-          fat: 0.2,
-          carbs: 6,
-          protein: 1,
-          iron: "1%",
-        },
-        {
-          name: "Pumpkin",
-          calories: 26,
-          fat: 0.1,
-          carbs: 6.5,
-          protein: 1,
-          iron: "4%",
-        },
-        {
-          name: "Celery",
-          calories: 16,
-          fat: 0.2,
-          carbs: 3,
-          protein: 0.7,
-          iron: "1%",
-        },
-        {
-          name: "Cucumber",
-          calories: 15,
-          fat: 0.1,
-          carbs: 3.6,
-          protein: 0.7,
-          iron: "2%",
-        },
-        {
-          name: "Leek",
-          calories: 61,
-          fat: 0.3,
-          carbs: 14.2,
-          protein: 1.5,
-          iron: "12%",
-        },
-        {
-          name: "Fennel",
-          calories: 31,
-          fat: 0.2,
-          carbs: 7,
-          protein: 1.2,
-          iron: "6%",
-        },
-        {
-          name: "Green Peas",
-          calories: 81,
-          fat: 0.4,
-          carbs: 14.5,
-          protein: 5.4,
-          iron: "25%",
-        },
-        {
-          name: "Okra",
-          calories: 33,
-          fat: 0.2,
-          carbs: 7.5,
-          protein: 1.9,
-          iron: "3%",
-        },
-        {
-          name: "Chard",
-          calories: 19,
-          fat: 0.2,
-          carbs: 3.7,
-          protein: 1.8,
-          iron: "22%",
-        },
-        {
-          name: "Collard Greens",
-          calories: 32,
-          fat: 0.6,
-          carbs: 5.4,
-          protein: 3,
-          iron: "2%",
-        },
-      ],
     };
   },
-  methods: {
-    submitForm() {
-      // Lógica para enviar o formulário
-      console.log("Formulário enviado!");
-    },
+  components: {
+    SideBar,
   },
 };
 </script>

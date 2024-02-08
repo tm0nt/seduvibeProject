@@ -26,22 +26,43 @@
             <v-row class="ma-2" align="center" justify="center">
               <v-col cols="12" md="4" lg="4">
                 <p class="text-caption text-medium-emphasis">Saldo disponível</p>
-                <h3>R$ 256,00&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+                <h3>
+                  {{
+                    analyticsFetch?.creatorData?.balance_available.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })
+                  }}&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon>
+                </h3>
               </v-col>
               <v-col cols="12" md="4" lg="4">
                 <p class="text-caption text-medium-emphasis">Assinaturas ativas</p>
-                <h3>125&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+                <h3>
+                  {{ analyticsFetch?.activeSubscriptions?.length }}&nbsp;<v-icon
+                    color="primary"
+                    size="26"
+                    >mdi-chevron-up</v-icon
+                  >
+                </h3>
               </v-col>
               <v-col cols="12" md="4" lg="4">
                 <p class="text-caption text-medium-emphasis">Total em vendas</p>
-                <h3>R$ 10.454,00&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+                <h3>
+                  {{
+                    analyticsFetch?.creatorData?.balance_available.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })
+                  }}&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon>
+                </h3>
               </v-col>
             </v-row>
           </v-card>
           <v-card class="rounded-xl mt-4" color="input_color" flat>
             <v-container class="ma-2">
               <h4>Vendas por dia</h4>
-              <p class="text-caption text-medium-emphasis">Meios de pagamentos mais utilizados.</p>
+              <p class="text-caption text-medium-emphasis">Veja seu progresso diário.</p>
+              <lineChart />
             </v-container>
           </v-card>
           <v-row>
@@ -58,7 +79,13 @@
                       Cartão
                     </v-col>
                     <v-col cols="6" class="text-right">
-                      <span class="ml-auto">60%</span>
+                      <span class="ml-auto"
+                        >{{
+                          ((analyticsFetch?.creditCardSubscriptions?.length || 0) /
+                            (analyticsFetch?.activeSubscriptions?.length || 1)) *
+                          100
+                        }}%</span
+                      >
                     </v-col>
                   </v-row>
 
@@ -69,7 +96,13 @@
                       Pix
                     </v-col>
                     <v-col cols="6" class="text-right">
-                      <span class="ml-auto">30%</span>
+                      <span class="ml-auto"
+                        >{{
+                          ((analyticsFetch?.pixSubscriptions?.length || 0) /
+                            (analyticsFetch?.activeSubscriptions?.length || 1)) *
+                          100
+                        }}%</span
+                      >
                     </v-col>
                   </v-row>
 
@@ -80,7 +113,7 @@
                       Cripto
                     </v-col>
                     <v-col cols="6" class="text-right">
-                      <span class="ml-auto">10%</span>
+                      <span class="ml-auto">0%</span>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -119,12 +152,37 @@
     <v-toolbar flat height="50" color="rgb(0,0,0,0)"></v-toolbar>
   </v-app>
 </template>
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+const cookie = useCookie("token");
+const token = cookie.value;
+const analyticsFetch = ref(null);
+
+const fetchData = async () => {
+  try {
+    const { data, error } = await useFetch("https://api.seduvibe.com/analytics", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    analyticsFetch.value = data._rawValue;
+    console.log(analyticsFetch._rawValue);
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+};
+
+fetchData();
+</script>
 <script>
+import lineChart from "../../components/creator/analytics/charts/linecharts.vue";
 import SideBar from "../../components/creator/analytics/SidebarView.vue";
 export default {
   components: {
     SideBar,
+    lineChart,
   },
 };
 </script>

@@ -40,13 +40,15 @@
   </VApp>
 </template>
 
-<script setup></script>
+<script setup>
+
+</script>
 
 <script>
-import headerCreator from "../../components/creator/public/navbarHeader.vue";
+import headerCreator from "./headerCreator.vue";
 import navbarView from "../../components/navbar";
-import Publicacoes from "../../components/post/postViewCreator.vue";
-import Galeria from "../../components/post/galleryView.vue";
+import Publicacoes from "../../components/post/post.vue";
+import Galeria from "../../components/post/gallery.vue";
 import Mimos from "../components/creator/public/mimos.vue";
 
 export default {

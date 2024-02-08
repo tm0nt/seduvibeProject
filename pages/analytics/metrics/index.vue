@@ -19,15 +19,27 @@
             <v-row class="ma-2" align="center" justify="center">
               <v-col cols="12" md="4" lg="4">
                 <p class="text-caption text-medium-emphasis">Quantidade de curtidas</p>
-                <h3>256&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+                <h3>
+                  {{ metricFetch?.item?.totalCurtidas }}&nbsp;<v-icon color="primary" size="26"
+                    >mdi-chevron-up</v-icon
+                  >
+                </h3>
               </v-col>
               <v-col cols="12" md="4" lg="4">
                 <p class="text-caption text-medium-emphasis">Quantidade de comentários</p>
-                <h3>125&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+                <h3>
+                  {{ metricFetch?.item?.totalComentarios }}&nbsp;<v-icon color="primary" size="26"
+                    >mdi-chevron-up</v-icon
+                  >
+                </h3>
               </v-col>
               <v-col cols="12" md="4" lg="4">
                 <p class="text-caption text-medium-emphasis">Visualizações de perfil</p>
-                <h3>455&nbsp;<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+                <h3>
+                  {{ metricFetch?.views }}&nbsp;<v-icon color="primary" size="26"
+                    >mdi-chevron-up</v-icon
+                  >
+                </h3>
               </v-col>
             </v-row>
           </v-card>
@@ -47,64 +59,52 @@
               </p>
             </v-container>
           </v-card>
-          <v-row>
-            <v-col>
-              <v-card class="rounded-xl mt-4" color="input_color" flat>
-                <v-container class="ma-2">
-                  <h4>Tipo de conteúdo</h4>
-                  <p class="text-caption mb-2">Conteúdos consumidos</p>
-
-                  <!-- Cartão -->
-                  <v-row align="center">
-                    <v-col cols="6"> Assinantes </v-col>
-                    <v-col cols="6" class="text-right">
-                      <span class="ml-auto">60%</span>
-                    </v-col>
-                  </v-row>
-
-                  <!-- Pix -->
-                  <v-row align="center">
-                    <v-col cols="6"> Afiliados </v-col>
-                    <v-col cols="6" class="text-right">
-                      <span class="ml-auto">30%</span>
-                    </v-col>
-                  </v-row>
-
-                  <!-- Cripto -->
-                  <v-row align="center">
-                    <v-col cols="6"> Exclusivo </v-col>
-                    <v-col cols="6" class="text-right">
-                      <span class="ml-auto">10%</span>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="6" lg="6">
-              <v-card class="rounded-xl mt-4" color="input_color" flat>
-                <v-container class="ma-2">
-                  <h4>Ranking</h4>
-                  <p class="text-caption text-medium-emphasis">Seus melhores</p>
-                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal"
-                    >Manoel Gomes</v-chip
-                  >
-                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal"
-                    >Manoel Gomes</v-chip
-                  >
-                  <v-chip class="mt-2" color="primary" size="large" prepend-icon="mdi-medal"
-                    >Manoel Gomes</v-chip
-                  >
-                </v-container>
-              </v-card>
-            </v-col>
-          </v-row>
         </v-container>
       </v-col>
     </v-container>
     <v-toolbar flat height="50" color="rgb(0,0,0,0)"></v-toolbar>
   </v-app>
 </template>
-<script setup></script>
+<script setup>
+const cookie = useCookie("token");
+const token = cookie.value;
+const metricFetch = ref({
+  item: null,
+  views: null,
+});
+
+const fetchMetric = async () => {
+  try {
+    const { data, error } = await useFetch("https://api.seduvibe.com/posts/metric", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    metricFetch.value.item = data._rawValue;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const fetchMetricView = async () => {
+  try {
+    const { data, error } = await useFetch("https://api.seduvibe.com/get_views_profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    metricFetch.value.views = data._rawValue.users[0].views;
+  } catch (error) {
+    console.error(error);
+  }
+};
+fetchMetricView();
+fetchMetric();
+</script>
 <script>
 import SideBar from "../../components/creator/analytics/SidebarView.vue";
 export default {
