@@ -20,25 +20,31 @@
               </p>
             </div>
 
-            <VForm @submit.prevent="submit" class="mt-2">
+            <VForm @submit.prevent="submit" class="mt-2" ref="loginValidade">
               <div class="mt-1">
                 <VTextField
                   placeholder="Email"
+                  label="Email"
                   v-model="user.email"
+                  :rules="[ruleRequired, ruleEmail]"
                   id="email"
                   name="email"
+                  prepend-inner-icon="mdi-email"
                   bg-color="input_color"
-                  color="white"
+                  color="primary"
                   type="email"
                   persistent-clear
                 />
               </div>
-              <div class="mt-n4">
+              <div>
                 <VTextField
                   v-model="user.password"
                   placeholder="Senha"
-                  color="white"
+                  label="Senha"
+                  color="primary"
                   bg-color="input_color"
+                  :rules="[ruleRequired]"
+                  prepend-inner-icon="mdi-password"
                   persistent-clear
                   :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   @click:append-inner="togglePasswordVisibility"
@@ -46,13 +52,7 @@
                   name="password"
                   :type="showPassword ? 'text' : 'password'"
                 />
-                <div class="text-center mt-n4">
-                  <NuxtLink to="/reset-password"
-                    ><VBtn class="text-capitalize" variant="text" color="primary"
-                      >Esqueci a senha</VBtn
-                    ></NuxtLink
-                  >
-                </div>
+
               </div>
               <div class="mt-3">
                 <VBtn type="submit" block min-height="40" class="text-capitalize" color="primary"
@@ -110,30 +110,27 @@
       </VCol>
       <advertising />
     </VRow>
+    <v-snackbar v-model="useAuthStore().snackbar.show" :color="useAuthStore().snackbar.color" top>
+        {{ useAuthStore().snackbar.text }}
+      </v-snackbar>
   </VContainer>
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/auth";
 import { ref } from "vue";
-definePageMeta({
-  middleware: "check-login",
-});
-const router = useRouter();
 
-const { authenticateUser } = useAuthStore();
-const { authenticated } = storeToRefs(useAuthStore());
 const user = ref({
   email: "",
   password: "",
 });
+
+const { ruleEmail, ruleRequired } = useFormRules();
 const showPassword = ref(false);
 
 const submit = async () => {
-  await authenticateUser(user.value);
-  if (authenticated) {
-    router.push("/profile");
+  if(loginValidade.value.isValid){
+    await useAuthStore().authenticateUser(user.value);
   }
 };
 
@@ -141,7 +138,6 @@ const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
 </script>
-
 <script>
 import advertising from "@/components/advertisingLogin.vue";
 

@@ -1,7 +1,7 @@
 // auth.js
 import { defineStore } from "pinia";
 
-export const useAuthStore = defineStore("auth", {
+export const useRegisterStore = defineStore("register", {
   state: () => ({
     token: null,
     loading: false,
@@ -14,27 +14,28 @@ export const useAuthStore = defineStore("auth", {
     },
   }),
   actions: {
-    async authenticateUser({ email, password }) {
+    async registerUser({user,name,email,password,creator}) {
       try {
-        const { data, error, loading } = await useFetch("https://api.seduvibe.com/login", {
+        const { data, error, loading } = await useFetch("https://api.seduvibe.com/register", {
           method: "post",
           headers: { "Content-Type": "application/json" },
           body: {
+            user,
+            name,
             email,
             password,
+            creator
           },
         });
         this.loading = loading;
         if (data.value) {
           this.showSnackbar(data.value.msg, "success");
-          const token = useCookie("token");
-          token.value = data?.value?.token;
-          console.log(data);
 
           setTimeout(() => {
-            navigateTo("/profile");
+            navigateTo("/login");
           }, 2000);
         } else if (error.value) {
+          console.log(error);
           console.log(error.value.data.msg);
           this.showSnackbar(error.value.data.msg, "error");
         }

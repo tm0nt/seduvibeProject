@@ -1,5 +1,6 @@
+<template></template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 
 const redirectUser = ref(null);
 

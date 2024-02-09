@@ -73,7 +73,7 @@ onMounted(() => {
 
 const selectTheme = (selectedTheme) => {
   theme.global.name.value = selectedTheme;
-  nuxtStorage.localStorage.setData("theme", selectedTheme);
+  nuxtStorage.localStorage.setData("theme", selectedTheme, "365", "d");
   dialogOpen.value = false;
 };
 </script>
