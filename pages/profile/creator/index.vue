@@ -22,7 +22,7 @@
                 min-height="40"
                 class="text-capitalize"
                 block
-                to="/analytics"
+                to="/profile/creator/analytics/"
                 variant="outlined"
                 color="primary"
               >
@@ -37,7 +37,6 @@
     </VContainer>
   </VApp>
 </template>
-
 <script>
 import UploadwithPost from "../../../components/post/UploadwithPost.vue";
 import headerCreator from "../../../components/creator/headerCreator";

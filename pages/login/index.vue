@@ -125,6 +125,8 @@ const user = ref({
   password: "",
 });
 
+const loginValidade = ref(null);
+
 const { ruleEmail, ruleRequired } = useFormRules();
 const showPassword = ref(false);
 
