@@ -11,7 +11,7 @@
                 Enviaremos um e-mail para você
               </p>
             </div>
-            <VForm @submit.prevent="submit" class="mt-7">
+            <VForm @submit.prevent="submit" ref="resetForm" class="mt-7">
               <div class="mt-1">
                 <VTextField
                   v-model="email"
@@ -21,6 +21,7 @@
                   persistent-clear
                   id="email"
                   name="email"
+                  :rules="[ruleEmail, ruleRequired]"
                   placeholder="Email"
                 />
               </div>
@@ -31,7 +32,7 @@
               </div>
             </VForm>
             <div class="mt-2">
-              <NuxtLink to="/" class="font-weight-bold text-primary"
+              <NuxtLink to="/login" class="font-weight-bold text-primary"
                 ><VBtn
                   class="text-capitalize"
                   variant="outlined"
@@ -47,13 +48,44 @@
       </VCol>
       <advertising />
     </VRow>
+    <VDialog persistent v-model="dialogSend" width="400">
+      <v-card class="rounded-xl elevation-6" prepend-icon="mdi-check" title="Enviamos um e-mail para você." subtitle="Olhe seu e-mail." color="background" flat>
+        <v-card-text> Abra sua caixa de entrada e siga os passos para mudar sua senha.</v-card-text>
+        <v-card-actions><v-btn variant="text" @click="dialogSend = false" color="primary">OK</v-btn></v-card-actions>
+      </v-card>
+    </VDialog>
   </VContainer>
 </template>
 
 <script setup>
-const email = ref("");
+const email = ref(null);
+const resetForm = ref(false);
+const { ruleEmail, ruleRequired } = useFormRules();
+const dialogSend = ref(false);
 
-const submit = async () => {};
+const submit = async () => {
+  if (resetForm.value.isValid){
+    await sendMail();
+    dialogSend.value = true;
+  }
+};
+
+const sendMail = async () => {
+  try {
+    const { data } = await useFetch("https://api.seduvibe.com/forgot_password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        method: "email",
+        email: email.value,
+      }),
+    });
+  } catch (error) {
+    console.error("Erro:", error);
+  }
+};
 </script>
 <script>
 import advertising from "@/components/advertisingLogin.vue";
