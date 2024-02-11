@@ -9,7 +9,7 @@
           format="webp"
           width="60"
         ></VImg>
-        <VCard color="input_color" class="elevation-0 rounded-xl mx-auto" width="400" flat>
+        <VCard color="background" class="elevation-8 rounded-xl mx-auto" width="400" flat>
           <VCard-text class="text-center">
             <VAvatar
               size="120"
