@@ -201,6 +201,10 @@
 import { useRegisterStore } from "~/store/register";
 import { ref } from "vue";
 
+definePageMeta({
+  middleware: ["auth"]
+});
+
 const password_one = ref("");
 const showPassword = ref(false);
 const showPasswordConfirm = ref(false);

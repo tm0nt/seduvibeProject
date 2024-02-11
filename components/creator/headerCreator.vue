@@ -286,8 +286,8 @@ const logout = () => {
     showSnackbar("Você saiu da sua conta!", "success");
     setTimeout(() => {
       cookie.value = null;
-      localStorage.clear();
-      navigateTo("/");
+      nuxtStorage.localStorage.clear();
+      navigateTo("/login");
     }, 2000);
   } catch (error) {
     console.error("Error during logout:", error);

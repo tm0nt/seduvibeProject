@@ -41,16 +41,12 @@
 import UploadwithPost from "../../../components/post/UploadwithPost.vue";
 import headerCreator from "../../../components/creator/headerCreator";
 import navbarView from "../../../components/navbar";
-import createPost from "../../../components/post/createPost.vue";
-import uploadView from "../../../components/post/uploadPost.vue";
 
 export default {
   components: {
     headerCreator,
     navbarView,
     UploadwithPost,
-    uploadView,
-    createPost,
   },
 };
 </script>

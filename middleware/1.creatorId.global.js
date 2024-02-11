@@ -17,17 +17,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
         const storeId = useIdStore();
         storeId.setCreatorId(creator);
         storeId.setId(id);
-      } else if(error.value) {
-        if (to.path != "/login") {
-          return navigateTo("/login");
-        }
       }
     } catch (error) {
       console.error("Error fetching creator value:", error);
-    }
-  } else {
-    if (to.path !== "/login") {
-      return navigateTo("/login");
     }
   }
 });

@@ -42,8 +42,8 @@
 
         <v-spacer></v-spacer>
 
-        <p class="text-caption text-medium-emphasis">{{ formatDate(post.createdAt) }}</p>
-        <v-btn variant="text" class="ma-4" @click="deleteDialog = true">
+        <p class="text-caption text-medium-emphasis mr-n6">{{ formatDate(post.createdAt) }}</p>
+        <v-btn variant="text" class="ma-4 mr-n2" @click="deleteDialog = true">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
         <v-dialog v-model="deleteDialog" width="600" persistent>
@@ -175,7 +175,16 @@
   </v-snackbar>
 </template>
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
+import { useIdStore } from "~/store/id";
+
+
+
+
+// Fetch creatorId
+const storeId = useIdStore();
+const id = storeId.id;
+
 
 const deleteDialogComment = ref(false);
 
@@ -227,7 +236,7 @@ const videoPosts = ref(0);
 
 // Share
 const sharePublication = (id) => {
-  navigator.clipboard.writeText(`https://seduvibe.com/@lais/post/${id}`);
+  navigator.clipboard.writeText(`https://seduvibe.com/post/${id}`);
   showSnackbar("Publicação copiada com sucesso!", "success");
 };
 
@@ -369,8 +378,8 @@ const fetchPosts = async () => {
 
 // Fetch like
 const isCurrentUserLiked = (likes) => {
-  return likes.some((like) => like.userId === 14);
+  return likes.some((like) => like.userId === id);
 };
 
-onMounted(fetchPosts);
+fetchPosts();
 </script>
