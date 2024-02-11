@@ -18,6 +18,7 @@
             <h2 class="mt-2">@L4rissa</h2>
             <p class="text-caption text-medium-emphasis mt-1">Olá meus amoreesss <33</p>
             <VSpacer></VSpacer>
+            <VChip color="primary" class="mt-1">R$ 50,00</VChip>
             <PaymentMethod />
           </VCard-text>
         </VCard>
