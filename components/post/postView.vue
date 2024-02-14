@@ -42,8 +42,8 @@
 
         <v-spacer></v-spacer>
 
-        <p class="text-caption text-medium-emphasis">{{ formatDate(post.createdAt) }}</p>
-        <v-btn variant="text" class="ma-4" @click="deleteDialog = true">
+        <p class="text-caption text-medium-emphasis mr-n1">{{ formatDate(post.createdAt) }}</p>
+        <v-btn v-if="post?.userId === idStore.id" variant="text" class="ma-4 mr-n4" @click="deleteDialog = true">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
         <v-dialog v-model="deleteDialog" width="600" persistent>
@@ -125,7 +125,7 @@
             <v-icon
               @click="deleteDialogComment = true"
               class="ml-auto"
-              v-if="comment?.length !== 0"
+              v-if="comment?.length !== 0 && idStore.id == comment?.commenter?.id"
               size="16"
               >mdi-delete</v-icon
             >
@@ -176,10 +176,11 @@
   <v-toolbar color="rgb(0,0,0,0)" height="100"></v-toolbar>
 </template>
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { useIdStore } from '~/store/id';
+import { ref, computed } from "vue";
 
 const deleteDialogComment = ref(false);
-
+const idStore = useIdStore();
 const snackbar = ref({
   show: false,
   message: "",
@@ -370,7 +371,7 @@ const fetchPosts = async () => {
 
 // Fetch like
 const isCurrentUserLiked = (likes) => {
-  return likes.some((like) => like.userId === 14);
+  return likes.some((like) => like.userId === idStore.id);
 };
 
 fetchPosts();

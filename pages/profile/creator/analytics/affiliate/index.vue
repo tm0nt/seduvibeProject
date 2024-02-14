@@ -82,6 +82,7 @@
             <v-container class="ma-2">
               <h4>Sua comissão</h4>
               <p class="text-caption text-medium-emphasis">Acompanhe o volume de suas comissões.</p>
+              <lineChart/>
             </v-container>
           </v-card>
           <v-row>
@@ -114,6 +115,7 @@
   </v-app>
 </template>
 <script setup>
+import lineChart from "../../../../../components/creator/analytics/charts/line.vue";
 const cookie = useCookie("token");
 const token = cookie.value;
 const affiliateFetch = ref(null);

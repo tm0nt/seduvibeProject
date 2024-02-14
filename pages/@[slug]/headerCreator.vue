@@ -6,7 +6,7 @@
   </VCard>
 
   <v-row align="start" no-gutters>
-    <v-col cols="4" class="mt-2">
+    <v-col cols="auto" class="mt-2">
       <v-btn fab color="primary" :href="social_media?.instagram?.url" variant="text">
         <v-icon size="26">mdi-instagram</v-icon>
       </v-btn>
@@ -17,7 +17,8 @@
         <v-icon size="26">mdi-twitter</v-icon>
       </v-btn>
     </v-col>
-    <v-col cols="4">
+    <v-spacer></v-spacer>
+    <v-col cols="auto">
       <div class="text-center mt-n15">
         <v-menu width="250" height="180">
           <template v-slot:activator="{ props }">
@@ -59,20 +60,18 @@
         </v-menu>
       </div>
     </v-col>
-    <v-col cols="1" class="text-caption mt-2">
-      <v-btn variant="text" color="primary" @click="toggleFavorite(profileFetch?.userData?.id)">
+    <v-spacer></v-spacer>
+
+    <v-col cols="auto" class="text-caption mt-2 ml-n2">
+      <v-btn fab variant="text" color="primary" @click="toggleFavorite(profileFetch?.userData?.id)">
         <v-icon size="26">
           {{ isFavorite ? "mdi-heart" : "mdi-heart-outline" }}
         </v-icon></v-btn
       >
-    </v-col>
-    <v-col cols="1" class="text-caption mt-2">
-      <v-btn variant="text" color="primary" :disabled="true"
+      <v-btn fab variant="text" class="ml-n4" color="primary" :disabled="true"
         ><v-icon size="26">mdi-chat</v-icon></v-btn
       >
-    </v-col>
-    <v-col cols="1" class="text-caption mt-2">
-      <v-btn variant="text" @click="donation.visible = true" color="primary"
+      <v-btn fab variant="text" class="ml-n4" @click="donation.visible = true" color="primary"
         ><v-icon size="26">mdi-gift</v-icon></v-btn
       >
     </v-col>

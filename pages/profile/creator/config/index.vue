@@ -14,7 +14,7 @@
               >
             </VCol>
             <VCol cols="6">
-              <NuxtLink to="/analytics">
+              <NuxtLink to="/profile/creator/analytics">
                 <VBtn
                   min-height="40"
                   class="text-capitalize"

@@ -55,11 +55,28 @@
     >
       {{ snackbar.message }}
     </v-snackbar>
-    <v-dialog v-model="DonationMetaDialog.visible" width="600" persistent>
-      <v-card class="rounded-xl elevation-6"  flat>
-        <v-card-title><v-icon @click="DonationMetaDialog.visible = false">mdi-close</v-icon></v-card-title>
-        <v-card-text class="text-center">Contribua com o objetivo: {{ DonationMetaDialog.item.name}}</v-card-text>
-        <PaymentMethod/>
+    <v-dialog v-model="DonationMetaDialog.visible" width="650" persistent>
+      <v-card class="rounded-xl elevation-6" flat>
+        <v-card-title
+          ><v-icon @click="DonationMetaDialog.visible = false">mdi-close</v-icon></v-card-title
+        >
+        <v-card-text class="text-center"
+          >Contribua com o objetivo: {{ DonationMetaDialog.item.name }}
+          <v-row align="center" justify="center" class="mt-2">
+            <v-col cols="6">
+              <v-text-field
+                placeholder="Valor"
+                prepend-inner-icon="mdi-coin"
+                label="Valor"
+                v-model="valueDonate"
+                type="number"
+                hide-spin-buttons
+                bg-color="input_color"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <PaymentMethod />
       </v-card>
     </v-dialog>
     <v-toolbar color="rgb(0,0,0,0)" height="100"></v-toolbar>
@@ -78,10 +95,20 @@ export default {
 
 <script setup>
 import { ref } from "vue";
+import { idPayment } from '~/store/payment';
+
 
 
 const cookie = useCookie("token");
 const token = cookie.value;
+
+
+const valueDonate = ref(null);
+const idPaymentStore = idPayment();
+
+watch(valueDonate, (newValue) => {
+  idPaymentStore.setAmount = newValue;
+});
 
 const route = useRoute();
 const user = ref(route.params.slug);
@@ -92,7 +119,7 @@ const snackbar = ref({
   color: "success",
   timeout: 4000,
 });
-const DonationMetaDialog  = ref({item: null, visible: false});
+const DonationMetaDialog = ref({ item: null, visible: false });
 const progress = ref(0);
 
 const isMetaCompleted = (metaItem) => {
@@ -122,7 +149,9 @@ const fetchData = async () => {
         },
       }
     );
-    filteredMetaList.value = metaData._rawValue.userData.userObjectives.filter(metaItem => !isMetaCompleted(metaItem));
+    filteredMetaList.value = metaData._rawValue.userData.userObjectives.filter(
+      (metaItem) => !isMetaCompleted(metaItem)
+    );
     console.log(filteredMetaList.value);
   } catch (error) {
     console.error("Erro durante a requisição:", error);

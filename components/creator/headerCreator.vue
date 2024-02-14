@@ -12,7 +12,7 @@
   </VCard>
 
   <v-row align="start" no-gutters>
-    <v-col cols="4" class="mt-2">
+    <v-col cols="auto" class="mt-2">
       <v-btn fab color="primary" :href="social_media.instagram" variant="text">
         <v-icon size="26">mdi-instagram</v-icon>
       </v-btn>
@@ -23,7 +23,8 @@
         <v-icon size="26">mdi-twitter</v-icon>
       </v-btn>
     </v-col>
-    <v-col cols="4">
+    <v-spacer></v-spacer>
+    <v-col cols="auto">
       <div class="text-center mt-n15">
         <v-menu width="250" height="250">
           <template v-slot:activator="{ props }">
@@ -85,9 +86,10 @@
         </v-menu>
       </div>
     </v-col>
-    <v-col cols="4" class="text-caption mt-2">
-      <v-chip small class="text-capitalize ml-4" size="large" color="primary"
-        ><v-icon color="primary" class="ma-1">mdi-heart</v-icon>265</v-chip
+    <v-spacer></v-spacer>
+    <v-col cols="auto" class="text-caption mt-2">
+      <v-chip small class="text-capitalize ml-4" color="primary"
+        ><v-icon color="primary" size="26" class="ma-1">mdi-heart</v-icon>265</v-chip
       >
       <!---   <v-btn variant="text" class="ml-n2" color="primary"
         ><v-icon size="26">mdi-heart-outline</v-icon></v-btn

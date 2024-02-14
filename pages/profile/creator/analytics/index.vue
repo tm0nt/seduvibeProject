@@ -61,7 +61,7 @@
           <v-card class="rounded-xl mt-4" color="input_color" flat>
             <v-container class="ma-2">
               <h4>Vendas por dia</h4>
-              <p class="text-caption text-medium-emphasis">Veja seu progresso diário.</p>
+              <p class="text-caption text-medium-emphasis">Veja seu progresso mensal.</p>
               <lineChart />
             </v-container>
           </v-card>
@@ -177,7 +177,7 @@ const fetchData = async () => {
 fetchData();
 </script>
 <script>
-import lineChart from "../../components/creator/analytics/charts/linecharts.vue";
+import lineChart from "../../components/creator/analytics/charts/bar.vue";
 import SideBar from "../../components/creator/analytics/SidebarView.vue";
 export default {
   components: {

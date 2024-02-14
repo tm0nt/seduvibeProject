@@ -29,13 +29,16 @@
               <v-row v-if="item === 'PIX'">
                 <v-col class="ma-4">
                   <v-text-field
-                    label="CPF"
-                    :disabled="true"
-                    :readonly="true"
+                    label="Valor"
+                    type="number"
+                    hide-spin-buttons
                     color="input_color"
+                    prepend-inner-icon="mdi-coin"
+                    v-model="pix.amount"
                     outlined
                   ></v-text-field>
-                  <v-btn color="primary" @click="submitForm" class="text-capitalize">Sacar</v-btn>
+                  <p class="text-caption mt-n2 text-medium-emphasis">Saques via pix são feitos para o cpf associado.</p>
+                  <v-btn color="primary" @click="withdrawRequest(pix.id, pix.amount)" class="text-capitalize mt-2">Sacar</v-btn>
                 </v-col>
               </v-row>
 
@@ -68,6 +71,15 @@
       </v-window>
     </v-container>
   </v-card>
+  <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      rounded="pill"
+      :timeout="snackbar.timeout"
+      top
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
 </template>
 <script>
 export default {
@@ -78,4 +90,48 @@ export default {
     };
   },
 };
+</script>
+<script setup>
+const snackbar = ref({
+  show: false,
+  message: "",
+  color: "success",
+  timeout: 4000,
+});
+const showSnackbar = (message, color) => {
+  snackbar.value = {
+    show: true,
+    message,
+    color,
+    timeout: 6000,
+  };
+};
+const pix = ref({
+  id: 1,
+  amount: null,
+});
+const cookie = useCookie("token");
+const token = cookie.value;
+
+const withdrawRequest = async (id, amount) => {
+  try {
+    const { data } = await useFetch("https://api.seduvibe.com/request_withdraw", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        method: id,
+        amount: amount,
+      }),
+    });
+    console.log(data.value);
+    showSnackbar("Seu saque foi pedido e vai ser processado!", "success");
+    pix.value.amount = null;
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+};
+
 </script>

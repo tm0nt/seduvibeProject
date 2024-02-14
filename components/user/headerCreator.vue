@@ -1,7 +1,7 @@
 <template>
   <VCard class="rounded-lg" flat height="150">
     <template v-slot:image>
-      <VImg eager cover position="center" :src="info.coverPicture"> </VImg>
+      <VImg eager cover position="center" src="https://i.imgur.com/7PZP0v0.jpeg"> </VImg>
     </template>
   </VCard>
 
@@ -34,7 +34,7 @@
                 </v-btn>
                 <v-divider class="my-3"></v-divider>
                 <v-btn
-                  @click="changeCreatorId"
+                  @click="toCreator = true"
                   rounded
                   append-icon="mdi-swap-horizontal"
                   class="text-capitalize"
@@ -81,6 +81,15 @@
     >
       {{ snackbar.message }}
     </v-snackbar>
+    <VDialog v-model="toCreator" width="600" persistent>
+      <v-card color="background" class="elevation-6 rounded-xl" flat title="Você deseja tornar-se criador(a)?" subtitle="Você não conseguirá se tornar um usuário novamente." prepend-icon="mdi-account-alert">
+        <v-card-actions>
+        <v-btn variant="text" color="primary" @click="changeCreatorId">SIM</v-btn>
+        <v-btn variant="text" color="primary" @click="toCreator = false;">NÃO</v-btn>
+      </v-card-actions>
+      </v-card>
+
+    </VDialog>
   </VRow>
 </template>
 <script setup>
@@ -88,7 +97,7 @@ import nuxtStorage from "nuxt-storage";
 import { ref } from "vue";
 import { useTheme } from "vuetify";
 const theme = useTheme();
-
+const toCreator = ref(false);
 const snackbar = ref({
   show: false,
   message: "",
@@ -104,6 +113,25 @@ const showSnackbar = (message, color) => {
     timeout: 4000,
   };
 };
+
+const changeCreatorId = async () =>{
+  try {
+    const { data, error } = await useFetch("https://api.seduvibe.com/updateCreator", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("Requisição realizada com sucesso:", fetchData);
+    if(to.path != "/profile/"){
+      return navigateTo("/profile");
+    }
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+};
+
 
 const cookie = useCookie("token");
 const token = cookie.value;

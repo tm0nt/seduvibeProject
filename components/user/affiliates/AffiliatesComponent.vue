@@ -67,6 +67,8 @@ import afiliacaoAtiva from "./tabs/afiliacaoativa.vue";
 import meafiliar from "./tabs/meafiliar.vue";
 import solicitacoes from "./tabs/solicitacoes.vue";
 import financeiro from "./tabs/financeiro.vue";
+import historico from "./tabs/historico.vue";
+
 
 export default {
   data: () => ({
@@ -75,6 +77,8 @@ export default {
       { text: "Solicitação de afiliação", icon: "mdi-file-document-plus", component: solicitacoes },
       { text: "Quero me afiliar", icon: "mdi-account-group", component: meafiliar },
       { text: "Financeiro", icon: "mdi-cash", component: financeiro },
+      { text: "Histórico", icon: "mdi-history", component: historico },
+
     ],
     selectedComponent: null,
   }),

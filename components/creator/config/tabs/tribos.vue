@@ -4,35 +4,75 @@
     <p class="text-caption text-medium-emphasis mt-n2">
       Adicione tribos para ajudar seu público-alvo a te encontrar
     </p>
-    <v-combobox
-      class="mt-5"
-      color="primary"
-      item-color="primary"
-      selected="primary"
-      chips
-      multiple
-      clearable
-      placeholder="Adicione tribos"
-      v-model="tribosMy"
-      rounded="xl"
-      variant="solo"
-      prepend-inner-icon="mdi-flag"
-      bg-color="input_color"
-      :items="tribosNames"
-      @update:modelValue="handleTribosChange"
-    ></v-combobox>
+    <v-row>
+      <v-col class="mt-5" v-if="availableTribos.length > 0">
+        <v-chip-group color="primary">
+          <v-chip v-for="tribos in availableTribos" :key="tribos.id" @click="addTribos(tribos.id)">
+            {{ tribos.name }}
+          </v-chip>
+        </v-chip-group>
+      </v-col>
+      <v-col v-else>
+        <p class="text-caption text-center mt-5">Você já possui todas as tribos</p>
+      </v-col>
+      <v-divider></v-divider>
+      
+      <v-col v-if="tribosMy.length > 0">
+        <p class="text-caption text-center">Suas tribos</p>
+        <v-chip color="primary" class="ma-2" v-for="tribos in tribosMy" :key="tribos.id">
+          {{ tribos.name }}
+          <template v-slot:append>
+            <v-icon class="ml-1" size="small" @click="removeTribos(tribos.id)">mdi-close</v-icon>
+          </template>
+        </v-chip>
+      </v-col>
+
+      <v-col v-else>
+        <p class="text-caption text-center">Você ainda não tem tribos selecionadas.</p>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
 
+
+
+const availableTribos = computed(() => {
+  return listTribos.value.filter(tribo => !tribosMy.value.some(myTribo => myTribo.id === tribo.id));
+});
 const cookie = useCookie("token");
 const token = cookie.value;
 const listTribos = ref([]);
 const tribosMy = ref([]);
 
 onMounted(async () => {
+  await listTribosAvaliables();
+  await listMyTribes();
+});
+
+const addTribos = async (addedTribosIds) => {
+  try {
+    const { data, error } = await useFetch("https://api.seduvibe.com/choose_tribos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ tribeIds: [addedTribosIds] }),
+    });
+    listMyTribes();
+    console.log("Resposta da requisição:", data);
+    console.log("Erro da requisição:", error);
+
+    console.log("Tribos adicionadas com sucesso!");
+  } catch (error) {
+    console.error("Erro ao adicionar tribos:", error);
+  }
+};
+
+const listTribosAvaliables = async () => {
   try {
     const { data: fetchData } = await useFetch("https://api.seduvibe.com/list_tribos", {
       method: "GET",
@@ -40,60 +80,43 @@ onMounted(async () => {
         "Content-Type": "application/json",
       },
     });
+
     listTribos.value = fetchData?._rawValue?.tribos || [];
-    console.log(fetchData);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao obter tribos:", error);
   }
-});
+};
+
+const listMyTribes = async () => {
+  try {
+    const { data } = await useFetch("https://api.seduvibe.com/list_user_tribos/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    });
+
+    tribosMy.value = data.value.tribos;
+
+    console.log("Tribos do usuário:", tribosMy.value);
+  } catch (error) {
+    console.error("Erro ao obter tribos:", error);
+  }
+};
 
 const tribosNames = computed(() => listTribos.value.map((tribo) => tribo.name));
 
-const handleTribosChange = async () => {
-  const addedTribos = tribosMy.value.filter(
-    (tribo) => !listTribos.value.find((t) => t.name === tribo)
-  );
-  const removedTribos = listTribos.value
-    .filter((tribo) => !tribosMy.value.includes(tribo.name))
-    .map((tribo) => tribo.id);
-
-  if (addedTribos.length > 0) {
-    await addTribos(addedTribos);
-  }
-
-  if (removedTribos.length > 0) {
-    await removeTribos(removedTribos);
-  }
-};
-
-const addTribos = async (addedTribos) => {
+const removeTribos = async (triboId) => {
   try {
-    await useFetch("https://api.seduvibe.com/choose_tribos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ tribeIds: addedTribos.map((tribo) => tribo.id) }),
-    });
-    console.log("Tribos adicionadas com sucesso!");
-  } catch (error) {
-    console.error("Erro ao adicionar tribos:", error);
-  }
-};
 
-const removeTribos = async (removedTribos) => {
-  try {
-    await Promise.all(
-      removedTribos.map(async (triboId) => {
-        await useFetch(`https://api.seduvibe.com/delete_user_tribos/${triboId}`, {
+     const {data} = await useFetch(`https://api.seduvibe.com/delete_user_tribos/${triboId}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
-      })
-    );
+        })
+    listMyTribes();
     console.log("Tribos removidas com sucesso!");
   } catch (error) {
     console.error("Erro ao remover tribos:", error);

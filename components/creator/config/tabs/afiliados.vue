@@ -49,7 +49,7 @@ Copy code
         </v-col>
         <v-col cols="6">
           <v-btn
-            to="/analytics/affiliate"
+            to="/profile/creator/analytics/affiliate"
             color="primary"
             class="text-capitalize"
             variant="outlined"
@@ -155,7 +155,7 @@ const setAffiliateData = async () => {
     console.error("Error saving data:", error);
   }
 };
-onMounted(async () => {
+const fetchData = async () => {
   try {
     const { data, error } = await useFetch(
       "https://api.seduvibe.com/afiliates/affiliate-creator-data",
@@ -167,13 +167,15 @@ onMounted(async () => {
         },
       }
     );
-
-    valorAssinatura.value = formatarMoeda(data._rawValue.productValue);
+      console.log(data);
+    valorAssinatura.value = (data._rawValue.productValue);
     porcentagemComissao.value = data._rawValue.commission;
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
-});
+};
+
+fetchData();
 
 const formatarMoeda = (valor) => {
   return valor.toLocaleString("pt-BR", {

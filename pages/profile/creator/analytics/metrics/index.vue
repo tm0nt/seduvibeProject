@@ -49,6 +49,7 @@
               <p class="text-caption text-medium-emphasis">
                 Veja sua progressão com seus assinantes
               </p>
+              <lineChart/>
             </v-container>
           </v-card>
           <v-card class="rounded-xl mt-4" color="input_color" flat>
@@ -57,6 +58,7 @@
               <p class="text-caption text-medium-emphasis">
                 Acompanhe a progressão do seu faturamento
               </p>
+              <areaChart/>
             </v-container>
           </v-card>
         </v-container>
@@ -66,6 +68,9 @@
   </v-app>
 </template>
 <script setup>
+import lineChart from "../../../../../components/creator/analytics/charts/line.vue";
+import areaChart from "../../../../../components/creator/analytics/charts/area.vue";
+
 const cookie = useCookie("token");
 const token = cookie.value;
 const metricFetch = ref({

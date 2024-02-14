@@ -210,6 +210,10 @@
 </template>
 <script setup>
 import { onMounted, ref, computed } from "vue";
+import { idPayment } from '~/store/payment';
+
+
+const idPaymentStore = idPayment();
 
 const payment = ref([]);
 const selectedFilter = ref("mensal");
@@ -249,6 +253,9 @@ const paymentInfo = ref({
   title: "",
   subtitle: "",
 });
+
+const selectedPrice = ref("");
+
 const onClick = () => {
   loading.value = true;
   setTimeout(() => {
@@ -301,6 +308,12 @@ onMounted(async () => {
 });
 const selectPlan = (plan) => {
   selectedPlan.value = plan;
+  selectedPrice.value =
+    selectedFilter.value === "mensal"
+      ? plan.priceMensal.replace("R$ ", "")
+      : plan.priceAnual.replace("R$ ", "");
+
+  selectedPrice.value = selectedPrice.value.replace(",", ".");
 
   paymentInfo.value = {
     title: `Plano ${plan.name}`,
@@ -308,6 +321,7 @@ const selectPlan = (plan) => {
     duration: `${selectedFilter.value}`,
   };
   e1.value = 1;
+  idPaymentStore.setAmount = selectedPrice.value;
 };
 </script>
 <script>

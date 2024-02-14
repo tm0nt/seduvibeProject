@@ -191,8 +191,13 @@ const fetchMetaData = async () => {
       },
     });
 
-    metaList.value = metaData._rawValue.objectives.reverse();
-  } catch (error) {
+    if (selectedFilter.value === "all") {
+      metaList.value = metaData._rawValue.objectives.reverse();
+    } else {
+      metaList.value = metaData._rawValue.objectives.filter(metaItem => {
+        return isMetaCompleted(metaItem) === (selectedFilter.value === "completed");
+      }).reverse();
+    }  } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
 };
