@@ -62,7 +62,9 @@
             <v-container class="ma-2">
               <h4>Vendas por dia</h4>
               <p class="text-caption text-medium-emphasis">Veja seu progresso mensal.</p>
-              <lineChart />
+              <ClientOnly>
+                <lineChart />
+              </ClientOnly>
             </v-container>
           </v-card>
           <v-row>

@@ -49,7 +49,9 @@
               <p class="text-caption text-medium-emphasis">
                 Veja sua progressão com seus assinantes
               </p>
-              <lineChart/>
+              <ClientOnly>
+                <lineChart/>
+              </ClientOnly>
             </v-container>
           </v-card>
           <v-card class="rounded-xl mt-4" color="input_color" flat>

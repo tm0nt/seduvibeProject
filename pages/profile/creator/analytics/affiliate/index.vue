@@ -82,7 +82,9 @@
             <v-container class="ma-2">
               <h4>Sua comissão</h4>
               <p class="text-caption text-medium-emphasis">Acompanhe o volume de suas comissões.</p>
-              <lineChart/>
+                <ClientOnly>
+                  <lineChart/>
+                </ClientOnly>
             </v-container>
           </v-card>
           <v-row>
