@@ -1,8 +1,6 @@
 <template>
   <div>
-    <NuxtLayout>
       <NuxtPage />
-    </NuxtLayout>
     <VDialog
       persistent
       aria-labelledby="Mudança de tema"

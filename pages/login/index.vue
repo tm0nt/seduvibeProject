@@ -64,11 +64,9 @@
                 <VDivider class="border-opacity-75" color="grey" length="10"></VDivider>
               </div>
               <div class="mt-2">
-                <NuxtLink to="/register">
-                  <VBtn block min-height="40" class="text-capitalize" variant="outlined" color="primary"
+                  <VBtn to="/register" block min-height="40" class="text-capitalize" variant="outlined" color="primary"
                     >Crie sua conta</VBtn
                   >
-                </NuxtLink>
               </div>
             </VForm>
           </VCol>

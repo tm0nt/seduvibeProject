@@ -66,16 +66,16 @@
               </div>
             </VForm>
             <div class="mt-2">
-              <NuxtLink to="/login" class="font-weight-bold text-primary"
-                ><VBtn
+                <VBtn
                   class="text-capitalize"
                   variant="outlined"
+                  to="/login"
                   color="primary"
                   block
                   min-height="40"
                   >Eu tenho conta</VBtn
-                ></NuxtLink
-              >
+                >
+            
             </div>
           </VCol>
         </VRow>
@@ -200,10 +200,6 @@
 <script setup>
 import { useRegisterStore } from "~/store/register";
 import { ref } from "vue";
-
-definePageMeta({
-  middleware: ["auth"]
-});
 
 const password_one = ref("");
 const showPassword = ref(false);
