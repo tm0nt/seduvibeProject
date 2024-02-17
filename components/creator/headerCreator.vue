@@ -13,13 +13,13 @@
 
   <v-row align="start" no-gutters>
     <v-col cols="auto" class="mt-2">
-      <v-btn fab color="primary" :href="social_media.instagram" variant="text">
+      <v-btn fab color="primary" v-if="social_media.instagram !== null" :href="social_media.instagram" variant="text">
         <v-icon size="26">mdi-instagram</v-icon>
       </v-btn>
-      <v-btn fab color="primary" :href="social_media.telegram" class="ml-n4" variant="text">
+      <v-btn fab color="primary" v-if="social_media.telegram !== null"  :href="social_media.telegram" class="ml-n4" variant="text">
         <v-icon size="26">mdi-send-circle</v-icon>
       </v-btn>
-      <v-btn fab color="primary" :href="social_media.twitter" class="ml-n4" variant="text">
+      <v-btn fab color="primary" :href="social_media.twitter" v-if="social_media.twitter !== null"  class="ml-n4" variant="text">
         <v-icon size="26">mdi-twitter</v-icon>
       </v-btn>
     </v-col>
@@ -167,7 +167,7 @@
           chips
           prepend-inner-icon="mdi-camera"
         ></v-file-input>
-        <VBtn class="text-capitalize" @click="createItem()" block color="primary" min-height="40"
+        <VBtn class="text-capitalize" @click="handleUploadProfile" block color="primary" min-height="40"
           >Alterar</VBtn
         >
       </v-form>
@@ -316,18 +316,6 @@ const changeDescription = async () => {
   }
 };
 
-async function createItem() {
-  const formData = new FormData();
-  formData.append("profilePicture", PicturesUser.value.profile);
-  await fetch("https//api.seduvibe.com/uploadPicture", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    method: "POST",
-    body: formData,
-  });
-}
-
 const handleUploadCover = async () => {
   const filePath = "./image.jpg";
 
@@ -344,10 +332,10 @@ const handleUploadCover = async () => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await fetch("https://api.seduvibe.com/uploadCover", options);
+    const {data, error} = await useFetch("https://api.seduvibe.com/uploadCover", options);
     delete options.headers["Content-Type"];
-    const data = await response.json();
     console.log("Resposta do servidor:", data);
+    console.log("Resposta do servidor:", error);
 
     if (response.ok) {
       console.log("Imagem enviada com sucesso!");
@@ -362,18 +350,19 @@ const handleUploadCover = async () => {
 const handleUploadProfile = async () => {
   if (PicturesUser.value.profile) {
     const formData = new FormData();
-    formData.append("profilePicture", PicturesUser.value.profile);
-    console.log(PicturesUser.value.profile);
+    formData.append("profilePicture", PicturesUser.profile);
+    console.log(formData);
 
     try {
-      await useFetch("https://api.seduvibe.com/uploadPicture", {
+      const {data, error} = await useFetch("https://api.seduvibe.com/uploadPicture", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
-
+      console.log(data)
+      console.log(error)
       showSnackbar("Sua capa foi atualizada!", "success");
       fetchDataFromAPI();
       changeInfoData.value.profile = false;

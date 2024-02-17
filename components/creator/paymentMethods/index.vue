@@ -181,9 +181,8 @@ const makePaymentPix = async () => {
       amount: parseFloat(amountInCents),
     };
 
-    console.log("Request Body:", requestBody);
 
-    const { data, error } = useFetch("http://127.0.0.1:4567/paymentProcess/pix", {
+    const { data, error } = useFetch("https://payment.seduvibe.cloud/paymentProcess/pix", {
       method: "POST",
       body: JSON.stringify(requestBody),
     });
