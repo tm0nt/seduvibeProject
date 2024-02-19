@@ -13,13 +13,33 @@
 
   <v-row align="start" no-gutters>
     <v-col cols="auto" class="mt-2">
-      <v-btn fab color="primary" v-if="social_media.instagram !== null" :href="social_media.instagram" variant="text">
+      <v-btn
+        fab
+        color="primary"
+        :disabled="fetchData?._rawValue?.social_media[0]?.instagram === null || ''"
+        :href="social_media.instagram"
+        variant="text"
+      >
         <v-icon size="26">mdi-instagram</v-icon>
       </v-btn>
-      <v-btn fab color="primary" v-if="social_media.telegram !== null"  :href="social_media.telegram" class="ml-n4" variant="text">
+      <v-btn
+        fab
+        color="primary"
+        :disabled="fetchData?._rawValue?.social_media[0]?.instagram === null || ''"
+        :href="social_media.telegram"
+        class="ml-n4"
+        variant="text"
+      >
         <v-icon size="26">mdi-send-circle</v-icon>
       </v-btn>
-      <v-btn fab color="primary" :href="social_media.twitter" v-if="social_media.twitter !== null"  class="ml-n4" variant="text">
+      <v-btn
+        fab
+        color="primary"
+        :href="social_media.twitter"
+        :disabled="fetchData?._rawValue?.social_media[0]?.twitter === null || ''"
+        class="ml-n4"
+        variant="text"
+      >
         <v-icon size="26">mdi-twitter</v-icon>
       </v-btn>
     </v-col>
@@ -29,8 +49,8 @@
         <v-menu width="250" height="250">
           <template v-slot:activator="{ props }">
             <VAvatar
-              style="border: 4px solid background"
-              size="130"
+              style="border: 3px solid background"
+              size="120"
               v-bind="props"
               :image="info.profilePicture"
             ></VAvatar>
@@ -118,49 +138,43 @@
   </VDialog>
 
   <VDialog persistent v-model="changeInfoData.cover" width="500">
-  <VCard color="background" title="Alterar sua capa" class="rounded-xl" flat>
-    <template v-slot:prepend>
-      <v-icon @click="changeInfoData.cover = false">mdi-close</v-icon>
-    </template>
-    <v-form class="ma-4">
-      <v-file-input
-  show-size
-  bg-color="input_color"
-  label="Capa"
-  placeholder="Envie sua capa"
-  rounded="xl"
-  counter
-  variant="solo"
-  :prepend-icon="false"
-  chips
-  prepend-inner-icon="mdi-camera"
-  @change="handleUploadCover"
-></v-file-input>
+    <VCard color="background" title="Alterar sua capa" class="rounded-xl" flat>
+      <template v-slot:prepend>
+        <v-icon @click="changeInfoData.cover = false">mdi-close</v-icon>
+      </template>
+      <v-form class="ma-4" @submit.prevent="handleFileSubmitCover">
+        <v-file-input
+          show-size
+          bg-color="input_color"
+        label="Capa"
+          placeholder="Envie sua capa"
+          rounded="xl"
+          counter
+          variant="solo"
+          :prepend-icon="false"
+          chips
+          prepend-inner-icon="mdi-camera"
+          @change="handleUploadCover"
+        ></v-file-input>
 
-      <VBtn
-        class="text-capitalize"
-        block
-        color="primary"
-        @click="handleUploadCover"
-        min-height="40"
-      >Alterar</VBtn>
-    </v-form>
-  </VCard>
-</VDialog>
-
+        <VBtn type="submit" class="text-capitalize" block color="primary" min-height="40">Alterar</VBtn>
+      </v-form>
+    </VCard>
+  </VDialog>
 
   <VDialog persistent v-model="changeInfoData.profile" width="500">
     <VCard color="background" title="Alterar seu perfil" class="rounded-xl" flat>
       <template v-slot:prepend>
         <v-icon @click="changeInfoData.profile = false">mdi-close</v-icon>
       </template>
-      <v-form class="ma-4">
+      <v-form class="ma-4" @submit.prevent="handleFileSubmitPicture">
         <v-file-input
           show-size
           label="Perfil"
           placeholder="Envie sua foto de perfil"
           bg-color="input_color"
           rounded="xl"
+          @change="handleUploadPicture"
           v-model="PicturesUser.profile"
           counter
           variant="solo"
@@ -168,7 +182,12 @@
           chips
           prepend-inner-icon="mdi-camera"
         ></v-file-input>
-        <VBtn class="text-capitalize" @click="handleUploadProfile" block color="primary" min-height="40"
+        <VBtn
+          class="text-capitalize"
+          type="submit"
+          block
+          color="primary"
+          min-height="40"
           >Alterar</VBtn
         >
       </v-form>
@@ -207,7 +226,7 @@
           {{ info.nome }}<v-icon size="25" class="ma-1" color="primary">mdi-check-decagram</v-icon>
         </h2>
         <p class="text-center mt-n2 text-medium-emphasis text-caption">
-          {{ info.bio
+          {{ info.bio || "Adicione uma descrição"
           }}<v-icon class="ma-1" @click="changeInfoData.bio = true"
             >mdi-dots-horizontal-circle</v-icon
           >
@@ -287,9 +306,9 @@ const toggleTheme = () => {
 const coverPictureUrl = ref(info.coverPicture);
 
 const removeCoverPicture = () => {
-    PicturesUser.cover = null;
-    coverPictureUrl.value = null;
-  };
+  PicturesUser.cover = null;
+  coverPictureUrl.value = null;
+};
 
 const logout = () => {
   try {
@@ -324,62 +343,77 @@ const changeDescription = async () => {
   }
 };
 
-const handleUploadCover = async (event) => {
-  const input = event.target;
-  if (input.files && input.files[0]) {
-    PicturesUser.cover = input.files[0];
-    const formData = new FormData();
-    formData.append("coverPicture", PicturesUser.cover);
+const filesPicture = ref(null);
 
-    try {
-      const options = {
+
+function handleUploadCover  (event) {
+   files.value = event.target.files;
+   console.log(files.value)
+}
+
+
+
+function handleUploadPicture  (event) {
+   filesPicture.value = event.target.files;
+   console.log(filesPicture.value)
+}
+
+
+async function handleFileSubmitCover () {
+  const fd = new FormData()
+  if(files.value){
+    Array.from(files.value).forEach((file) =>{
+      fd.append("profileCover", file)
+    })
+  } 
+  const options = {
         method: "POST",
-        body: formData,
+        body: fd,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      const { data, error } = await useFetch("https://api.seduvibe.com/uploadCover", options);
+      const {data, error} = await useFetch("https://api.seduvibe.com/uploadCover", options);
 
       if (data.value) {
-        console.log("Imagem enviada com sucesso!");
+        changeInfoData.value.cover = false
+        fetchDataFromAPI();
+        showSnackbar("Você alterou sua capa com sucesso!", "success");
       } else {
         console.error("Erro ao enviar imagem:", error);
       }
-    } catch (error) {
-      console.error("Erro durante a requisição:", error);
-    }
-  }
 };
 
-const handleUploadProfile = async (event) => {
-  const input = event.target;
-  if (input.files && input.files[0]) {
-    PicturesUser.profile = input.files[0];
-    const formData = new FormData();
-    formData.append("profilePicture", PicturesUser.profile);
 
-    try {
-      const { data, error } = await useFetch("https://api.seduvibe.com/uploadPicture", {
+
+
+async function handleFileSubmitPicture() {
+  const fd = new FormData()
+  if(filesPicture.value){
+    Array.from(filesPicture.value).forEach((file) =>{
+      fd.append("profilePicture", file)
+    })
+  } 
+  const options = {
         method: "POST",
+        body: fd,
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: formData,
-      });
+      };
+      const {data, error} = await useFetch("https://api.seduvibe.com/uploadPicture", options);
 
       if (data.value) {
-        showSnackbar("Sua capa foi atualizada!", "success");
+        changeInfoData.value.profile = false
         fetchDataFromAPI();
-        changeInfoData.value.profile = false;
+        showSnackbar("Você alterou sua foto de perfil com sucesso!", "success");
       } else {
-        console.error("Erro ao fazer upload:", error);
+        console.error("Erro ao enviar imagem:", error);
       }
-    } catch (error) {
-      console.error("Erro durante a requisição:", error);
-    }
-  }
 };
+
+
+
 
 
 const copyToClipboard = () => {

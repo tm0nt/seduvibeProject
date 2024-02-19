@@ -190,7 +190,7 @@ const makePaymentPix = async () => {
     if (data.value) {
       watchEffect(() => {
         idPaymentStore.setDataReceived = data.value;
-        console.log("WEBHOOK"+ idPaymentStore.setFetchPayment)
+        console.log(idPaymentStore.setFetchPayment)
       });
       payPixDialog.value = true;
     }
