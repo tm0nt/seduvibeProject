@@ -149,6 +149,7 @@
         label="Capa"
           placeholder="Envie sua capa"
           rounded="xl"
+          accept="image/*"
           counter
           variant="solo"
           :prepend-icon="false"
@@ -174,6 +175,7 @@
           placeholder="Envie sua foto de perfil"
           bg-color="input_color"
           rounded="xl"
+          accept="image/*"
           @change="handleUploadPicture"
           v-model="PicturesUser.profile"
           counter
@@ -344,6 +346,7 @@ const changeDescription = async () => {
 };
 
 const filesPicture = ref(null);
+const files = ref(null);
 
 
 function handleUploadCover  (event) {

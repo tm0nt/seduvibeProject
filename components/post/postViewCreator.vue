@@ -1,6 +1,7 @@
 <template>
   <v-row align="center" justify="center">
-    <v-chip-group
+    <v-col cols="12" class="mx-auto d-flex align-center justify-center">
+      <v-chip-group
       selected-class="primary"
       color="primary"
       mandatory
@@ -23,12 +24,19 @@
         <v-icon append>mdi-video</v-icon>
       </v-chip>
     </v-chip-group>
+    </v-col>
+    <v-row>
+      <v-col  cols="12" class="mt-2">
+      <p v-if="filteredPosts.length === 0" class="text-center text-caption text-medium-emphasis">Nenhum publicação encontrada</p>
+      </v-col>
+    </v-row>
     <v-card
       v-for="post in filteredPosts"
       class="rounded-xl elevation-4 mt-4"
       width="600"
       color="postBackground"
     >
+    
       <v-card-title class="d-flex align-center">
         <v-avatar size="50">
           <v-img cover :src="post?.userData?.profilePicture"></v-img>
