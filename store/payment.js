@@ -8,6 +8,7 @@ export const idPayment = defineStore("idPayment", {
     email: null,
     name: null,
     dataReceived: null,
+    paymentLatest: null,
   }),
   actions: {
     setCpf(cpf) {
@@ -24,6 +25,9 @@ export const idPayment = defineStore("idPayment", {
     },
     setEmail(email) {
       this.email = email;
+    },
+    setFetchPayment(payment){
+      this.paymentLatest = payment;
     },
     setDataReceived(dataReceived) {
       this.dataReceived = dataReceived;

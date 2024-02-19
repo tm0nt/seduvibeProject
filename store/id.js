@@ -6,6 +6,7 @@ export const useIdStore = defineStore('id', {
     id: '',
   }),
   actions: {
+
     setId(id) {
       this.id = id;
     },
