@@ -118,35 +118,36 @@
   </VDialog>
 
   <VDialog persistent v-model="changeInfoData.cover" width="500">
-    <VCard color="background" title="Alterar sua capa" class="rounded-xl" flat>
-      <template v-slot:prepend>
-        <v-icon @click="changeInfoData.cover = false">mdi-close</v-icon>
-      </template>
-      <v-form class="ma-4">
-        <v-file-input
-          show-size
-          bg-color="input_color"
-          label="Capa"
-          placeholder="Envie sua capa"
-          rounded="xl"
-          counter
-          v-model="PicturesUser.cover"
-          variant="solo"
-          :prepend-icon="false"
-          chips
-          prepend-inner-icon="mdi-camera"
-        ></v-file-input>
-        <VBtn
-          class="text-capitalize"
-          block
-          color="primary"
-          @click="handleUploadCover"
-          min-height="40"
-          >Alterar</VBtn
-        >
-      </v-form>
-    </VCard>
-  </VDialog>
+  <VCard color="background" title="Alterar sua capa" class="rounded-xl" flat>
+    <template v-slot:prepend>
+      <v-icon @click="changeInfoData.cover = false">mdi-close</v-icon>
+    </template>
+    <v-form class="ma-4">
+      <v-file-input
+  show-size
+  bg-color="input_color"
+  label="Capa"
+  placeholder="Envie sua capa"
+  rounded="xl"
+  counter
+  variant="solo"
+  :prepend-icon="false"
+  chips
+  prepend-inner-icon="mdi-camera"
+  @change="handleUploadCover"
+></v-file-input>
+
+      <VBtn
+        class="text-capitalize"
+        block
+        color="primary"
+        @click="handleUploadCover"
+        min-height="40"
+      >Alterar</VBtn>
+    </v-form>
+  </VCard>
+</VDialog>
+
 
   <VDialog persistent v-model="changeInfoData.profile" width="500">
     <VCard color="background" title="Alterar seu perfil" class="rounded-xl" flat>
@@ -283,6 +284,13 @@ const toggleTheme = () => {
   }
 };
 
+const coverPictureUrl = ref(info.coverPicture);
+
+const removeCoverPicture = () => {
+    PicturesUser.cover = null;
+    coverPictureUrl.value = null;
+  };
+
 const logout = () => {
   try {
     showSnackbar("Você saiu da sua conta!", "success");
@@ -316,61 +324,63 @@ const changeDescription = async () => {
   }
 };
 
-const handleUploadCover = async () => {
-  const filePath = "./image.jpg";
+const handleUploadCover = async (event) => {
+  const input = event.target;
+  if (input.files && input.files[0]) {
+    PicturesUser.cover = input.files[0];
+    const formData = new FormData();
+    formData.append("coverPicture", PicturesUser.cover);
 
-  const formData = new FormData();
-  formData.append("profileCover", filePath);
-  console.log(formData.has("profileCover"));
+    try {
+      const options = {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data, error } = await useFetch("https://api.seduvibe.com/uploadCover", options);
 
-  try {
-    console.log(formData);
-    const options = {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const {data, error} = await useFetch("https://api.seduvibe.com/uploadCover", options);
-    delete options.headers["Content-Type"];
-    console.log("Resposta do servidor:", data);
-    console.log("Resposta do servidor:", error);
-
-    if (response.ok) {
-      console.log("Imagem enviada com sucesso!");
-    } else {
-      console.error("Erro ao enviar imagem:", data.error);
+      if (data.value) {
+        console.log("Imagem enviada com sucesso!");
+      } else {
+        console.error("Erro ao enviar imagem:", error);
+      }
+    } catch (error) {
+      console.error("Erro durante a requisição:", error);
     }
-  } catch (error) {
-    console.error("Erro durante a requisição:", error);
   }
 };
 
-const handleUploadProfile = async () => {
-  if (PicturesUser.value.profile) {
+const handleUploadProfile = async (event) => {
+  const input = event.target;
+  if (input.files && input.files[0]) {
+    PicturesUser.profile = input.files[0];
     const formData = new FormData();
     formData.append("profilePicture", PicturesUser.profile);
-    console.log(formData);
 
     try {
-      const {data, error} = await useFetch("https://api.seduvibe.com/uploadPicture", {
+      const { data, error } = await useFetch("https://api.seduvibe.com/uploadPicture", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
-      console.log(data)
-      console.log(error)
-      showSnackbar("Sua capa foi atualizada!", "success");
-      fetchDataFromAPI();
-      changeInfoData.value.profile = false;
+
+      if (data.value) {
+        showSnackbar("Sua capa foi atualizada!", "success");
+        fetchDataFromAPI();
+        changeInfoData.value.profile = false;
+      } else {
+        console.error("Erro ao fazer upload:", error);
+      }
     } catch (error) {
-      console.error("Erro ao fazer upload:", error);
+      console.error("Erro durante a requisição:", error);
     }
   }
 };
+
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(shareProfile.value.url);

@@ -66,7 +66,9 @@
               <v-data-table
                 :loading="loading"
                 class="rounded-xl"
-                :items="items"
+                :headers="headers"
+                :items="historyTable"
+                no-data-text="Nenhum pagamento realizado"
                 items-per-page-text="Pagamento por página"
               >
                 <template v-slot:loading>
@@ -210,7 +212,10 @@
 </template>
 <script setup>
 import { onMounted, ref, computed } from "vue";
-import { idPayment } from '~/store/payment';
+import { idPayment } from "~/store/payment";
+const cookie = useCookie("token");
+const token = cookie.value;
+
 
 
 const idPaymentStore = idPayment();
@@ -249,6 +254,14 @@ const plans = ref([
   },
 ]);
 
+const headers = [
+  {
+    title: "Identificador",
+    key: "id",
+  },
+];
+
+
 const paymentInfo = ref({
   title: "",
   subtitle: "",
@@ -284,6 +297,24 @@ const fetchData = async () => {
   }
 };
 
+const historyTable = ref(null);
+
+const historyPayment = async () => {
+  try {
+    const { data, error } = useFetch("https://api.seduvibe.com/subscription/list_all_subscriptions_creator", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(data.value);
+    historyTable.value = data.value
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+historyPayment();
+
 const getSubscriptionTitle = (data) => {
   if (data.length > 0) {
     const name = data[0].subscriptionData.name.split("-")[0].trim();
@@ -291,6 +322,8 @@ const getSubscriptionTitle = (data) => {
   }
   return "";
 };
+
+
 
 const e1 = ref(0);
 
