@@ -207,7 +207,7 @@
           {{ info.nome }}<v-icon size="25" class="ma-1" color="primary">mdi-check-decagram</v-icon>
         </h2>
         <p class="text-center mt-n2 text-medium-emphasis text-caption">
-          {{ info.bio || "Adicione uma descrição..."
+          {{ info.bio
           }}<v-icon class="ma-1" @click="changeInfoData.bio = true"
             >mdi-dots-horizontal-circle</v-icon
           >

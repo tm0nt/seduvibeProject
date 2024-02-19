@@ -22,7 +22,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
         paymentId.setEmail = data.value.users[0].email;
         storeId.setCreatorId(creator);
         storeId.setId(id);
-        console.log(paymentId.setFetchPayment)
       }
     } catch (error) {
       console.error("Error fetching creator value:", error);
