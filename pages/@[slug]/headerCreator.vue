@@ -123,8 +123,12 @@
   <VDialog v-model="donation.visible" width="600" persistent>
     <v-card color="background" class="elevation-6 rounded-xl" flat>
       <v-card-title><v-icon @click="donation.visible = false">mdi-close</v-icon></v-card-title>
+      
       <v-card-text class="text-center">
         Envie um presente para {{ profileFetch?.userData?.name }}
+        <v-text-field>
+          
+        </v-text-field>
       </v-card-text>
       <PaymentMethod />
     </v-card>

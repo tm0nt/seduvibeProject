@@ -195,7 +195,7 @@ const makePaymentPix = async () => {
       payPixDialog.value = true;
     }
   } catch (error) {
-    // Trate o erro conforme necessário
+    // 
   }
 };
 

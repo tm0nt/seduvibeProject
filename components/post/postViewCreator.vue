@@ -191,7 +191,7 @@ import { useIdStore } from "~/store/id";
 
 // Fetch creatorId
 const storeId = useIdStore();
-const id = storeId.id;
+const idUser = storeId.id;
 
 
 const deleteDialogComment = ref(false);
@@ -261,7 +261,7 @@ const toggleLike = async (post) => {
       showSnackbar("Você curtiu a postagem!", "success");
     }
 
-    fetchPosts();
+    fetchPosts(idUser);
   } catch (error) {
     console.error("Erro ao alternar curtida:", error);
   }
@@ -297,7 +297,7 @@ const newComment = async (id) => {
     });
     comment.value.content = null;
     showSnackbar("Comentário feito com sucesso!", "success");
-    fetchPosts();
+    fetchPosts(idUser);
     console.log(data);
     console.log(error);
   } catch {
@@ -314,7 +314,7 @@ const newLike = async (id) => {
       },
     });
     showSnackbar("Vocẽ curtiu uma postagem!", "success");
-    fetchPosts();
+    fetchPosts(idUser);
     console.log(data);
     console.log(error);
   } catch {
@@ -331,7 +331,7 @@ const deleteLike = async (id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    fetchPosts();
+    fetchPosts(idUser);
     console.log(data);
   } catch {
     //
@@ -347,7 +347,7 @@ const deletePost = async (id) => {
     });
     deleteDialog.value = false;
     showSnackbar("Postagem deletada com sucesso!", "success");
-    fetchPosts();
+    fetchPosts(idUser);
     console.log(data);
   } catch {
     //
@@ -363,16 +363,16 @@ const deleteComment = async (id) => {
     });
     deleteDialogComment.value = false;
     showSnackbar("Comentário deletado com sucesso!", "success");
-    fetchPosts();
+    fetchPosts(idUser);
     console.log(data);
   } catch {
     //
   }
 };
-
 //Fetch Post
-const fetchPosts = async () => {
-  const { data: postData } = await useFetch("https://api.seduvibe.com/posts/list_all/14", {
+const fetchPosts = async (id) => {
+
+  const { data: postData } = await useFetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -389,5 +389,5 @@ const isCurrentUserLiked = (likes) => {
   return likes.some((like) => like.userId === id);
 };
 
-fetchPosts();
+fetchPosts(idUser);
 </script>
