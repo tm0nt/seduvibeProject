@@ -17,7 +17,7 @@
   </v-row>
 
   <v-row v-if="hasFilteredPosts">
-    <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" cols="4">
+    <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" rounded="xl" cols="4">
       <template v-if="isVideo(n.content)">
         <video :key="n.content" :width="200" controls>
           <source :src="n.content" type="video/mp4" />
@@ -25,7 +25,7 @@
         </video>
       </template>
       <template v-else>
-        <v-img :src="n.content" aspect-ratio="1" cover class="bg-grey-lighten-2">
+        <v-img :src="n.content" aspect-ratio="1" cover class="bg-grey-lighten-2" rounded="xl">
           <template v-slot:placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
               <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
@@ -45,18 +45,22 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useIdStore } from "~/store/id";
+
+
+const storeId = useIdStore();
+const idUser = storeId.id;
 const cookie = useCookie("token");
 const token = cookie.value;
 
 const selectedFilter = ref(0);
-const { data: post } = await useFetch(`https://api.seduvibe.com/posts/list_all/14`, {
+const { data: post } = await useFetch(`https://api.seduvibe.com/posts/list_all/${idUser}`, {
   headers: {
     Authorization: `Bearer ${token}`,
   },
 });
 const posts = ref(post._rawValue.reverse());
 
-// Helper function to check file extension for videos
 const isVideo = (url) => {
   const videoExtensions = [".mp4", ".webm", ".ogg"];
   const ext = url.slice(url.lastIndexOf(".") + 1);

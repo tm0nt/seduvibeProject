@@ -132,10 +132,15 @@
 
 <script setup>
 import { ref } from "vue";
+import { usePostStore } from "~/store/post";
+defineEmits(["post-successfull"])
 
 const cookie = useCookie("token");
 const token = cookie.value;
 
+
+
+const postStore = usePostStore();
 
 
 const snackbar = ref({
@@ -242,6 +247,7 @@ async function handleFileSubmit() {
 
       loading.value = false;
       if (data.value) {
+        postStore.setPost = true;
         showSnackbar("Você acabou de publicar!", "success");
         loading.value = false;
       } else {

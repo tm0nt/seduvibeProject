@@ -185,14 +185,38 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useIdStore } from "~/store/id";
+import { usePostStore } from "~/store/post";
 
 
-
-
+const postStore = usePostStore();
 // Fetch creatorId
 const storeId = useIdStore();
 const idUser = storeId.id;
+watch(
+   ()  => postStore.post,
+  (newPostValue, oldPostValue) =>{
+    console.log(`postStore.post mudou de ${oldPostValue} para ${newPostValue}`);
 
+    if (newPostValue) {
+      console.log("postStore.post é verdadeiro, executando operação...");
+
+      try {
+        // Execute a operação desejada, como fetchPost(idUser)
+        fetchPost(idUser);
+
+        console.log("Operação concluída com sucesso.");
+
+        // Após a operação ser concluída, defina postStore.post de volta para false
+        postStore.setPost(false);
+
+        console.log("postStore.post foi definido como false.");
+      } catch (error) {
+        console.error("Erro ao executar a operação:", error);
+      }
+    }
+  },
+  { deep: true } // Adicionando a opção deep para assistir alterações profundas
+);
 
 const deleteDialogComment = ref(false);
 

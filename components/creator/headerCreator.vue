@@ -108,8 +108,9 @@
     </v-col>
     <v-spacer></v-spacer>
     <v-col cols="auto" class="text-caption mt-2">
-      <v-chip small class="text-capitalize ml-4" color="primary"
-        ><v-icon color="primary" size="26" class="ma-1">mdi-heart</v-icon>265</v-chip
+      <v-chip small class="text-capitalize" color="primary">
+        <v-icon color="primary" size="26" class="ma-1">mdi-account</v-icon>{{ userSubsCount?.totalUsers }}
+        </v-chip
       >
       <!---   <v-btn variant="text" class="ml-n2" color="primary"
         ><v-icon size="26">mdi-heart-outline</v-icon></v-btn
@@ -325,6 +326,24 @@ const logout = () => {
   }
 };
 
+const userSubsCount = ref(null);
+
+const countUserSubs = async () => {
+  try{
+    const {data, error} = await useFetch("https://api.seduvibe.com/subscription/subs_users_count/", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(data);
+    userSubsCount.value = data.value;
+  }catch(error){
+    console.error(error);
+  }
+};
+
 const changeDescription = async () => {
   try {
     const { data } = await useFetch("https://api.seduvibe.com/change_user_data", {
@@ -432,7 +451,7 @@ const fetchDataFromAPI = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-
+    countUserSubs();
     social_media.value = {
       instagram: "https://instagram/" + fetchData?._rawValue?.social_media[0]?.instagram,
       telegram: "https://t.me/@" + fetchData?._rawValue?.social_media[0]?.telegram,
