@@ -82,13 +82,19 @@
       {{ snackbar.message }}
     </v-snackbar>
     <VDialog v-model="toCreator" width="600" persistent>
-      <v-card color="background" class="elevation-6 rounded-xl" flat title="Você deseja tornar-se criador(a)?" subtitle="Você não conseguirá se tornar um usuário novamente." prepend-icon="mdi-account-alert">
+      <v-card
+        color="background"
+        class="elevation-6 rounded-xl"
+        flat
+        title="Você deseja tornar-se criador(a)?"
+        subtitle="Você não conseguirá se tornar um usuário novamente."
+        prepend-icon="mdi-account-alert"
+      >
         <v-card-actions>
-        <v-btn variant="text" color="primary" @click="changeCreatorId">SIM</v-btn>
-        <v-btn variant="text" color="primary" @click="toCreator = false;">NÃO</v-btn>
-      </v-card-actions>
+          <v-btn variant="text" color="primary" @click="changeCreatorId">SIM</v-btn>
+          <v-btn variant="text" color="primary" @click="toCreator = false">NÃO</v-btn>
+        </v-card-actions>
       </v-card>
-
     </VDialog>
   </VRow>
 </template>
@@ -114,7 +120,7 @@ const showSnackbar = (message, color) => {
   };
 };
 
-const changeCreatorId = async () =>{
+const changeCreatorId = async () => {
   try {
     const { data, error } = await useFetch("https://api.seduvibe.com/updateCreator", {
       method: "PUT",
@@ -124,14 +130,13 @@ const changeCreatorId = async () =>{
       },
     });
     console.log("Requisição realizada com sucesso:", fetchData);
-    if(to.path != "/profile/"){
+    if (to.path != "/profile/") {
       return navigateTo("/profile");
     }
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
 };
-
 
 const cookie = useCookie("token");
 const token = cookie.value;

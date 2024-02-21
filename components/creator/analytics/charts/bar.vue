@@ -1,12 +1,13 @@
 <template>
   <div>
-    <apexchart
+<!--    <apexchart
       :key="series"
       height="200"
       width="100%"
       :options="options"
       :series="series"
-    ></apexchart>
+    ></apexchart> -->
+    <v-progress-circular class="mx-auto d-flex align-center justify-center mt-4" color="primary" size="small" indeterminate></v-progress-circular>
   </div>
 </template>
 
@@ -18,8 +19,7 @@ const options = ref({
     type: "bar",
   },
   theme: {
-      mode: 'light', 
-      
+    mode: "light",
   },
   grid: {
     show: true,
@@ -31,38 +31,39 @@ const options = ref({
       borderRadiusApplication: "around",
     },
   },
-  colors: ["#A020F0"], 
-  
+  colors: ["#A020F0"],
+
   noData: {
-  text: "Nenhum dado para exibir",
-  align: 'center',
-  verticalAlign: 'middle',
-  offsetX: 0,
-  offsetY: 0,
-  style: {
-    color: undefined,
-    fontSize: '14px',
-    fontFamily: undefined
-  }
-}, subtitle: {
-      text: undefined,
-      align: 'left',
-      margin: 10,
-      offsetX: 0,
-      offsetY: 0,
-      floating: false,
-      style: {
-        fontSize:  '12px',
-        fontWeight:  'normal',
-        fontFamily:  undefined,
-        color:  '#9699a2'
-      },
+    text: "Nenhum dado para exibir",
+    align: "center",
+    verticalAlign: "middle",
+    offsetX: 0,
+    offsetY: 0,
+    style: {
+      color: undefined,
+      fontSize: "14px",
+      fontFamily: undefined,
+    },
+  },
+  subtitle: {
+    text: undefined,
+    align: "left",
+    margin: 10,
+    offsetX: 0,
+    offsetY: 0,
+    floating: false,
+    style: {
+      fontSize: "12px",
+      fontWeight: "normal",
+      fontFamily: undefined,
+      color: "#9699a2",
+    },
   },
   tooltip: {
     style: {
       fontSize: "14px",
     },
-    theme:true,
+    theme: true,
     fillSeriesColor: true,
     intersect: true,
   },
@@ -81,7 +82,7 @@ const updateChart = () => {
 
   // Gerar array de números aleatórios com comprimento igual aos dias passados no mês atual
   const data = Array.from({ length: today.getDate() }, () => Math.floor(Math.random() * 100));
-  
+
   options.value = {
     ...options.value,
     xaxis: {

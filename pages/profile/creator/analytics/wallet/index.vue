@@ -25,7 +25,7 @@
                     <h3>
                       {{
                         Math.abs(
-                            parseFloat(balance?.creatorData?.balance_available)
+                          parseFloat(balance?.creatorData?.balance_available)
                         ).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
                       }}
                     </h3>

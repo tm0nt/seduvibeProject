@@ -16,7 +16,7 @@
         <p class="text-caption text-center mt-5">Você já possui todas as tribos</p>
       </v-col>
       <v-divider></v-divider>
-      
+
       <v-col v-if="tribosMy.length > 0">
         <p class="text-caption text-center">Suas tribos</p>
         <v-chip color="primary" class="ma-2" v-for="tribos in tribosMy" :key="tribos.id">
@@ -37,10 +37,10 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 
-
-
 const availableTribos = computed(() => {
-  return listTribos.value.filter(tribo => !tribosMy.value.some(myTribo => myTribo.id === tribo.id));
+  return listTribos.value.filter(
+    (tribo) => !tribosMy.value.some((myTribo) => myTribo.id === tribo.id)
+  );
 });
 const cookie = useCookie("token");
 const token = cookie.value;
@@ -93,7 +93,7 @@ const listMyTribes = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -109,13 +109,12 @@ const tribosNames = computed(() => listTribos.value.map((tribo) => tribo.name));
 
 const removeTribos = async (triboId) => {
   try {
-
-     const {data} = await useFetch(`https://api.seduvibe.com/delete_user_tribos/${triboId}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+    const { data } = await useFetch(`https://api.seduvibe.com/delete_user_tribos/${triboId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     listMyTribes();
     console.log("Tribos removidas com sucesso!");
   } catch (error) {

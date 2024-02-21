@@ -2,32 +2,34 @@
   <v-row align="center" justify="center">
     <v-col cols="12" class="mx-auto d-flex align-center justify-center">
       <v-chip-group
-      selected-class="primary"
-      color="primary"
-      mandatory
-      filter
-      v-model="selectedExtension"
-    >
-      <v-chip value="all">
-        <p>({{ totalPosts }})</p>
-        &nbsp;Tudo&nbsp;
-        <v-icon append>mdi-all-inclusive</v-icon>
-      </v-chip>
-      <v-chip value="image">
-        <p>({{ imagePosts }})</p>
-        &nbsp;Imagens&nbsp;
-        <v-icon append>mdi-image</v-icon>
-      </v-chip>
-      <v-chip value="video">
-        <p>({{ videoPosts }})</p>
-        &nbsp;Vídeos&nbsp;
-        <v-icon append>mdi-video</v-icon>
-      </v-chip>
-    </v-chip-group>
+        selected-class="primary"
+        color="primary"
+        mandatory
+        filter
+        v-model="selectedExtension"
+      >
+        <v-chip value="all">
+          <p>({{ totalPosts }})</p>
+          &nbsp;Tudo&nbsp;
+          <v-icon append>mdi-all-inclusive</v-icon>
+        </v-chip>
+        <v-chip value="image">
+          <p>({{ imagePosts }})</p>
+          &nbsp;Imagens&nbsp;
+          <v-icon append>mdi-image</v-icon>
+        </v-chip>
+        <v-chip value="video">
+          <p>({{ videoPosts }})</p>
+          &nbsp;Vídeos&nbsp;
+          <v-icon append>mdi-video</v-icon>
+        </v-chip>
+      </v-chip-group>
     </v-col>
     <v-row>
-      <v-col  cols="12" class="mt-2">
-      <p v-if="filteredPosts.length === 0" class="text-center text-caption text-medium-emphasis">Nenhum publicação encontrada</p>
+      <v-col cols="12" class="mt-2">
+        <p v-if="filteredPosts.length === 0" class="text-center text-caption text-medium-emphasis">
+          Nenhum publicação encontrada
+        </p>
       </v-col>
     </v-row>
     <v-card
@@ -36,7 +38,6 @@
       width="600"
       color="postBackground"
     >
-    
       <v-card-title class="d-flex align-center">
         <v-avatar size="50">
           <v-img cover :src="post?.userData?.profilePicture"></v-img>
@@ -187,14 +188,13 @@ import { ref, computed } from "vue";
 import { useIdStore } from "~/store/id";
 import { usePostStore } from "~/store/post";
 
-
 const postStore = usePostStore();
 // Fetch creatorId
 const storeId = useIdStore();
 const idUser = storeId.id;
 watch(
-   ()  => postStore.post,
-  (newPostValue, oldPostValue) =>{
+  () => postStore.post,
+  (newPostValue, oldPostValue) => {
     console.log(`postStore.post mudou de ${oldPostValue} para ${newPostValue}`);
 
     if (newPostValue) {
@@ -395,7 +395,6 @@ const deleteComment = async (id) => {
 };
 //Fetch Post
 const fetchPosts = async (id) => {
-
   const { data: postData } = await useFetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,

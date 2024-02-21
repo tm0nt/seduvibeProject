@@ -95,13 +95,10 @@ export default {
 
 <script setup>
 import { ref } from "vue";
-import { idPayment } from '~/store/payment';
-
-
+import { idPayment } from "~/store/payment";
 
 const cookie = useCookie("token");
 const token = cookie.value;
-
 
 const valueDonate = ref(null);
 const idPaymentStore = idPayment();

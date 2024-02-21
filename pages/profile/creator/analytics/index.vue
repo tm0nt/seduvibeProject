@@ -15,6 +15,7 @@
             variant="outlined"
             class="text-capitalize mt-2"
             prepend-icon="mdi-calendar"
+            :disabled="true"
             >Período</v-btn
           >
           <v-card
@@ -68,7 +69,7 @@
             </v-container>
           </v-card>
           <v-row>
-            <v-col>
+            <v-col cols="12">
               <v-card class="rounded-xl mt-4" color="input_color" flat>
                 <v-container class="ma-2">
                   <h4>Vendas por método</h4>
@@ -121,32 +122,7 @@
                 </v-container>
               </v-card>
             </v-col>
-            <v-col cols="12" md="6" lg="6">
-              <v-card class="rounded-xl mt-4" color="input_color" flat>
-                <v-container class="ma-2">
-                  <h4>Índices</h4>
-                  <p class="text-caption text-medium-emphasis">PIX.</p>
-                  <v-row class="ma-1">
-                    <v-col cols="auto">
-                      <v-progress-circular
-                        :size="100"
-                        :width="10"
-                        :rotate="360"
-                        model-value="50"
-                        color="primary"
-                        >50%</v-progress-circular
-                      >
-                    </v-col>
-                    <v-col cols="auto" class="justify-center align-center d-flex">
-                      <div>
-                        <h4>PIX</h4>
-                        <p class="text-caption text-medium-emphasis mt-n2">Conversão</p>
-                      </div>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
-            </v-col>
+
           </v-row>
         </v-container>
       </v-col>
@@ -179,7 +155,7 @@ const fetchData = async () => {
 fetchData();
 </script>
 <script>
-import lineChart from "../../components/creator/analytics/charts/bar.vue";
+import lineChart from "../../components/creator/analytics/charts/line.vue";
 import SideBar from "../../components/creator/analytics/SidebarView.vue";
 export default {
   components: {

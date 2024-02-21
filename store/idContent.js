@@ -1,12 +1,12 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const idPostStore = defineStore('idPost', {
+export const idPostStore = defineStore("idPost", {
   state: () => ({
-    creatorId: '',
+    creatorId: "",
   }),
   actions: {
     setCreatorId(creatorId) {
-        this.creatorId = creatorId;
-      },
+      this.creatorId = creatorId;
+    },
   },
 });

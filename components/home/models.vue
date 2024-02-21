@@ -1,9 +1,8 @@
 <template>
-        <p class="text-caption  mt-5 text-center text-medium-emphasis">Escolha tribos específicas</p>
+  <p class="text-caption mt-5 text-center text-medium-emphasis">Escolha tribos específicas</p>
   <v-row>
     <v-col cols="12" class="mt-1 mb-5 d-flex align-center justify-center">
       <v-chip-group filter>
-        
         <v-chip @click="getData" color="primary"> Todos </v-chip>
         <v-chip
           v-for="tribo in tribes"
@@ -22,32 +21,28 @@
     </template>
     <template v-else>
       <v-col cols="12" sm="4" md="4" lg="4" v-for="user in seduvibe" :key="user.id">
-        <NuxtLink :to="'/@'+user.user">
-        <v-card
-          class="mx-auto mt-n5 my-5 rounded-xl elevation-6"
-          width="250"
-          color="background"
-        >
-          <v-img width="300" height="150" cover :src="user.coverPicture"></v-img>
-          <div class="d-flex align-center justify-center" style="height: 100%">
-            <v-avatar class="elevation-8" size="100" style="position: absolute">
-              <v-img :src="user.profilePicture" cover></v-img>
-            </v-avatar>
-          </div>
-          <v-card-text>
-            <v-card-title class="text-subtitle-1 text-center mt-8">
-              {{ user.name }}
-              <v-icon color="purple">mdi-check-decagram</v-icon>
-            </v-card-title>
-            <v-card-title class="text-center mt-n7 text-caption font-italic text-medium-emphasis">
-              @{{ user.user }}
-            </v-card-title>
-            <v-card-title class="text-center text-caption text-medium-emphasis mt-n6">
-              {{ user.bio === null ? "." : user.bio }}
-            </v-card-title>
-          </v-card-text>
-        </v-card>
-      </NuxtLink>
+        <NuxtLink :to="'/@' + user.user">
+          <v-card class="mx-auto mt-n5 my-5 rounded-xl elevation-6" width="250" color="background">
+            <v-img width="300" height="150" cover :src="user.coverPicture"></v-img>
+            <div class="d-flex align-center justify-center" style="height: 100%">
+              <v-avatar class="elevation-8" size="100" style="position: absolute">
+                <v-img :src="user.profilePicture" cover></v-img>
+              </v-avatar>
+            </div>
+            <v-card-text>
+              <v-card-title class="text-subtitle-1 text-center mt-8">
+                {{ user.name }}
+                <v-icon color="purple">mdi-check-decagram</v-icon>
+              </v-card-title>
+              <v-card-title class="text-center mt-n7 text-caption font-italic text-medium-emphasis">
+                @{{ user.user }}
+              </v-card-title>
+              <v-card-title class="text-center text-caption text-medium-emphasis mt-n6">
+                {{ user.bio === null ? "." : user.bio }}
+              </v-card-title>
+            </v-card-text>
+          </v-card>
+        </NuxtLink>
       </v-col>
     </template>
     <v-btn

@@ -36,7 +36,11 @@
             chips
             density="comfortable"
             placeholder="Público"
-            :items="[{ key: 'Assinantes', value: '1' }, { key: 'Afiliados', value: '2' },{key: 'Exclusivo', value:'3'}]"
+            :items="[
+              { key: 'Assinantes', value: '1' },
+              { key: 'Afiliados', value: '2' },
+              { key: 'Exclusivo', value: '3' },
+            ]"
             item-title="key"
             item-value="value"
             rounded="xl"
@@ -75,38 +79,51 @@
         </v-col>
       </v-row>
       <v-row class="mt-1 ml-1" align="center">
-        <v-file-input label='Envie uma mídia' chips rounded="xl" variant="solo" bg-color="input_color" prepend-inner-icon="mdi-camera" prepend-icon=""  type='file' @change="handleMediaUpload" accept="image/*,video/*"  hide-input></v-file-input>
-      
+        <v-file-input
+          label="Envie uma mídia"
+          chips
+          rounded="xl"
+          variant="solo"
+          bg-color="input_color"
+          prepend-inner-icon="mdi-camera"
+          prepend-icon=""
+          type="file"
+          @change="handleMediaUpload"
+          accept="image/*,video/*"
+          hide-input
+        ></v-file-input>
       </v-row>
       <v-row class="mt-4">
-  <v-col v-for="(preview, index) in previewFiles" :key="index" cols="3">
-    <v-card
-      :image="preview.url"
-      class="rounded-xl elevation-0"
-      v-if="preview.type === 'image'"
-      width="120"
-      height="120"
-      flat
-    >
-      <v-btn size="x-small" class="ma-1 mt-4" icon @click="removeFile(index)">
-        <v-icon color="red" size="16">mdi-close</v-icon>
-      </v-btn>
-    </v-card>
-    <v-card
-      v-else-if="preview.type === 'video'"
-      class="rounded-xl elevation-0"
-      width="120"
-      height="120"
-      flat
-    >
-      <!-- Use um ícone diferente para vídeos (por exemplo, mdi-play) -->
-      <v-icon @click="playVideo(preview.url)" class="ma-1 mt-4" size="48" color="primary">mdi-play</v-icon>
-      <v-btn size="x-small" class="ma-1 mt-4" icon @click="removeFile(index)">
-        <v-icon color="red" size="16">mdi-close</v-icon>
-      </v-btn>
-    </v-card>
-  </v-col>
-</v-row>
+        <v-col v-for="(preview, index) in previewFiles" :key="index" cols="3">
+          <v-card
+            :image="preview.url"
+            class="rounded-xl elevation-0"
+            v-if="preview.type === 'image'"
+            width="120"
+            height="120"
+            flat
+          >
+            <v-btn size="x-small" class="ma-1 mt-4" icon @click="removeFile(index)">
+              <v-icon color="red" size="16">mdi-close</v-icon>
+            </v-btn>
+          </v-card>
+          <v-card
+            v-else-if="preview.type === 'video'"
+            class="rounded-xl elevation-0"
+            width="120"
+            height="120"
+            flat
+          >
+            <!-- Use um ícone diferente para vídeos (por exemplo, mdi-play) -->
+            <v-icon @click="playVideo(preview.url)" class="ma-1 mt-4" size="48" color="primary"
+              >mdi-play</v-icon
+            >
+            <v-btn size="x-small" class="ma-1 mt-4" icon @click="removeFile(index)">
+              <v-icon color="red" size="16">mdi-close</v-icon>
+            </v-btn>
+          </v-card>
+        </v-col>
+      </v-row>
 
       <v-btn
         block
@@ -119,12 +136,13 @@
         Publicar
       </v-btn>
     </v-form>
-  <v-snackbar
+    <v-snackbar
       v-model="snackbar.show"
       :color="snackbar.color"
       rounded="pill"
       :timeout="snackbar.timeout"
-      top>
+      top
+    >
       {{ snackbar.message }}
     </v-snackbar>
   </v-container>
@@ -133,15 +151,12 @@
 <script setup>
 import { ref } from "vue";
 import { usePostStore } from "~/store/post";
-defineEmits(["post-successfull"])
+defineEmits(["post-successfull"]);
 
 const cookie = useCookie("token");
 const token = cookie.value;
 
-
-
 const postStore = usePostStore();
-
 
 const snackbar = ref({
   show: false,
@@ -160,10 +175,9 @@ const showSnackbar = (message, color) => {
 };
 
 const removeFile = (index) => {
-  mediaFiles.value.splice(index, 1);  // Remove o arquivo da lista de mídias
-  previewFiles.value = [...mediaFiles.value];  // Atualiza a lista de previews
+  mediaFiles.value.splice(index, 1); // Remove o arquivo da lista de mídias
+  previewFiles.value = [...mediaFiles.value]; // Atualiza a lista de previews
 };
-
 
 const previewFiles = ref([]);
 const publicVisible = ref(null);
@@ -180,7 +194,7 @@ const removeMedia = (index) => {
 const handleMediaUpload = async (event) => {
   files.value = event.target.files;
 
-  previewFiles.value = []; 
+  previewFiles.value = [];
 
   try {
     await Promise.all(
@@ -201,12 +215,9 @@ const handleMediaUpload = async (event) => {
   } catch (error) {
     console.error("Erro ao carregar a mídia:", error);
   }
-  
+
   // Restante do código...
 };
-
-
-
 
 async function handleFileSubmit() {
   loading.value = true;
@@ -240,26 +251,28 @@ async function handleFileSubmit() {
       },
     };
 
-    const { data, error, pending } = await useFetch("https://api.seduvibe.com/posts/create_post", options);
+    const { data, error, pending } = await useFetch(
+      "https://api.seduvibe.com/posts/create_post",
+      options
+    );
 
     console.log("Response data:", data);
     console.log("Response error:", error);
 
+    loading.value = false;
+    if (data.value) {
+      postStore.setPost = true;
+      showSnackbar("Você acabou de publicar!", "success");
       loading.value = false;
-      if (data.value) {
-        postStore.setPost = true;
-        showSnackbar("Você acabou de publicar!", "success");
-        loading.value = false;
-      } else {
-        showSnackbar("Ocorreu um erro!", "error");
-        loading.value = false;
-        console.error("Erro ao enviar imagem:", error);
-      }
+    } else {
+      showSnackbar("Ocorreu um erro!", "error");
+      loading.value = false;
+      console.error("Erro ao enviar imagem:", error);
+    }
   } catch (e) {
     console.error("Error during fetch:", e);
   }
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

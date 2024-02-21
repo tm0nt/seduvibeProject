@@ -49,9 +49,20 @@
       <advertising />
     </VRow>
     <VDialog persistent v-model="dialogSend" width="400">
-      <v-card class="rounded-xl elevation-6" prepend-icon="mdi-check" title="Enviamos um e-mail para você." subtitle="Olhe seu e-mail." color="background" flat>
+      <v-card
+        class="rounded-xl elevation-6"
+        prepend-icon="mdi-check"
+        title="Enviamos um e-mail para você."
+        subtitle="Olhe seu e-mail."
+        color="background"
+        flat
+      >
         <v-card-text> Abra sua caixa de entrada e siga os passos para mudar sua senha.</v-card-text>
-        <v-card-actions><v-btn variant="text" @click="dialogSend = false" color="primary">OK</v-btn></v-card-actions>
+        <v-card-actions
+          ><v-btn variant="text" @click="dialogSend = false" color="primary"
+            >OK</v-btn
+          ></v-card-actions
+        >
       </v-card>
     </VDialog>
   </VContainer>
@@ -64,7 +75,7 @@ const { ruleEmail, ruleRequired } = useFormRules();
 const dialogSend = ref(false);
 
 const submit = async () => {
-  if (resetForm.value.isValid){
+  if (resetForm.value.isValid) {
     await sendMail();
     dialogSend.value = true;
   }

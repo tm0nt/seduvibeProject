@@ -52,7 +52,6 @@
                   name="password"
                   :type="showPassword ? 'text' : 'password'"
                 />
-
               </div>
               <div class="mt-3">
                 <VBtn type="submit" block min-height="40" class="text-capitalize" color="primary"
@@ -64,9 +63,15 @@
                 <VDivider class="border-opacity-75" color="grey" length="10"></VDivider>
               </div>
               <div class="mt-2">
-                  <VBtn to="/register" block min-height="40" class="text-capitalize" variant="outlined" color="primary"
-                    >Crie sua conta</VBtn
-                  >
+                <VBtn
+                  to="/register"
+                  block
+                  min-height="40"
+                  class="text-capitalize"
+                  variant="outlined"
+                  color="primary"
+                  >Crie sua conta</VBtn
+                >
               </div>
             </VForm>
           </VCol>
@@ -75,13 +80,12 @@
       <advertising />
     </VRow>
     <v-snackbar v-model="useAuthStore().snackbar.show" :color="useAuthStore().snackbar.color" top>
-        {{ useAuthStore().snackbar.text }}
-      </v-snackbar>
+      {{ useAuthStore().snackbar.text }}
+    </v-snackbar>
   </VContainer>
 </template>
 
 <script setup>
-
 import { useAuthStore } from "~/store/auth";
 import { ref } from "vue";
 
@@ -96,7 +100,7 @@ const { ruleEmail, ruleRequired } = useFormRules();
 const showPassword = ref(false);
 
 const submit = async () => {
-  if(loginValidade.value.isValid){
+  if (loginValidade.value.isValid) {
     await useAuthStore().authenticateUser(user.value);
   }
 };

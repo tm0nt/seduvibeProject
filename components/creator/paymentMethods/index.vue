@@ -84,8 +84,8 @@
       <v-expansion-panel-text>
         <v-form class="ma-4">
           <v-text-field
-          :readonly="idPaymentStore?.setCpf?.length === 14"
-          bg-color="input_color"
+            :readonly="idPaymentStore?.setCpf?.length === 14"
+            bg-color="input_color"
             placeholder="CPF"
             label="CPF"
             v-model="idPaymentStore.setCpf"
@@ -94,7 +94,12 @@
             readonly
           >
           </v-text-field>
-          <v-btn block min-height="40" color="primary" @click="makePaymentPix(1)" class="text-capitalize"
+          <v-btn
+            block
+            min-height="40"
+            color="primary"
+            @click="makePaymentPix(1)"
+            class="text-capitalize"
             >Fazer pagamento</v-btn
           >
         </v-form>
@@ -106,7 +111,7 @@
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-form class="ma-4">
-    <!---      <p class="text-caption text-center text-medium-emphasis">
+          <!---      <p class="text-caption text-center text-medium-emphasis">
             Você está pagando 0.0001456 BTC
           </p>
           <v-btn block min-height="40" color="primary" class="mt-2 text-capitalize"
@@ -119,33 +124,50 @@
   </v-expansion-panels>
   <v-dialog v-model="payPixDialog" width="400" persistent>
     <v-card class="rounded-xl elevation-6" color="background" flat>
-      <v-card-title><v-icon @click="payPixDialog = false;">mdi-close</v-icon></v-card-title>
+      <v-card-title><v-icon @click="payPixDialog = false">mdi-close</v-icon></v-card-title>
       <v-card-text class="text-center">
         <p class="mb-2">Você está pagando via pix</p>
-        <v-img  width="200" class="mx-auto rounded-xl" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Link_pra_pagina_principal_da_Wikipedia-PT_em_codigo_QR_b.svg/1200px-Link_pra_pagina_principal_da_Wikipedia-PT_em_codigo_QR_b.svg.png"></v-img>
-        <v-chip class="mt-2" color="primary" prepend-icon="mdi-coin">R$ {{ idPaymentStore.setDataReceived.value / 100 }}</v-chip>
-        <v-text-field class="mt-2" v-model="idPaymentStore.setDataReceived.qrCode.qrcode" readonly bg-color="input_color" @click="copyToClipboard">
+        <v-card class="elevation-0 mx-auto d-flex align-center justify-center rounded-xl" width="250" flat>
+            <qrcode-vue :value="idPaymentStore.setDataReceived.qrCode.qrcode" :size="238" level="H"></qrcode-vue>
+        </v-card>
+        <v-chip class="mt-2" color="primary" prepend-icon="mdi-coin"
+          >R$ {{ idPaymentStore.setDataReceived.value / 100 }}</v-chip
+        >
+        <v-text-field
+          class="mt-2"
+          v-model="idPaymentStore.setDataReceived.qrCode.qrcode"
+          readonly
+          bg-color="input_color"
+          @click="copyToClipboard"
+        >
           <template v-slot:append-inner>
-          <v-icon @click="copyToClipboard">mdi-content-copy</v-icon>
-        </template>
+            <v-icon @click="copyToClipboard">mdi-content-copy</v-icon>
+          </template>
         </v-text-field>
       </v-card-text>
     </v-card>
-
   </v-dialog>
   <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      rounded="pill"
-      :timeout="snackbar.timeout"
-      top
-    >
-      {{ snackbar.message }}
-    </v-snackbar>
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    rounded="pill"
+    :timeout="snackbar.timeout"
+    top
+  >
+    {{ snackbar.message }}
+  </v-snackbar>
 </template>
+<script>
+import QrcodeVue from "qrcode.vue";
+export default {
+  components:{
+    QrcodeVue
+  }
+}
 
-<script setup> 
-import { idPayment } from '~/store/payment';
+</script>
+<script setup>
+import { idPayment } from "~/store/payment";
 
 const cookie = useCookie("token");
 const token = cookie.amount;
@@ -166,8 +188,8 @@ const showSnackbar = (message, color) => {
   };
 };
 
-const idPaymentStore = idPayment()
-console.log(idPaymentStore)
+const idPaymentStore = idPayment();
+console.log(idPaymentStore);
 
 const payPixDialog = ref(false);
 const makePaymentPix = async () => {
@@ -181,7 +203,6 @@ const makePaymentPix = async () => {
       amount: parseFloat(amountInCents),
     };
 
-
     const { data, error } = useFetch("https://payment.seduvibe.cloud/paymentProcess/pix", {
       method: "POST",
       body: JSON.stringify(requestBody),
@@ -190,19 +211,28 @@ const makePaymentPix = async () => {
     if (data.value) {
       watchEffect(() => {
         idPaymentStore.setDataReceived = data.value;
-        console.log(idPaymentStore.setFetchPayment)
+        console.log(idPaymentStore.setFetchPayment);
       });
       payPixDialog.value = true;
     }
   } catch (error) {
-    // 
+    //
   }
 };
-
 
 const clearDataPayment = async () => {
   idPaymentStore.setDataReceived = null;
 };
+
+
+const sucessPayment = async (type, id, creator, plan) => {
+  try{
+
+  }catch(error){
+    console.log(error);
+  }
+};
+
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(idPaymentStore.setDataReceived.qrCode.qrcode);

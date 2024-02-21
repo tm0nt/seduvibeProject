@@ -167,8 +167,8 @@ const fetchData = async () => {
         },
       }
     );
-      console.log(data);
-    valorAssinatura.value = (data._rawValue.productValue);
+    console.log(data);
+    valorAssinatura.value = data._rawValue.productValue;
     porcentagemComissao.value = data._rawValue.commission;
   } catch (error) {
     console.error("Erro durante a requisição:", error);

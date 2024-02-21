@@ -43,7 +43,12 @@
         <v-spacer></v-spacer>
 
         <p class="text-caption text-medium-emphasis mr-n1">{{ formatDate(post.createdAt) }}</p>
-        <v-btn v-if="post?.userId === idStore.id" variant="text" class="ma-4 mr-n4" @click="deleteDialog = true">
+        <v-btn
+          v-if="post?.userId === idStore.id"
+          variant="text"
+          class="ma-4 mr-n4"
+          @click="deleteDialog = true"
+        >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
         <v-dialog v-model="deleteDialog" width="600" persistent>
@@ -176,7 +181,7 @@
   <v-toolbar color="rgb(0,0,0,0)" height="100"></v-toolbar>
 </template>
 <script setup>
-import { useIdStore } from '~/store/id';
+import { useIdStore } from "~/store/id";
 import { ref, computed } from "vue";
 
 const deleteDialogComment = ref(false);

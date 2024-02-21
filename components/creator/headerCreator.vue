@@ -2,11 +2,11 @@
   <VCard class="rounded-lg" flat height="150">
     <template v-slot:image>
       <VImg eager cover position="center" :src="info.coverPicture">
-        <div class="ml-4 mt-4">
-          <VBtn @click="changeInfoData.cover = true" color="primary" class="text-capitalize">
-            <v-icon>mdi-camera</v-icon>
+        <v-card class="ml-4 mt-4 elevation-0" flat color="primary" variant="tonal" width="50" >
+          <VBtn @click="changeInfoData.cover = true" class="text-capitalize">
+            <v-icon color="primary">mdi-camera</v-icon>
           </VBtn>
-        </div></VImg
+        </v-card></VImg
       >
     </template>
   </VCard>
@@ -109,9 +109,9 @@
     <v-spacer></v-spacer>
     <v-col cols="auto" class="text-caption mt-2">
       <v-chip small class="text-capitalize" color="primary">
-        <v-icon color="primary" size="26" class="ma-1">mdi-account</v-icon>{{ userSubsCount?.totalUsers }}
-        </v-chip
-      >
+        <v-icon color="primary" size="26" class="ma-1">mdi-account</v-icon
+        >{{ userSubsCount?.totalUsers }} subs
+      </v-chip>
       <!---   <v-btn variant="text" class="ml-n2" color="primary"
         ><v-icon size="26">mdi-heart-outline</v-icon></v-btn
       > -->
@@ -147,7 +147,7 @@
         <v-file-input
           show-size
           bg-color="input_color"
-        label="Capa"
+          label="Capa"
           placeholder="Envie sua capa"
           rounded="xl"
           accept="image/*"
@@ -159,7 +159,9 @@
           @change="handleUploadCover"
         ></v-file-input>
 
-        <VBtn type="submit" class="text-capitalize" block color="primary" min-height="40">Alterar</VBtn>
+        <VBtn type="submit" class="text-capitalize" block color="primary" min-height="40"
+          >Alterar</VBtn
+        >
       </v-form>
     </VCard>
   </VDialog>
@@ -185,12 +187,7 @@
           chips
           prepend-inner-icon="mdi-camera"
         ></v-file-input>
-        <VBtn
-          class="text-capitalize"
-          type="submit"
-          block
-          color="primary"
-          min-height="40"
+        <VBtn class="text-capitalize" type="submit" block color="primary" min-height="40"
           >Alterar</VBtn
         >
       </v-form>
@@ -329,17 +326,20 @@ const logout = () => {
 const userSubsCount = ref(null);
 
 const countUserSubs = async () => {
-  try{
-    const {data, error} = await useFetch("https://api.seduvibe.com/subscription/subs_users_count/", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+  try {
+    const { data, error } = await useFetch(
+      "https://api.seduvibe.com/subscription/subs_users_count/",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
     console.log(data);
     userSubsCount.value = data.value;
-  }catch(error){
+  } catch (error) {
     console.error(error);
   }
 };
@@ -367,76 +367,65 @@ const changeDescription = async () => {
 const filesPicture = ref(null);
 const files = ref(null);
 
-
-function handleUploadCover  (event) {
-   files.value = event.target.files;
-   console.log(files.value)
+function handleUploadCover(event) {
+  files.value = event.target.files;
+  console.log(files.value);
 }
 
-
-
-function handleUploadPicture  (event) {
-   filesPicture.value = event.target.files;
-   console.log(filesPicture.value)
+function handleUploadPicture(event) {
+  filesPicture.value = event.target.files;
+  console.log(filesPicture.value);
 }
 
-
-async function handleFileSubmitCover () {
-  const fd = new FormData()
-  if(files.value){
-    Array.from(files.value).forEach((file) =>{
-      fd.append("profileCover", file)
-    })
-  } 
+async function handleFileSubmitCover() {
+  const fd = new FormData();
+  if (files.value) {
+    Array.from(files.value).forEach((file) => {
+      fd.append("profileCover", file);
+    });
+  }
   const options = {
-        method: "POST",
-        body: fd,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const {data, error} = await useFetch("https://api.seduvibe.com/uploadCover", options);
+    method: "POST",
+    body: fd,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const { data, error } = await useFetch("https://api.seduvibe.com/uploadCover", options);
 
-      if (data.value) {
-        changeInfoData.value.cover = false
-        fetchDataFromAPI();
-        showSnackbar("Você alterou sua capa com sucesso!", "success");
-      } else {
-        console.error("Erro ao enviar imagem:", error);
-      }
-};
-
-
-
+  if (data.value) {
+    changeInfoData.value.cover = false;
+    fetchDataFromAPI();
+    showSnackbar("Você alterou sua capa com sucesso!", "success");
+  } else {
+    console.error("Erro ao enviar imagem:", error);
+  }
+}
 
 async function handleFileSubmitPicture() {
-  const fd = new FormData()
-  if(filesPicture.value){
-    Array.from(filesPicture.value).forEach((file) =>{
-      fd.append("profilePicture", file)
-    })
-  } 
+  const fd = new FormData();
+  if (filesPicture.value) {
+    Array.from(filesPicture.value).forEach((file) => {
+      fd.append("profilePicture", file);
+    });
+  }
   const options = {
-        method: "POST",
-        body: fd,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const {data, error} = await useFetch("https://api.seduvibe.com/uploadPicture", options);
+    method: "POST",
+    body: fd,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const { data, error } = await useFetch("https://api.seduvibe.com/uploadPicture", options);
 
-      if (data.value) {
-        changeInfoData.value.profile = false
-        fetchDataFromAPI();
-        showSnackbar("Você alterou sua foto de perfil com sucesso!", "success");
-      } else {
-        console.error("Erro ao enviar imagem:", error);
-      }
-};
-
-
-
-
+  if (data.value) {
+    changeInfoData.value.profile = false;
+    fetchDataFromAPI();
+    showSnackbar("Você alterou sua foto de perfil com sucesso!", "success");
+  } else {
+    console.error("Erro ao enviar imagem:", error);
+  }
+}
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(shareProfile.value.url);

@@ -66,16 +66,15 @@
               </div>
             </VForm>
             <div class="mt-2">
-                <VBtn
-                  class="text-capitalize"
-                  variant="outlined"
-                  to="/login"
-                  color="primary"
-                  block
-                  min-height="40"
-                  >Eu tenho conta</VBtn
-                >
-            
+              <VBtn
+                class="text-capitalize"
+                variant="outlined"
+                to="/login"
+                color="primary"
+                block
+                min-height="40"
+                >Eu tenho conta</VBtn
+              >
             </div>
           </VCol>
         </VRow>
@@ -121,12 +120,12 @@
                   link
                   subtitle="Quero apoiar meu criador"
                   title="Usuário"
-                  @click="toggleTypeUser('2')"
+                  @click="toggleTypeUser('0')"
                 >
                   <template v-slot:prepend>
                     <v-icon color="primary">mdi-account</v-icon>
                   </template>
-                  <template v-slot:append v-if="checkType === '2'">
+                  <template v-slot:append v-if="checkType === '0'">
                     <v-icon color="primary">mdi-check</v-icon>
                   </template>
                   <VCardText
@@ -137,7 +136,14 @@
             </VRow>
           </VCardText>
           <VCardActions>
-            <VBtn class="text-capitalize" :disabled="checkType === null" @click="dialogPassword = true;dialogOpen=false;" color="primary"
+            <VBtn
+              class="text-capitalize"
+              :disabled="checkType === null"
+              @click="
+                dialogPassword = true;
+                dialogOpen = false;
+              "
+              color="primary"
               >Continuar</VBtn
             >
           </VCardActions>
@@ -186,14 +192,26 @@
             </div>
           </VCardText>
           <VCardActions>
-            <VBtn class="text-capitalize" @click="registerFetch();dialogPassword = false;" color="primary">Criar Conta</VBtn>
+            <VBtn
+              class="text-capitalize"
+              @click="
+                registerFetch();
+                dialogPassword = false;
+              "
+              color="primary"
+              >Criar Conta</VBtn
+            >
           </VCardActions>
         </VContainer>
       </VCard>
     </VDialog>
-    <v-snackbar v-model="useRegisterStore().snackbar.show" :color="useRegisterStore().snackbar.color" top>
-        {{ useRegisterStore().snackbar.text }}
-      </v-snackbar>
+    <v-snackbar
+      v-model="useRegisterStore().snackbar.show"
+      :color="useRegisterStore().snackbar.color"
+      top
+    >
+      {{ useRegisterStore().snackbar.text }}
+    </v-snackbar>
   </VContainer>
 </template>
 
@@ -208,7 +226,6 @@ const dialogOpen = ref(false);
 const checkType = ref(null);
 const dialogPassword = ref(false);
 
-
 const registerData = ref({
   user: "",
   name: "",
@@ -217,7 +234,7 @@ const registerData = ref({
   creator: "",
 });
 
-const registerValidade =ref(null);
+const registerValidade = ref(null);
 const { ruleEmail, ruleRequired, rulePassLen } = useFormRules();
 
 const togglePasswordVisibility = () => {
@@ -238,15 +255,13 @@ const submit = async () => {
   }
 };
 
-
-
-const registerFetch = async() =>{
+const registerFetch = async () => {
   await useRegisterStore().registerUser({
-  user: registerData.value.user,
-  name: registerData.value.name,
-  email: registerData.value.email,
-  password: registerData.value.password,
-  creator: registerData.value.creator,
+    user: registerData.value.user,
+    name: registerData.value.name,
+    email: registerData.value.email,
+    password: registerData.value.password,
+    creator: registerData.value.creator,
   });
 };
 </script>

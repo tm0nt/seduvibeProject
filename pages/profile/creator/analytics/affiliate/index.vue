@@ -82,9 +82,9 @@
             <v-container class="ma-2">
               <h4>Sua comissão</h4>
               <p class="text-caption text-medium-emphasis">Acompanhe o volume de suas comissões.</p>
-                <ClientOnly>
-                  <lineChart/>
-                </ClientOnly>
+              <ClientOnly>
+                <lineChart />
+              </ClientOnly>
             </v-container>
           </v-card>
           <v-row>
@@ -102,10 +102,13 @@
                     >
                       {{ affiliate.affiliateName }}
                     </v-chip>
-                  </template>
-                  <p class="text-caption text-medium-emphasis mt-2">
+                    <p v-if="affiliate.affiliateName" class="text-caption text-medium-emphasis mt-2">
                     Estes são os usuários do checkout
                   </p>
+                  <p v-else class="text-caption">Nenhuma atualização</p>
+                  </template>
+
+
                 </v-container>
               </v-card>
             </v-col>

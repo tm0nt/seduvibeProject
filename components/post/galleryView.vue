@@ -47,7 +47,6 @@
 import { ref, computed } from "vue";
 import { useIdStore } from "~/store/id";
 
-
 const storeId = useIdStore();
 const idUser = storeId.id;
 const cookie = useCookie("token");

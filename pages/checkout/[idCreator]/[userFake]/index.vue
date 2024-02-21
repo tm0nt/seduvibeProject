@@ -11,12 +11,9 @@
         ></VImg>
         <VCard color="background" class="elevation-8 rounded-xl mx-auto" width="400" flat>
           <VCard-text class="text-center">
-            <VAvatar
-              size="120"
-              :image="affiliateProfile?.profilePicture"
-              ></VAvatar>
+            <VAvatar size="120" :image="affiliateProfile?.profilePicture"></VAvatar>
             <h2 class="mt-2">@{{ affiliateProfile?.userFake }}</h2>
-            <p class="text-caption text-medium-emphasis mt-1">{{ affiliateProfile?.bio }} </p>
+            <p class="text-caption text-medium-emphasis mt-1">{{ affiliateProfile?.bio }}</p>
             <VSpacer></VSpacer>
             <VChip color="primary" class="mt-1">R$ {{ affiliateProfile?.productValue }}</VChip>
             <PaymentMethod />
@@ -27,18 +24,16 @@
   </VApp>
 </template>
 <script setup>
-import { idPayment } from '~/store/payment';
+import { idPayment } from "~/store/payment";
 const idPaymentStore = idPayment();
 const cookie = useCookie("token");
 const token = cookie.value;
-
 
 const affiliateProfile = ref(null);
 
 const route = useRoute();
 const idCreator = ref(route.params.idCreator);
 const userFake = ref(route.params.userFake);
-
 
 const fetchData = async () => {
   try {
@@ -52,12 +47,11 @@ const fetchData = async () => {
         },
       }
     );
-    if(data.value){
+    if (data.value) {
       affiliateProfile.value = data.value;
-
-    }else{
+    } else {
       return navigateTo("/");
-    };
+    }
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

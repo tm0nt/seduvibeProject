@@ -1,12 +1,12 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const usePostStore = defineStore('post', {
+export const usePostStore = defineStore("post", {
   state: () => ({
     post: false,
   }),
   actions: {
     setPost(post) {
-        this.post = post;
-      },
+      this.post = post;
+    },
   },
 });

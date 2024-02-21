@@ -7,13 +7,33 @@
 
   <v-row align="start" no-gutters>
     <v-col cols="auto" class="mt-2">
-      <v-btn fab color="primary" :href="social_media?.instagram?.url" variant="text">
+      <v-btn
+        fab
+        :disabled="fetchData?._rawValue?.social_media[0]?.instagram === null || ''"
+        color="primary"
+        :href="social_media?.instagram?.url"
+        variant="text"
+      >
         <v-icon size="26">mdi-instagram</v-icon>
       </v-btn>
-      <v-btn fab color="primary" :href="social_media?.telegram?.url" class="ml-n4" variant="text">
+      <v-btn
+        fab
+        :disabled="fetchData?._rawValue?.social_media[0]?.telegram === null || ''"
+        color="primary"
+        :href="social_media?.telegram?.url"
+        class="ml-n4"
+        variant="text"
+      >
         <v-icon size="26">mdi-send-circle</v-icon>
       </v-btn>
-      <v-btn fab color="primary" :href="social_media?.twitter?.url" class="ml-n4" variant="text">
+      <v-btn
+        fab
+        :disabled="fetchData?._rawValue?.social_media[0]?.twitter === null || ''"
+        color="primary"
+        :href="social_media?.twitter?.url"
+        class="ml-n4"
+        variant="text"
+      >
         <v-icon size="26">mdi-twitter</v-icon>
       </v-btn>
     </v-col>
@@ -123,12 +143,22 @@
   <VDialog v-model="donation.visible" width="600" persistent>
     <v-card color="background" class="elevation-6 rounded-xl" flat>
       <v-card-title><v-icon @click="donation.visible = false">mdi-close</v-icon></v-card-title>
-      
+
       <v-card-text class="text-center">
         Envie um presente para {{ profileFetch?.userData?.name }}
-        <v-text-field>
-          
-        </v-text-field>
+        <v-row align="center" justify="center" class="mt-2">
+          <v-col cols="6">
+            <v-text-field
+              placeholder="Valor"
+              prepend-inner-icon="mdi-coin"
+              label="Valor"
+              v-model="valueDonate"
+              type="number"
+              hide-spin-buttons
+              bg-color="input_color"
+            ></v-text-field>
+          </v-col>
+        </v-row>
       </v-card-text>
       <PaymentMethod />
     </v-card>
@@ -145,10 +175,18 @@ export default {
 </script>
 <script setup>
 import nuxtStorage from "nuxt-storage";
+import { idPayment } from "~/store/payment";
 import { ref } from "vue";
 import { useTheme } from "vuetify";
 const theme = useTheme();
 const isFavorite = ref(false);
+
+const valueDonate = ref(null);
+const idPaymentStore = idPayment();
+
+watch(valueDonate, (newValue) => {
+  idPaymentStore.setAmount = newValue;
+});
 const toggleFavorite = async (id) => {
   try {
     if (isFavorite.value) {
@@ -165,60 +203,49 @@ const toggleFavorite = async (id) => {
   }
 };
 
-
-// Remover 
-const removeFromFavorites = async (id) =>{
+// Remover
+const removeFromFavorites = async (id) => {
   try {
-    const { data, error } = await useFetch(
-      `https://api.seduvibe.com/unlike/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      }
-    );
+    const { data, error } = await useFetch(`https://api.seduvibe.com/unlike/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
 };
 // Adicionar
-const addToFavorites = async (id) =>{
+const addToFavorites = async (id) => {
   try {
-    const { data, error } = await useFetch(
-      `https://api.seduvibe.com/like/${id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      }
-    );
+    const { data, error } = await useFetch(`https://api.seduvibe.com/like/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
 };
 // Verificar
-const checkFavorites = async (id) =>{
+const checkFavorites = async (id) => {
   try {
-    const { data, error } = await useFetch(
-      `https://api.seduvibe.com/is_favorite/${id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      }
-    );
+    const { data, error } = await useFetch(`https://api.seduvibe.com/is_favorite/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     isFavorite.value = data._rawValue.isFavorite;
     console.log(data);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
-  
 };
 
 const snackbar = ref({

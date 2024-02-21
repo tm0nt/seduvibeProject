@@ -3,11 +3,11 @@
     <v-row class="ma-2" align="center" justify="center">
       <v-col cols="12" md="6" lg="6">
         <p class="text-caption text-medium-emphasis">Saldo disponível</p>
-        <h3>R$ 256,00<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+        <h3>R$ 0,00<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
       </v-col>
       <v-col cols="12" md="6" lg="6">
         <p class="text-caption text-medium-emphasis">Total em vendas</p>
-        <h3>R$ 10.454,00<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
+        <h3>R$ 0,00<v-icon color="primary" size="26">mdi-chevron-up</v-icon></h3>
       </v-col>
     </v-row>
   </v-card>
@@ -37,8 +37,15 @@
                     v-model="pix.amount"
                     outlined
                   ></v-text-field>
-                  <p class="text-caption mt-n2 text-medium-emphasis">Saques via pix são feitos para o cpf associado.</p>
-                  <v-btn color="primary" @click="withdrawRequest(pix.id, pix.amount)" class="text-capitalize mt-2">Sacar</v-btn>
+                  <p class="text-caption mt-n2 text-medium-emphasis">
+                    Saques via pix são feitos para o cpf associado.
+                  </p>
+                  <v-btn
+                    color="primary"
+                    @click="withdrawRequest(pix.id, pix.amount)"
+                    class="text-capitalize mt-2"
+                    >Sacar</v-btn
+                  >
                 </v-col>
               </v-row>
 
@@ -72,14 +79,14 @@
     </v-container>
   </v-card>
   <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      rounded="pill"
-      :timeout="snackbar.timeout"
-      top
-    >
-      {{ snackbar.message }}
-    </v-snackbar>
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    rounded="pill"
+    :timeout="snackbar.timeout"
+    top
+  >
+    {{ snackbar.message }}
+  </v-snackbar>
 </template>
 <script>
 export default {
@@ -133,5 +140,4 @@ const withdrawRequest = async (id, amount) => {
     console.error("Erro durante a requisição:", error);
   }
 };
-
 </script>

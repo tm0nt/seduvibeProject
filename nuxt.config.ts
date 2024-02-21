@@ -4,7 +4,8 @@ import vuetify from "vite-plugin-vuetify";
 const title = "Seduvibe";
 const shortTitle = "Seduvibe";
 const description = "Venda com taxa zero! A melhor plataforma de distribuição de conteúdo!";
-const image = "https://ogcdn.net/6064b869-74ed-4eb9-b76c-0b701ffe7e6b/v4/seduvibe.com/Seduvibe/https%3A%2F%2Fopengraph.b-cdn.net%2Fproduction%2Fdocuments%2F1f350f0a-7862-4223-8969-611b73e6450b.png%3Ftoken%3DX4Df_l8-kz2mm8kpPC3evdQ2ENQDDdAd9o7RwDQzaQ8%26height%3D520%26width%3D780%26expires%3D33243497606/og.png";
+const image =
+  "https://ogcdn.net/6064b869-74ed-4eb9-b76c-0b701ffe7e6b/v4/seduvibe.com/Seduvibe/https%3A%2F%2Fopengraph.b-cdn.net%2Fproduction%2Fdocuments%2F1f350f0a-7862-4223-8969-611b73e6450b.png%3Ftoken%3DX4Df_l8-kz2mm8kpPC3evdQ2ENQDDdAd9o7RwDQzaQ8%26height%3D520%26width%3D780%26expires%3D33243497606/og.png";
 const url = "https://seduvibe.com/";
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config

@@ -50,7 +50,7 @@
                 Veja sua progressão com seus assinantes
               </p>
               <ClientOnly>
-                <lineChart/>
+                <lineChart />
               </ClientOnly>
             </v-container>
           </v-card>
@@ -60,7 +60,7 @@
               <p class="text-caption text-medium-emphasis">
                 Acompanhe a progressão do seu faturamento
               </p>
-              <areaChart/>
+              <areaChart />
             </v-container>
           </v-card>
         </v-container>

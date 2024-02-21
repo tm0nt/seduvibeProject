@@ -1,5 +1,5 @@
 <template>
-    <Publicacoes />
+  <Publicacoes />
 </template>
 <script>
 import Publicacoes from "../../components/post/postView.vue";

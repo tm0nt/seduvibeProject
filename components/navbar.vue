@@ -20,7 +20,7 @@
         <v-icon size="26">mdi-account</v-icon>
       </v-btn>
     </div>
-      <v-img v-else max-width="40" src="https://i.imgur.com/BrTfYSp.png"></v-img>
+    <v-img v-else max-width="40" src="https://i.imgur.com/BrTfYSp.png"></v-img>
   </v-bottom-navigation>
 </template>
 <script setup>

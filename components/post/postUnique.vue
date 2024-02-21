@@ -20,7 +20,12 @@
         <v-spacer></v-spacer>
 
         <p class="text-caption text-medium-emphasis mr-n4">{{ formatDate(post.createdAt) }}</p>
-        <v-btn v-if="id === post?.userId" variant="text" class="ma-4 mr-n2" @click="deleteDialog = true">
+        <v-btn
+          v-if="id === post?.userId"
+          variant="text"
+          class="ma-4 mr-n2"
+          @click="deleteDialog = true"
+        >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
         <v-dialog v-model="deleteDialog" width="600" persistent>
@@ -334,7 +339,7 @@ const fetchPosts = async () => {
       },
     }
   );
-    console.log(postData._rawValue);
+  console.log(postData._rawValue);
   posts.value = postData?._rawValue || [];
 };
 

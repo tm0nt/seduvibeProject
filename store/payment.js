@@ -26,7 +26,7 @@ export const idPayment = defineStore("idPayment", {
     setEmail(email) {
       this.email = email;
     },
-    setFetchPayment(payment){
+    setFetchPayment(payment) {
       this.paymentLatest = payment;
     },
     setDataReceived(dataReceived) {

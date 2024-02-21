@@ -216,8 +216,6 @@ import { idPayment } from "~/store/payment";
 const cookie = useCookie("token");
 const token = cookie.value;
 
-
-
 const idPaymentStore = idPayment();
 
 const payment = ref([]);
@@ -261,7 +259,6 @@ const headers = [
   },
 ];
 
-
 const paymentInfo = ref({
   title: "",
   subtitle: "",
@@ -301,13 +298,16 @@ const historyTable = ref(null);
 
 const historyPayment = async () => {
   try {
-    const { data, error } = useFetch("https://api.seduvibe.com/subscription/list_all_subscriptions_creator", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const { data, error } = useFetch(
+      "https://api.seduvibe.com/subscription/list_all_subscriptions_creator",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     console.log(data.value);
-    historyTable.value = data.value
+    historyTable.value = data.value;
   } catch (error) {
     console.error(error);
   }
@@ -322,8 +322,6 @@ const getSubscriptionTitle = (data) => {
   }
   return "";
 };
-
-
 
 const e1 = ref(0);
 

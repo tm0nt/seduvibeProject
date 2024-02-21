@@ -22,35 +22,51 @@
           <v-tabs color="primary" v-model="selectedTab" align-tabs="center">
             <v-tab>Publicações</v-tab>
             <v-tab>Galeria</v-tab>
-            <v-tab>Mimos</v-tab>
+            <v-tab>Metas</v-tab>
           </v-tabs>
           <div class="mt-10">
-    <v-row v-if="selectedTab === 0">
-      <v-col>
-        <component v-if="active" :is="currentComponent" />
-        <v-card @click="showBlockMessage" variant="tonal" link width="150" class="rounded-xl mx-auto" color="primary" flat v-else
-          ><v-card-text class="text-center">
-            <v-icon color="primary" size="30">mdi-lock-outline</v-icon>
-          </v-card-text></v-card
-        >
-      </v-col>
-    </v-row>
-    <v-row v-if="selectedTab === 1">
-      <v-col>
-        <component v-if="active" :is="currentComponent" />
-        <v-card variant="tonal" @click="showBlockMessage" link width="150" class="rounded-xl mx-auto" color="primary" flat v-else
-          ><v-card-text class="text-center">
-            <v-icon color="primary" size="30">mdi-lock-outline</v-icon>
-          </v-card-text></v-card
-        >
-      </v-col>
-    </v-row>
-    <v-row v-if="selectedTab === 2">
-      <v-col>
-        <component :is="currentComponent" />
-      </v-col>
-    </v-row>
-  </div>
+            <v-row v-if="selectedTab === 0">
+              <v-col>
+                <component v-if="active" :is="currentComponent" />
+                <v-card
+                  @click="showBlockMessage"
+                  variant="tonal"
+                  link
+                  width="150"
+                  class="rounded-xl mx-auto"
+                  color="primary"
+                  flat
+                  v-else
+                  ><v-card-text class="text-center">
+                    <v-icon color="primary" size="30">mdi-lock-outline</v-icon>
+                  </v-card-text></v-card
+                >
+              </v-col>
+            </v-row>
+            <v-row v-if="selectedTab === 1">
+              <v-col>
+                <component v-if="active" :is="currentComponent" />
+                <v-card
+                  variant="tonal"
+                  @click="showBlockMessage"
+                  link
+                  width="150"
+                  class="rounded-xl mx-auto"
+                  color="primary"
+                  flat
+                  v-else
+                  ><v-card-text class="text-center">
+                    <v-icon color="primary" size="30">mdi-lock-outline</v-icon>
+                  </v-card-text></v-card
+                >
+              </v-col>
+            </v-row>
+            <v-row v-if="selectedTab === 2">
+              <v-col>
+                <component :is="currentComponent" />
+              </v-col>
+            </v-row>
+          </div>
         </VCol>
       </VRow>
     </VContainer>
@@ -95,6 +111,7 @@
                 "
                 color="primary"
                 variant="tonal"
+                v-if="subscriptionValueFormatted != 'R$ 0.00'"
                 :title="`Assinatura ${selectedPlan}`"
               >
                 <template v-slot:title>
@@ -104,6 +121,18 @@
                   Pagamentos feitos periódicamente automaticamente
                 </p>
                 <h3 class="ma-4">{{ subscriptionValueFormatted }}</h3>
+              </v-card>
+              <v-card
+                class="elevation-0 rounded-xl mx-auto"
+                link
+                flat
+                prepend-icon="mdi-error"
+                variant="tonal"
+                color="primary"
+              >
+                <template v-slot:title>
+                  <p class="text-subtitle-1">Nenhuma assinatura cadastrada</p>
+                </template>
               </v-card>
             </v-col>
           </v-row>
@@ -118,41 +147,41 @@
         <v-container>
           <p class="text-center mb-4">Você está pagando</p>
           <v-card
-                link
-                class="rounded-xl mx-auto mb-2"
-                prepend-icon="mdi-coin"
-                color="primary"
-                width="400"
-                variant="tonal"
-                :title="`Assinatura ${selectedPlan}`"
-              >
-                <template v-slot:title>
-                  <p class="text-subtitle-1">Assinatura {{ selectedPlan }}</p>
-                </template>
-                <p class="mt-n3 text-caption text-medium-emphasis ma-4">
-                  Pagamentos feitos periódicamente automaticamente
-                </p>
-                <h3 class="ma-4">{{ subscriptionValueFormatted }}</h3>
-              </v-card>
+            link
+            class="rounded-xl mx-auto mb-2"
+            prepend-icon="mdi-coin"
+            color="primary"
+            width="400"
+            variant="tonal"
+            :title="`Assinatura ${selectedPlan}`"
+          >
+            <template v-slot:title>
+              <p class="text-subtitle-1">Assinatura {{ selectedPlan }}</p>
+            </template>
+            <p class="mt-n3 text-caption text-medium-emphasis ma-4">
+              Pagamentos feitos periódicamente automaticamente
+            </p>
+            <h3 class="ma-4">{{ subscriptionValueFormatted }}</h3>
+          </v-card>
           <paymentMethod />
         </v-container>
       </v-card>
     </VDialog>
     <v-snackbar
-    v-model="snackbar.show"
-    :color="snackbar.color"
-    rounded="pill"
-    :timeout="snackbar.timeout"
-    top
-  >
-    {{ snackbar.message }}
-  </v-snackbar>
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      rounded="pill"
+      :timeout="snackbar.timeout"
+      top
+    >
+      {{ snackbar.message }}
+    </v-snackbar>
   </VApp>
 </template>
 
 <script setup>
 import { ref, computed, watch } from "vue";
-import { idPayment } from '~/store/payment';
+import { idPayment } from "~/store/payment";
 const idPaymentStore = idPayment();
 
 const snackbar = ref({
@@ -190,14 +219,13 @@ const guardContentRequest = async (creatorId) => {
       }
     );
     active.value = data._rawValue.active;
-    console.log(data)
+    console.log(data);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
 };
 
-
-const showBlockMessage = async () =>{
+const showBlockMessage = async () => {
   showSnackbar("Você não possui acesso para ver este conteúdo!", "error");
 };
 const selectedPlan = ref("mensal");

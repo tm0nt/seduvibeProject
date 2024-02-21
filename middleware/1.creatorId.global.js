@@ -1,5 +1,5 @@
-import { useIdStore } from '~/store/id';
-import { idPayment } from '~/store/payment';
+import { useIdStore } from "~/store/id";
+import { idPayment } from "~/store/payment";
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const cookie = useCookie("token");

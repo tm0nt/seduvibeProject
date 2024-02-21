@@ -2,7 +2,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const cookie = useCookie("token");
   const token = cookie.value;
 
-  if ((to.path === '/login' || to.path === '/register') && token) {
+  if ((to.path === "/login" || to.path === "/register") && token) {
     try {
       const { data, error } = await useFetch("https://api.seduvibe.com/", {
         headers: {
