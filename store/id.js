@@ -4,8 +4,16 @@ export const useIdStore = defineStore("id", {
   state: () => ({
     creatorId: "",
     id: "",
+    auth: false,
+    user: "",
   }),
   actions: {
+    setAuth(auth){
+      this.auth = auth;
+    },
+    setUser(user){
+      this.user = user;
+    },
     setId(id) {
       this.id = id;
     },

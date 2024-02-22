@@ -74,6 +74,8 @@ import Tribos from "../../../../components/creator/config/tabs/tribos.vue";
 import Contas from "../../../../components/creator/config/tabs/contas.vue";
 import Afiliados from "../../../../components/creator/config/tabs/afiliados.vue";
 import Metas from "../../../../components/creator/config/tabs/metas.vue";
+import PaymentDirect from "../../../../components/creator/config/tabs/direct.vue";
+
 
 export default {
   data: () => ({
@@ -85,6 +87,7 @@ export default {
       { text: "Tribos", icon: "mdi-flag-variant", component: Tribos },
       { text: "Contas", icon: "mdi-bank", component: Contas },
       { text: "Afiliados", icon: "mdi-account-group", component: Afiliados },
+      { text: "Pagamento direto", icon: "mdi-link-variant-plus", component: PaymentDirect },
     ],
     selectedComponent: null,
   }),
@@ -102,6 +105,7 @@ export default {
     Info,
     navbarHeader,
     navbarView,
+    PaymentDirect,
   },
 };
 </script>

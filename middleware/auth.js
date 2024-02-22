@@ -2,7 +2,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const cookie = useCookie("token");
   const token = cookie.value;
 
-  if ((to.path === "/login" || to.path === "/register") && token) {
+  if ((to.path === "/login" || to.path === "/register")) {
     try {
       const { data, error } = await useFetch("https://api.seduvibe.com/", {
         headers: {
@@ -10,7 +10,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         },
       });
       if (data.value) {
-        return navigateTo("/profile");
+        return navigateTo("/profile/");
       } else if (error.value) {
         console.error("Error fetching creator value:", error);
       }

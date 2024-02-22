@@ -37,6 +37,14 @@
     </VContainer>
   </VApp>
 </template>
+<script setup>
+
+definePageMeta({
+  middleware: [
+    'profile-creator',
+  ],
+});
+</script>
 <script>
 import UploadwithPost from "../../../components/post/UploadwithPost.vue";
 import headerCreator from "../../../components/creator/headerCreator";

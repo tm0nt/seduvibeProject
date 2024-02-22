@@ -89,6 +89,12 @@
 import { useAuthStore } from "~/store/auth";
 import { ref } from "vue";
 
+definePageMeta({
+  middleware: [
+    'auth',
+  ],
+});
+
 const user = ref({
   email: "",
   password: "",
