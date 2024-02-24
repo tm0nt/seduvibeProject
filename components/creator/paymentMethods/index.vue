@@ -167,6 +167,7 @@ export default {
 
 </script>
 <script setup>
+import {io} from "socket.io-client";
 import { idPayment } from "~/store/payment";
 
 const cookie = useCookie("token");
@@ -223,6 +224,9 @@ const makePaymentPix = async () => {
 const clearDataPayment = async () => {
   idPaymentStore.setDataReceived = null;
 };
+
+
+
 
 
 const sucessPayment = async (type, id, creator, plan) => {

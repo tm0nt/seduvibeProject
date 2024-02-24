@@ -39,11 +39,6 @@
 </template>
 <script setup>
 
-definePageMeta({
-  middleware: [
-    'profile-creator',
-  ],
-});
 </script>
 <script>
 import UploadwithPost from "../../../components/post/UploadwithPost.vue";

@@ -134,7 +134,7 @@
                             @click="selectPlan(plan)"
                           >
                             <template v-slot:title>
-                              <p class="text-subtitle-1">{{ plan.name }}</p>
+                              <p class="text-subtitle-1">{{ plan?.name }}</p>
                             </template>
                             <template v-slot:prepend>
                               <v-icon @click="infoPlanDialog = true" color="primary"
@@ -142,10 +142,10 @@
                               >
                             </template>
                             <p class="text-caption text-medium-emphasis ma-4">
-                              {{ plan.description }}
+                              {{ plan?.description }}
                             </p>
                             <h3 class="ma-4">
-                              {{ selectedFilter === "mensal" ? plan.priceMensal : plan.priceAnual }}
+                              {{ selectedFilter === "mensal" ? plan?.priceMensal : plan?.priceAnual }}
                             </h3>
                           </v-card>
                         </v-col>
@@ -162,16 +162,16 @@
                         color="primary"
                       >
                         <template v-slot:title>
-                          <p class="text-subtitle-1">{{ paymentInfo.title }}</p>
+                          <p class="text-subtitle-1">{{ paymentInfo?.title }}</p>
                         </template>
                         <template v-slot:prepend>
                           <v-icon color="primary">mdi-check</v-icon>
                         </template>
                         <h3 class="ma-4 mt-n2">
-                          {{ paymentInfo.subtitle }}
+                          {{ paymentInfo?.subtitle }}
                         </h3>
                         <p class="text-caption text-medium-emphasis text-uppercase ma-4 mt-n4">
-                          {{ paymentInfo.duration }}
+                          {{ paymentInfo?.duration }}
                         </p>
                       </v-card>
 
@@ -211,7 +211,7 @@
   </v-app>
 </template>
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import { idPayment } from "~/store/payment";
 const cookie = useCookie("token");
 const token = cookie.value;
@@ -222,9 +222,7 @@ const payment = ref([]);
 const selectedFilter = ref("mensal");
 const infoPlanDialog = ref(false);
 const loading = ref(false);
-const items = [
-  { ID: 51535, Plano: "Plano Básico", Duração: "Mensal", Valor: "R$ 375,00", Data: "03/03/2023" },
-];
+
 
 const showDialog = ref(false);
 const filteredPlans = computed(() => {
@@ -313,7 +311,6 @@ const historyPayment = async () => {
   }
 };
 
-historyPayment();
 
 const getSubscriptionTitle = (data) => {
   if (data.length > 0) {
@@ -334,9 +331,6 @@ const getSubscriptionSubtitle = (data) => {
   return "";
 };
 
-onMounted(async () => {
-  await fetchData();
-});
 const selectPlan = (plan) => {
   selectedPlan.value = plan;
   selectedPrice.value =
@@ -354,6 +348,8 @@ const selectPlan = (plan) => {
   e1.value = 1;
   idPaymentStore.setAmount = selectedPrice.value;
 };
+fetchData();
+historyPayment();
 </script>
 <script>
 import PaymentMethod from "@/components/creator/paymentMethods/index.vue";

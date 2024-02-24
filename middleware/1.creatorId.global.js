@@ -24,7 +24,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
         storeId.setId(id);
         storeId.setUser(data.value.users[0].user);
         storeId.setAuth(true)
-        console.log("webhook", paymentId.paymentLatest);
       }
     } catch (error) {
       console.error("Error fetching creator value:", error);
