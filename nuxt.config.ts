@@ -19,7 +19,6 @@ export default defineNuxtConfig({
   modules: [
     "@pinia/nuxt",
     "@nuxt/image",
-    'nuxt3-socket.io',
     "nuxt-highcharts",
     "@kevinmarrec/nuxt-pwa",
     async (options, nuxt) => {

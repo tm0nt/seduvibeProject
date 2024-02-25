@@ -167,7 +167,7 @@ export default {
 
 </script>
 <script setup>
-import {io} from "socket.io-client";
+import WebSocket from 'ws';
 import { idPayment } from "~/store/payment";
 
 const cookie = useCookie("token");
@@ -225,10 +225,6 @@ const clearDataPayment = async () => {
   idPaymentStore.setDataReceived = null;
 };
 
-
-
-
-
 const sucessPayment = async (type, id, creator, plan) => {
   try{
 
@@ -236,6 +232,22 @@ const sucessPayment = async (type, id, creator, plan) => {
     console.log(error);
   }
 };
+
+const state = reactive({
+  message: 'Waiting for WebSocket data...',
+});
+
+const socket = new WebSocket('ws://localhost:3000/');
+
+// Lidar com a chegada de mensagens do servidor
+socket.addEventListener('message', (event) => {
+  state.message = `Received message: ${event.data}`;
+});
+
+// Lidar com a desconexão do servidor
+socket.addEventListener('close', () => {
+  state.message = 'WebSocket disconnected';
+});
 
 
 const copyToClipboard = () => {
