@@ -167,7 +167,6 @@ export default {
 
 </script>
 <script setup>
-import WebSocket from 'ws';
 import { idPayment } from "~/store/payment";
 
 const cookie = useCookie("token");
