@@ -233,23 +233,6 @@ const sucessPayment = async (type, id, creator, plan) => {
   }
 };
 
-const state = reactive({
-  message: 'Waiting for WebSocket data...',
-});
-
-const socket = new WebSocket('ws://localhost:3000/');
-
-// Lidar com a chegada de mensagens do servidor
-socket.addEventListener('message', (event) => {
-  state.message = `Received message: ${event.data}`;
-});
-
-// Lidar com a desconexão do servidor
-socket.addEventListener('close', () => {
-  state.message = 'WebSocket disconnected';
-});
-
-
 const copyToClipboard = () => {
   navigator.clipboard.writeText(idPaymentStore.setDataReceived.qrCode.qrcode);
   showSnackbar("Pix copia e cola copiado com sucesso!", "success");
