@@ -100,8 +100,6 @@
                     <v-stepper-item color="primary" :complete="e1 > 1" value="2"></v-stepper-item>
 
                     <v-divider></v-divider>
-
-                    <v-stepper-item color="primary" :complete="e1 > 2" value="3"></v-stepper-item>
                   </v-stepper-header>
 
                   <v-stepper-window>
@@ -177,18 +175,6 @@
 
                       <v-card class="elevation-0 mx-auto rounded-xl mt-2" color="background" flat>
                         <PaymentMethod />
-                      </v-card>
-                    </v-stepper-window-item>
-
-                    <v-stepper-window-item value="3">
-                      <v-card class="elevation-0 mx-auto rounded-xl" color="background" flat>
-                        <v-alert
-                          type="success"
-                          variant="tonal"
-                          color="primary"
-                          title="Assinatura ativa"
-                          text="Sua assinatura está confirmada e você já pode usar nossa plataforma normalmente."
-                        ></v-alert>
                       </v-card>
                     </v-stepper-window-item>
                   </v-stepper-window>

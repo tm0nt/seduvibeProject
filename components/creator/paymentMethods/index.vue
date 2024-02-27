@@ -124,29 +124,47 @@
   </v-expansion-panels>
   <v-dialog v-model="payPixDialog" width="400" persistent>
     <v-card class="rounded-xl elevation-6" color="background" flat>
-      <v-card-title><v-icon @click="payPixDialog = false">mdi-close</v-icon></v-card-title>
+      <v-card-title>
+        <v-icon @click="payPixDialog = false">mdi-close</v-icon>
+      </v-card-title>
       <v-card-text class="text-center">
-        <p class="mb-2">Você está pagando via pix</p>
-        <v-card class="elevation-0 mx-auto d-flex align-center justify-center rounded-xl" width="250" flat>
-            <qrcode-vue :value="idPaymentStore.setDataReceived.qrCode.qrcode" :size="238" level="H"></qrcode-vue>
-        </v-card>
-        <v-chip class="mt-2" color="primary" prepend-icon="mdi-coin"
-          >R$ {{ idPaymentStore.setDataReceived.value / 100 }}</v-chip
-        >
-        <v-text-field
-          class="mt-2"
-          v-model="idPaymentStore.setDataReceived.qrCode.qrcode"
-          readonly
-          bg-color="input_color"
-          @click="copyToClipboard"
-        >
-          <template v-slot:append-inner>
-            <v-icon @click="copyToClipboard">mdi-content-copy</v-icon>
-          </template>
-        </v-text-field>
+        <template v-if="paymentSuccessful">
+          <v-icon size="64" color="primary">mdi-check-circle</v-icon>
+          <p class="mb-2 mt-4">Pagamento concluído!</p>
+          <v-card-actions><v-btn variant="text" color="primary">OK</v-btn></v-card-actions>
+        </template>
+        <template v-else>
+          <p class="mb-2">Você está pagando via pix</p>
+          <v-card
+            class="elevation-0 mx-auto d-flex align-center justify-center rounded-xl"
+            width="250"
+            flat
+          >
+            <qrcode-vue
+              :value="idPaymentStore?.setDataReceived?.qrCode"
+              :size="238"
+              level="H"
+            ></qrcode-vue>
+          </v-card>
+          <v-chip class="mt-2" color="primary" prepend-icon="mdi-coin">
+            R$ {{ idPaymentStore?.setDataReceived?.value / 100 }}
+          </v-chip>
+          <v-text-field
+            class="mt-2"
+            v-model="idPaymentStore.setDataReceived.qrCode"
+            readonly
+            bg-color="input_color"
+            @click="copyToClipboard"
+          >
+            <template v-slot:append-inner>
+              <v-icon @click="copyToClipboard">mdi-content-copy</v-icon>
+            </template>
+          </v-text-field>
+        </template>
       </v-card-text>
     </v-card>
   </v-dialog>
+
   <v-snackbar
     v-model="snackbar.show"
     :color="snackbar.color"
@@ -160,11 +178,10 @@
 <script>
 import QrcodeVue from "qrcode.vue";
 export default {
-  components:{
-    QrcodeVue
-  }
-}
-
+  components: {
+    QrcodeVue,
+  },
+};
 </script>
 <script setup>
 import { idPayment } from "~/store/payment";
@@ -189,9 +206,11 @@ const showSnackbar = (message, color) => {
 };
 
 const idPaymentStore = idPayment();
-console.log(idPaymentStore);
+const paymentSuccessful = ref(false);
+
 
 const payPixDialog = ref(false);
+
 const makePaymentPix = async () => {
   try {
     const amountInCents = (idPaymentStore.setAmount * 100).toFixed(2);
@@ -201,22 +220,38 @@ const makePaymentPix = async () => {
       email: idPaymentStore.setEmail,
       cpf: idPaymentStore.setCpf,
       amount: parseFloat(amountInCents),
+      metadata: "userId:1,source:donation",
     };
 
-    const { data, error } = useFetch("https://payment.seduvibe.cloud/paymentProcess/pix", {
+    const { data } = await useFetch("https://payment.seduvibe.cloud/paymentProcess/pix", {
       method: "POST",
       body: JSON.stringify(requestBody),
     });
 
-    if (data.value) {
-      watchEffect(() => {
-        idPaymentStore.setDataReceived = data.value;
-        console.log(idPaymentStore.setFetchPayment);
-      });
+    if (data) {
+      console.log(data.value.id);
+      idPaymentStore.setDataReceived = data;
       payPixDialog.value = true;
+      await checkPayment(data.value.id);
     }
   } catch (error) {
-    //
+    console.error(error);
+    // Trate os erros adequadamente
+  }
+};
+
+const checkPayment = async (paymentId) => {
+  try {
+    const { data } = await useFetch(`https://api.seduvibe.com/gateway/check-status/${paymentId}`, {
+      method: "GET",
+    });
+
+    if(data.value){
+      paymentSuccessful.value = true;
+    }
+  } catch (error) {
+    console.error(error);
+    // Trate os erros adequadamente
   }
 };
 
@@ -225,9 +260,8 @@ const clearDataPayment = async () => {
 };
 
 const sucessPayment = async (type, id, creator, plan) => {
-  try{
-
-  }catch(error){
+  try {
+  } catch (error) {
     console.log(error);
   }
 };
