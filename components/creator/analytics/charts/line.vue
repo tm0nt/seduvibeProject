@@ -21,7 +21,7 @@ const seriesKey = ref(0);
 
 const fetchData = async () => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/analytics", {
+    const data= await $fetch("https://api.seduvibe.com/analytics", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -32,8 +32,6 @@ const fetchData = async () => {
     analyticsFetch.value = data.apexSeries.map((value, index) => value);
 
     console.log(analyticsFetch.value);
-
-    // Atualizar a chave do componente para forçar a recriação do gráfico
     seriesKey.value += 1;
   } catch (error) {
     console.error("Erro durante a requisição:", error);

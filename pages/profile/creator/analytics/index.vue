@@ -138,15 +138,14 @@ const analyticsFetch = ref(null);
 
 const fetchData = async () => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/analytics", {
+    const data  = await $fetch("https://api.seduvibe.com/analytics", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    analyticsFetch.value = data._rawValue;
-    console.log(analyticsFetch._rawValue);
+    analyticsFetch.value = data;
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

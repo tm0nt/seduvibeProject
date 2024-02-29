@@ -277,7 +277,7 @@ const withdrawRequest = async (id, amount) => {
       return;
     }
 
-    const { data, error } = await useFetch("https://api.seduvibe.com/request_withdraw", {
+    const { data, error } = await $fetch("https://api.seduvibe.com/request_withdraw", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -300,14 +300,14 @@ const withdrawRequest = async (id, amount) => {
 
 const fetchWithdraw = async () => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/withdraw_list", {
+    const data = await $fetch("https://api.seduvibe.com/withdraw_list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    historyWithdraw.value = data?._rawValue?.withdrawals.reverse();
+    historyWithdraw.value = data?.withdrawals.reverse();
     console.log(historyWithdraw);
   } catch (error) {
     console.error("Erro", error);
@@ -316,14 +316,14 @@ const fetchWithdraw = async () => {
 
 const fetchBalance = async () => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/analytics", {
+    const data = await $fetch("https://api.seduvibe.com/analytics", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    balance.value = data._rawValue;
+    balance.value = data;
     console.log(data);
   } catch (error) {
     console.error("Erro durante a requisição:", error);

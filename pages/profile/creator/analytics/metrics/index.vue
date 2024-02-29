@@ -82,14 +82,14 @@ const metricFetch = ref({
 
 const fetchMetric = async () => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/posts/metric", {
+    const data = await $fetch("https://api.seduvibe.com/posts/metric", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    metricFetch.value.item = data._rawValue;
+    metricFetch.value.item = data;
   } catch (error) {
     console.error(error);
   }
@@ -97,14 +97,14 @@ const fetchMetric = async () => {
 
 const fetchMetricView = async () => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/get_views_profile", {
+    const data = await $fetch("https://api.seduvibe.com/get_views_profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    metricFetch.value.views = data._rawValue.users[0].views;
+    metricFetch.value.views = data.users[0].views;
   } catch (error) {
     console.error(error);
   }

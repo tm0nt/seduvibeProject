@@ -130,7 +130,7 @@ const coin = ref({
 });
 const fetchAffiliate = async () => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/analytics", {
+    const data = await $fetch("https://api.seduvibe.com/analytics", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -138,14 +138,14 @@ const fetchAffiliate = async () => {
       },
     });
     console.log(data);
-    affiliateFetch.value = data._rawValue;
+    affiliateFetch.value = data;
   } catch (error) {
     console.error(error);
   }
 };
 const totalEarnings = async () => {
   try {
-    const { data, error } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/afiliates/total_affiliate_earnings",
       {
         method: "GET",
@@ -156,7 +156,7 @@ const totalEarnings = async () => {
       }
     );
     console.log(data);
-    coin.value.totalEarnings = data._rawValue;
+    coin.value.totalEarnings = data;
   } catch (error) {
     console.error(error);
   }
@@ -164,7 +164,7 @@ const totalEarnings = async () => {
 
 const rankingAffiliate = async () => {
   try {
-    const { data, error } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/afiliates/top_affiliate_earnings",
       {
         method: "GET",
@@ -175,7 +175,7 @@ const rankingAffiliate = async () => {
       }
     );
     console.log(data);
-    coin.value.rankingAffiliate = data._rawValue;
+    coin.value.rankingAffiliate = data;
   } catch (error) {
     console.error(error);
   }

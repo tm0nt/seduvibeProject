@@ -92,7 +92,7 @@ const viewRequestId = ref({
 
 const approvedRequest = async (id) => {
   try {
-    const { data, error } = await useFetch(
+    const data = await $fetch(
       `https://api.seduvibe.com/afiliates/accept-affiliate-request/${id}`,
       {
         method: "PUT",
@@ -103,7 +103,7 @@ const approvedRequest = async (id) => {
       }
     );
     console.log(data);
-    affiliatePending.value = data._rawValue;
+    affiliatePending.value = data;
     showSnackbar("Afiliado aprovado com sucesso!", "success");
     fetchAffiliates();
     viewRequestId.value.visible = false;
@@ -114,7 +114,7 @@ const approvedRequest = async (id) => {
 
 const rejectRequest = async (id) => {
   try {
-    const { data, error } = await useFetch(
+    const data = await $fetch(
       `https://api.seduvibe.com/afiliates/reject-affiliate-request/${id}`,
       {
         method: "PUT",
@@ -126,7 +126,7 @@ const rejectRequest = async (id) => {
     );
     console.log(data);
     showSnackbar("Afiliado reprovado com sucesso!", "success");
-    affiliatePending.value = data._rawValue;
+    affiliatePending.value = data;
     fetchAffiliates();
     viewRequestId.value.visible = false;
   } catch (error) {
@@ -149,7 +149,7 @@ const headers = [
 
 const fetchAffiliates = async () => {
   try {
-    const { data, error } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/afiliates/list-pending-affiliate-requests",
       {
         method: "GET",
@@ -160,7 +160,7 @@ const fetchAffiliates = async () => {
       }
     );
     console.log(data);
-    affiliatePending.value = data._rawValue;
+    affiliatePending.value = data;
   } catch (error) {
     console.error("Erro", error);
   }
