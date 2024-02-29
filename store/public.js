@@ -4,6 +4,7 @@ export const useIdStorePublic = defineStore("idPublic", {
   state: () => ({
     creatorId: "",
     id: "",
+    contributeId: "",
   }),
   actions: {
     setId(id) {
@@ -12,5 +13,7 @@ export const useIdStorePublic = defineStore("idPublic", {
     setCreatorId(creatorId) {
       this.creatorId = creatorId;
     },
+    setContributeId(contribute){
+      this.contributeId = contribute;    }
   },
 });

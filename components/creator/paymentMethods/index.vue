@@ -313,7 +313,8 @@ const checkPayment = async (paymentId, paymentMethod) => {
         userStorePublic.id,
         idPaymentStore.subscriptionId,
         paymentMethod,
-        idPaymentStore.setAmount
+        idPaymentStore.setAmount,
+        userStorePublic.contributeId
       );
     }
   } catch (error) {
@@ -325,7 +326,7 @@ const checkPayment = async (paymentId, paymentMethod) => {
 const clearDataPayment = async () => {
   idPaymentStore.setDataReceived = null;
 };
-const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
+const successPayment = async (id, subscriptionId, paymentMethodId, amount, contributeId) => {
   try {
     const makeSubscriptionRequest = async (url, data) => {
       try {
@@ -359,10 +360,15 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
         subscriptionId,
         paymentMethodId,
       });
-    } else {
+    } else if(subscriptionId == "donation") {
       await makeSubscriptionRequest(`https://api.seduvibe.com/donate/${id}`, {
         amount,
       });
+    }
+    else if(subscriptionId == "contribute"){
+      await makeSubscriptionRequest(`https://api.seduvibe.com/contribute/${contributeId}`, {
+        value: amount
+      })
     }
   } catch (error) {
     console.error("Error when subscribing:", error);

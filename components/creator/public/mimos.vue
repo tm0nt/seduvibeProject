@@ -96,6 +96,9 @@ export default {
 <script setup>
 import { ref } from "vue";
 import { idPayment } from "~/store/payment";
+import { useIdStorePublic } from "~/store/public";
+
+const idStore = useIdStorePublic();
 
 const cookie = useCookie("token");
 const token = cookie.value;
@@ -104,6 +107,7 @@ const valueDonate = ref(null);
 const idPaymentStore = idPayment();
 
 watch(valueDonate, (newValue) => {
+  idPaymentStore.setSubsId("contribute");
   idPaymentStore.setAmount = newValue;
 });
 
@@ -133,6 +137,8 @@ const formatarMoeda = (valor) => {
 
 const DonationMeta = (item) => {
   DonationMetaDialog.value = { item: item, visible: true };
+  
+  idStore.contributeId(item.id);
 };
 
 const fetchData = async () => {
