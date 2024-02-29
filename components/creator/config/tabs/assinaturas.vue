@@ -112,7 +112,7 @@ const saveSubscriptions = async () => {
     })),
   };
   try {
-    const { data: saveSubscription } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/subscription/choose_subscriptions",
       {
         method: "POST",
@@ -123,7 +123,7 @@ const saveSubscriptions = async () => {
         body: JSON.stringify(subscriptionsData),
       }
     );
-    console.log(saveSubscription);
+    console.log(data);
     showSnackbar("Dados atualizados!", "success");
     fetchData();
   } catch (error) {
@@ -134,11 +134,11 @@ const saveSubscriptions = async () => {
 const requiredRule = (value) => !!value || "O campo é obrigatório";
 
 const rangeRule = (value) => {
-  const isValidRange = parseFloat(value) >= 10 && parseFloat(value) <= 100;
+  const isValidRange = parseFloat(value) >= 0 && parseFloat(value) <= 1000;
 
   isSaveButtonDisabled.value = !isValidRange;
 
-  return isValidRange || "De R$10,00 até R$ 100,00";
+  return isValidRange || "Limite de até R$ 1000,00";
 };
 
 const snackbar = ref({
@@ -159,7 +159,7 @@ const showSnackbar = (message, color) => {
 
 const fetchData = async () => {
   try {
-    const { data: fetchData } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/subscription/list_values_subs",
       {
         method: "GET",
@@ -170,8 +170,8 @@ const fetchData = async () => {
       }
     );
 
-    if (Array.isArray(fetchData._rawValue)) {
-      fetchData._rawValue.forEach((subscriptionData) => {
+    if (Array.isArray(data)) {
+      data.forEach((subscriptionData) => {
         if (subscriptionData.Subscription && subscriptionData.Subscription.name) {
           const subscription = subscriptionData.Subscription;
 

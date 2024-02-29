@@ -44,7 +44,7 @@ const subscriptions = ref(null);
 
 onMounted(async () => {
   try {
-    const { data: fetchData } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/subscription/list_subscriptions",
       {
         method: "GET",
@@ -54,8 +54,7 @@ onMounted(async () => {
         },
       }
     );
-    subscriptions.value = fetchData._rawValue;
-    console.log(subscriptions);
+    subscriptions.value = data;
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

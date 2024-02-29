@@ -122,7 +122,7 @@ const token = cookie.value;
 
 const withdrawRequest = async (id, amount) => {
   try {
-    const { data } = await useFetch("https://api.seduvibe.com/request_withdraw", {
+    const data  = await $fetch("https://api.seduvibe.com/request_withdraw", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const withdrawRequest = async (id, amount) => {
         amount: amount,
       }),
     });
-    console.log(data.value);
+    console.log(data);
     showSnackbar("Seu saque foi pedido e vai ser processado!", "success");
     pix.value.amount = null;
   } catch (error) {

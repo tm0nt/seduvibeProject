@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container>
-      <v-slide-group>
+      <v-slide-group v-if="affiliateActive?.length">
         <v-slide-item v-for="(item, index) in affiliateActive" :key="index">
           <v-col>
             <v-badge color="success">
@@ -32,6 +32,11 @@
           </v-col>
         </v-slide-item>
       </v-slide-group>
+      <v-row v-else>
+        <v-col>
+          <p class="text-caption text-medium-emphasis text-center">Nenhuma afiliação ativa</p>
+        </v-col>
+      </v-row>
     </v-container>
   </v-app>
 </template>
@@ -47,11 +52,11 @@ const formatDate = (dateString) => {
 const cookie = useCookie("token");
 const token = cookie.value;
 
-const affiliateActive = ref(null);
+const affiliateActive = ref([]);
 
 onMounted(async () => {
   try {
-    const { data: fetchData } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/afiliates/user-affiliate-requests-approved",
       {
         method: "GET",
@@ -61,8 +66,7 @@ onMounted(async () => {
         },
       }
     );
-    affiliateActive.value = fetchData._rawValue;
-    console.log(fetchData);
+    affiliateActive.value = data;
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

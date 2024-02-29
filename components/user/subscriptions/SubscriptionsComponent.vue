@@ -61,7 +61,7 @@ const subscriptionCreator = ref(null);
 
 onMounted(async () => {
   try {
-    const { data: fetchData } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/subscription/list_subscriptions_users_active",
       {
         method: "GET",
@@ -71,8 +71,8 @@ onMounted(async () => {
         },
       }
     );
-    subscriptionCreator.value = fetchData._rawValue;
-    console.log(fetchData);
+    subscriptionCreator.value = data;
+    console.log(data);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

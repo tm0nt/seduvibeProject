@@ -86,7 +86,7 @@
           </template>
         </div>
       </v-card-text>
-      <v-img width="100%" class="cursor-pointer mb-n10">
+      <v-card width="100%" class="cursor-pointer mb-n10" v-if="post.content != null">
         <template v-if="isImage(post.content)">
           <v-img :src="post?.content"></v-img>
         </template>
@@ -96,7 +96,7 @@
             Your browser does not support the video tag.
           </video>
         </template>
-      </v-img>
+      </v-card>
       <v-card-actions class="mt-2 mb-n9 ml-n6">
         <v-container>
           <v-btn color="primary" icon class="ma-4" @click="toggleLike(post)">
@@ -309,7 +309,7 @@ const newComment = async (id) => {
   });
   try {
     console.log(comment_payload);
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/create_comment`, {
+    const data = await $fetch(`https://api.seduvibe.com/posts/create_comment`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -328,7 +328,7 @@ const newComment = async (id) => {
 
 const newLike = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/like/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com/posts/like/${id}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -346,7 +346,7 @@ const newLike = async (id) => {
 // Delete
 const deleteLike = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/unlike/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com/posts/unlike/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -360,7 +360,7 @@ const deleteLike = async (id) => {
 };
 const deletePost = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/delete_post/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com/posts/delete_post/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -376,7 +376,7 @@ const deletePost = async (id) => {
 };
 const deleteComment = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/delete_comment/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com/posts/delete_comment/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -392,16 +392,17 @@ const deleteComment = async (id) => {
 };
 //Fetch Post
 const fetchPosts = async (id) => {
-  const { data: postData } = await useFetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
+  const data = await $fetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-
-  posts.value = postData?._rawValue?.reverse() || [];
-  totalPosts.value = posts?.value?.length;
-  imagePosts.value = posts.value.filter((post) => post.content.endsWith(".jpg")).length;
-  videoPosts.value = posts.value.filter((post) => post.content.endsWith(".mp4")).length;
+  
+  posts.value = data?.reverse() || [];
+  console.log(posts.value)
+  totalPosts.value = posts?.length;
+  imagePosts.value = posts.filter((post) => post.content.endsWith(".jpg")).length;
+  videoPosts.value = posts.filter((post) => post.content.endsWith(".mp4")).length;
 };
 
 // Fetch like

@@ -32,7 +32,7 @@
         </v-row>
         <v-row v-else>
           <v-col>
-            <p class="text-center text-caption text-medium-emphasis">Nenhum favorito encontrado.</p>
+            <p class="text-center text-caption text-medium-emphasis mt-2">Nenhum favorito encontrado.</p>
           </v-col>
         </v-row>
       </v-sheet>
@@ -50,15 +50,14 @@ const favorites = ref(null);
 
 onMounted(async () => {
   try {
-    const { data: fetchData } = await useFetch("https://api.seduvibe.com/favorites", {
+    const data = await $fetch("https://api.seduvibe.com/favorites", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    favorites.value = fetchData._rawValue.favoriteCreators;
-    console.log(fetchData);
+    favorites.value = data.favoriteCreators;
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

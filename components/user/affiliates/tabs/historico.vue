@@ -77,15 +77,14 @@ const headers = [
 
 const fetchWithdraw = async () => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/withdraw_list", {
+    const data = await $fetch("https://api.seduvibe.com/withdraw_list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    historyWithdraw.value = data?._rawValue?.withdrawals.reverse();
-    console.log(historyWithdraw);
+    historyWithdraw.value = data?.withdrawals.reverse();
   } catch (error) {
     console.error("Erro", error);
   }

@@ -44,7 +44,6 @@
               v-model="info.email"
               placeholder="Email"
               readonly
-              :disabled="true"
               prepend-inner-icon="mdi-email"
               bg-color="input_color"
             >
@@ -52,7 +51,7 @@
                 <v-chip
                   v-if="info.email_confirmed === 0 || null"
                   color="primary"
-                  @click="openDialog"
+                  @click="openDialog = true"
                 >
                   Email não verificado
                 </v-chip>
@@ -68,7 +67,6 @@
               </v-col>
               <v-col cols="6">
                 <v-btn
-                  type="submit2"
                   variant="outlined"
                   @click="changePassword = true"
                   block
@@ -108,6 +106,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="openDialog" persisent width="600">
+      <v-card
+        class="rounded-xl elevation-6"
+        color="background"
+        title="Te enviamos um e-mail"
+        prepend-icon="mdi-check"
+      >
+        <v-card-text class="text-medium-emphasis text-caption">
+          Enviamos um e-mail para sua caixa de entrada para confirmação de e-mail!
+        </v-card-text>
+        <v-card-actions>
+          <v-btn variant="text" color="primary" @click="openDialog = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 <script setup>
@@ -115,7 +128,7 @@ import { onMounted, ref } from "vue";
 
 const cookie = useCookie("token");
 const token = cookie.value;
-
+const openDialog = ref(false);
 const changePassword = ref(false);
 
 const info = ref({
@@ -128,23 +141,22 @@ const info = ref({
 
 onMounted(async () => {
   try {
-    const { data: fetchData } = await useFetch("https://api.seduvibe.com/list_users", {
+    const data = await $fetch("https://api.seduvibe.com/list_users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(fetchData._rawValue);
     info.value = {
-      usuario: fetchData?._rawValue?.users[0]?.user,
-      name: fetchData?._rawValue?.users[0]?.name,
-      cpf: fetchData?._rawValue?.data_personal[0].cpf,
-      phone: fetchData?._rawValue?.data_personal[0].phone,
-      email: fetchData?._rawValue?.users[0]?.email,
-      email_confirmed: fetchData?._rawValue.users[0].emailConfirmed,
+      usuario: data.users[0]?.user,
+      name: data.users[0]?.name,
+      cpf: data.data_personal[0].cpf,
+      phone: data.data_personal[0].phone,
+      email: data.users[0]?.email,
+      email_confirmed: data.users[0].emailConfirmed,
     };
-    console.log("Requisição realizada com sucesso:", fetchData);
+    console.log("Requisição realizada com sucesso:", data);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
@@ -166,7 +178,7 @@ const showSnackbar = (message, color) => {
 
 const saveChanges = async () => {
   try {
-    const { data: saveData } = await useFetch("https://api.seduvibe.com/change_personal_data", {
+    const data = await $fetch("https://api.seduvibe.com/change_personal_data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -178,7 +190,7 @@ const saveChanges = async () => {
       }),
     });
     showSnackbar("Dados atualizados!", "success");
-    console.log("Changes saved successfully:", saveData);
+    console.log("Changes saved successfully:", data);
   } catch (error) {
     console.error("Error while saving changes:", error);
   }

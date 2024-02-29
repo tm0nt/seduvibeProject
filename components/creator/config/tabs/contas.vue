@@ -31,6 +31,8 @@
           <v-text-field
             v-model="agency"
             label="Agência"
+            type="number"
+            hide-spin-buttons
             bg-color="input_color"
             prepend-inner-icon="mdi-bank-outline"
           ></v-text-field>
@@ -39,6 +41,8 @@
           <v-text-field
             bg-color="input_color"
             v-model="conta_number"
+            type="number"
+            hide-spin-buttons
             label="Conta"
             prepend-inner-icon="mdi-credit-card"
           ></v-text-field>
@@ -146,7 +150,7 @@ const showSnackbar = (message, color) => {
 
 const deleteAccount = async () => {
   try {
-    const { data: deleteConfirm, error } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/delete_banking_account",
       {
         method: "DELETE",
@@ -157,7 +161,7 @@ const deleteAccount = async () => {
       }
     );
 
-    console.log(deleteConfirm);
+    console.log(data);
     showSnackbar("Conta deletada com sucesso!", "success");
     fetchData();
   } catch (error) {
@@ -176,7 +180,7 @@ const registrarConta = async () => {
   };
 
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/register_banking_data", {
+    const data  = await $fetch("https://api.seduvibe.com/register_banking_data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -193,7 +197,7 @@ const registrarConta = async () => {
 };
 const fetchData = async () => {
   try {
-    const { data: bankingData, error } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/get_banking_data",
       {
         method: "GET",
@@ -204,7 +208,7 @@ const fetchData = async () => {
       }
     );
 
-    contas.value = bankingData?._rawValue?.bankingData;
+    contas.value = data?.bankingData;
     console.log(contas);
   } catch (error) {
     console.error("Erro durante a requisição:", error);

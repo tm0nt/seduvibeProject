@@ -225,20 +225,15 @@ async function handleFileSubmit() {
   try {
     const fd = new FormData();
 
+    // Append common fields outside the loop
+    fd.append("description", description.value);
+    fd.append("mention", mention.value);
+    fd.append("tagId", 1);
+
     if (files.value) {
       Array.from(files.value).forEach((file) => {
-        console.log("Appending content:", file);
         fd.append("content", file);
-
-        console.log("Appending description:", description.value);
-        fd.append("description", description.value);
-        fd.append("mention", mention.value);
-        console.log("Appending mention:", mention.value);
-        fd.append("tagId", 1);
       });
-    } else {
-      console.error("No files selected");
-      return; // Se nenhum arquivo for selecionado, pare a execução da função
     }
 
     console.log("FormData before fetch:", fd);

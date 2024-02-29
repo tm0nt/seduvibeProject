@@ -16,15 +16,15 @@
   </v-row>
 
   <v-row v-if="hasFilteredPosts">
-    <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" rounded="xl" cols="4">
+    <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" rounded="xl" cols="4" >
       <template v-if="isVideo(n.content)">
-        <video :key="n.content" :width="200" controls>
+        <video :key="n.content" :width="200" controls v-if="n.content === null">
           <source :src="n.content" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </template>
-      <template v-else>
-        <v-img :src="n.content" aspect-ratio="1" cover class="bg-grey-lighten-2" rounded="xl">
+      <template >
+        <v-img  v-if="n.content === null" :src="n.content" aspect-ratio="1" cover class="bg-grey-lighten-2" rounded="xl">
           <template v-slot:placeholder>
             <v-row class="fill-height ma-0" align="center" justify="center">
               <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>

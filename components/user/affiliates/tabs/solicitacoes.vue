@@ -55,7 +55,7 @@ const affiliateRequests = ref(null);
 
 onMounted(async () => {
   try {
-    const { data: fetchData } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/afiliates/user-affiliate-requests",
       {
         method: "GET",
@@ -65,8 +65,7 @@ onMounted(async () => {
         },
       }
     );
-    affiliateRequests.value = fetchData._rawValue;
-    console.log(fetchData);
+    affiliateRequests.value = data;
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

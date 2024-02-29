@@ -122,17 +122,14 @@ const showSnackbar = (message, color) => {
 
 const changeCreatorId = async () => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/updateCreator", {
+    const data = await $fetch("https://api.seduvibe.com/updateCreator", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("Requisição realizada com sucesso:", fetchData);
-    if (to.path != "/profile/") {
-      return navigateTo("/profile");
-    }
+  return navigateTo("/profile");
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
@@ -168,7 +165,7 @@ const logout = () => {
 
 const fetchDataFromAPI = async () => {
   try {
-    const { data: fetchData, error } = await useFetch("https://api.seduvibe.com/list_users", {
+    const data = await $fetch("https://api.seduvibe.com/list_users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -176,15 +173,14 @@ const fetchDataFromAPI = async () => {
       },
     });
 
-    console.log(error);
     info.value = {
-      nome: fetchData?._rawValue?.users[0]?.name,
-      user: fetchData?._rawValue?.users[0]?.user,
-      coverPicture: fetchData?._rawValue?.users[0]?.coverPicture,
-      profilePicture: fetchData?._rawValue?.users[0]?.profilePicture,
+      nome: data.users[0]?.name,
+      user: data.users[0]?.user,
+      coverPicture: data.users[0]?.coverPicture,
+      profilePicture: data.users[0]?.profilePicture,
     };
 
-    console.log("Requisição realizada com sucesso:", fetchData);
+    console.log("Requisição realizada com sucesso:", data);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
