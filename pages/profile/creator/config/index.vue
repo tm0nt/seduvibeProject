@@ -76,7 +76,6 @@ import Afiliados from "../../../../components/creator/config/tabs/afiliados.vue"
 import Metas from "../../../../components/creator/config/tabs/metas.vue";
 import PaymentDirect from "../../../../components/creator/config/tabs/direct.vue";
 
-
 export default {
   data: () => ({
     items: [

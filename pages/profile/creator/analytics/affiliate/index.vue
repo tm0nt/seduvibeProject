@@ -102,13 +102,14 @@
                     >
                       {{ affiliate.affiliateName }}
                     </v-chip>
-                    <p v-if="affiliate.affiliateName" class="text-caption text-medium-emphasis mt-2">
-                    Estes são os usuários do checkout
-                  </p>
-                  <p v-else class="text-caption">Nenhuma atualização</p>
+                    <p
+                      v-if="affiliate.affiliateName"
+                      class="text-caption text-medium-emphasis mt-2"
+                    >
+                      Estes são os usuários do checkout
+                    </p>
+                    <p v-else class="text-caption">Nenhuma atualização</p>
                   </template>
-
-
                 </v-container>
               </v-card>
             </v-col>
@@ -145,16 +146,13 @@ const fetchAffiliate = async () => {
 };
 const totalEarnings = async () => {
   try {
-    const data = await $fetch(
-      "https://api.seduvibe.com/afiliates/total_affiliate_earnings",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch("https://api.seduvibe.com/afiliates/total_affiliate_earnings", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log(data);
     coin.value.totalEarnings = data;
   } catch (error) {
@@ -164,16 +162,13 @@ const totalEarnings = async () => {
 
 const rankingAffiliate = async () => {
   try {
-    const data = await $fetch(
-      "https://api.seduvibe.com/afiliates/top_affiliate_earnings",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch("https://api.seduvibe.com/afiliates/top_affiliate_earnings", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log(data);
     coin.value.rankingAffiliate = data;
   } catch (error) {

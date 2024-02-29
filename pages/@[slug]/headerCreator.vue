@@ -1,7 +1,7 @@
 <template>
   <VCard class="rounded-lg" flat height="150">
     <template v-slot:image>
-      <VImg eager cover position="center" :src="profileFetch?.userData?.coverPicture"></VImg>
+      <VImg cover :src="profileFetch?.userData?.coverPicture"></VImg>
     </template>
   </VCard>
 
@@ -191,13 +191,12 @@ watch(valueDonate, (newValue) => {
 const toggleFavorite = async (id) => {
   try {
     if (isFavorite.value) {
-      await removeFromFavorites(id); // Implemente essa função de acordo com sua lógica
-      showSnackbar("Removido dos favoritos!", "info");
+      await removeFromFavorites(id);
+      showSnackbar("Removido dos favoritos!", "error");
     } else {
-      await addToFavorites(id); // Implemente essa função de acordo com sua lógica
+      await addToFavorites(id);
       showSnackbar("Adicionado aos favoritos!", "success");
     }
-    // Atualize o estado isFavorite
     isFavorite.value = !isFavorite.value;
   } catch (error) {
     console.error("Erro ao favoritar/desfavoritar:", error);
@@ -207,7 +206,7 @@ const toggleFavorite = async (id) => {
 // Remover
 const removeFromFavorites = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/unlike/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com/unlike/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -219,15 +218,14 @@ const removeFromFavorites = async (id) => {
   }
 };
 
-const donationVisible = async() => {
+const donationVisible = async () => {
   idPaymentStore.setSubsId("donation");
   donation.value.visible = true;
-  
 };
 // Adicionar
 const addToFavorites = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/like/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com/like/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -241,15 +239,14 @@ const addToFavorites = async (id) => {
 // Verificar
 const checkFavorites = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/is_favorite/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com/is_favorite/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-    isFavorite.value = data._rawValue.isFavorite;
-    console.log(data);
+    isFavorite.value = data?.isFavorite;
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
@@ -331,34 +328,28 @@ const route = useRoute();
 const user = ref(route.params.slug);
 const profileFetch = ref(null);
 
-const fetchData = async () => {
+const fetchData = async (userName) => {
   try {
-    const { data, error } = await useFetch(
-      `https://api.seduvibe.com/list_creator/${user._rawValue}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    checkFavorites(data._rawValue.userData.id);
-    profileFetch.value = data._rawValue;
+    const data = await $fetch(`https://api.seduvibe.com/list_creator/${userName}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    checkFavorites(data?.userData?.id);
+    profileFetch.value = data;
     userIdPublic.setId(profileFetch.value.userData.id);
     social_media.value.instagram.user = profileFetch.value.userData.socialMedia.instagram;
     social_media.value.twitter.user = profileFetch.value.userData.socialMedia.twitter;
     social_media.value.telegram.user = profileFetch.value.userData.socialMedia.telegram;
-
-    console.log(data);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
 };
 
-fetchData();
-
 const shareProfile = ref({
   value: false,
   url: "https://seduvibe.com/@" + route.params.slug,
 });
+fetchData(user.value);
 </script>

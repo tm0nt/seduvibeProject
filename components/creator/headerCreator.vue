@@ -352,16 +352,13 @@ const userSubsCount = ref(null);
 
 const countUserSubs = async () => {
   try {
-    const data= await $fetch(
-      "https://api.seduvibe.com/subscription/subs_users_count/",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const data = await $fetch("https://api.seduvibe.com/subscription/subs_users_count/", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     userSubsCount.value = data;
     console.log(data);
   } catch (error) {
@@ -371,7 +368,7 @@ const countUserSubs = async () => {
 
 const changeDescription = async () => {
   try {
-    const data  = await $fetch("https://api.seduvibe.com/change_user_data", {
+    const data = await $fetch("https://api.seduvibe.com/change_user_data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -458,7 +455,7 @@ const copyToClipboard = () => {
 };
 const fetchDataFromAPI = async () => {
   try {
-    const data  = await $fetch("https://api.seduvibe.com/creator_list", {
+    const data = await $fetch("https://api.seduvibe.com/creator_list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

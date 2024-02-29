@@ -47,7 +47,7 @@
               <v-col>
                 <component v-if="active?.subscriptionActive?.active" :is="currentComponent" />
                 <v-card
-                @click="showBlockMessage"
+                  @click="showBlockMessage"
                   variant="tonal"
                   link
                   width="150"
@@ -100,7 +100,12 @@
             >
           </v-chip-group>
           <v-row class="mt-1" align="center" justify="center">
-            <p v-if="selectedPlan === null" class="text-caption text-medium-emphasis text-center ma-2">Selecione um período de assinatura acima</p>
+            <p
+              v-if="selectedPlan === null"
+              class="text-caption text-medium-emphasis text-center ma-2"
+            >
+              Selecione um período de assinatura acima
+            </p>
             <v-col cols="8">
               <v-card
                 link
@@ -218,7 +223,7 @@ const cookie = useCookie("token");
 const token = cookie.value;
 const guardContentRequest = async (creatorId) => {
   try {
-    const { data, error, pending } = await useFetch(
+    const data = await $fetch(
       `https://api.seduvibe.com/subscription/subs_users_active_unique/${creatorId}`,
       {
         method: "GET",
@@ -228,9 +233,7 @@ const guardContentRequest = async (creatorId) => {
         },
       }
     );
-    active.value = data.value;
-    console.log(data);
-    console.log(error);
+    active.value = data;
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
@@ -241,19 +244,16 @@ const showBlockMessage = async () => {
 };
 const selectedPlan = ref(null);
 const paymentDialogVisible = ref(false);
-const fetchData = async () => {
+const fetchData = async (userName) => {
   try {
-    const { data, error } = await useFetch(
-      `https://api.seduvibe.com/list_creator/${user._rawValue}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    subscriptionList.value.list = data.value.creatorSubscriptions;
-    guardContentRequest(data.value.userData.id);
+    const data = await $fetch(`https://api.seduvibe.com/list_creator/${userName}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    subscriptionList.value.list = data.creatorSubscriptions;
+    guardContentRequest(data.userData.id);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
@@ -263,7 +263,7 @@ const route = useRoute();
 const user = ref(route.params.slug);
 
 const selectPlan = (plan) => {
-  selectedPlan.value = plan;  
+  selectedPlan.value = plan;
   idPaymentStore.setSubsId(planIds[plan]);
 };
 const subscriptionValue = computed(() => {
@@ -277,27 +277,11 @@ const subscriptionValueFormatted = computed(() => {
   return `R$ ${subscriptionValue.value.toFixed(2)}`;
 });
 
-watch(() => {
+watchEffect(() => {
   idPaymentStore.setAmount = subscriptionValue.value;
 });
 
-// Assista as alterações em subscriptionList e imprima no console
-watch(
-  () => subscriptionList.value,
-  (newList) => {
-    console.log("subscriptionList atualizada:", newList);
-  }
-);
-
-// Assista as alterações em selectedPlan e imprima no console
-watch(
-  () => selectedPlan.value,
-  (newPlan) => {
-    console.log("selectedPlan atualizado:", newPlan);
-  }
-);
-
-fetchData();
+fetchData(user.value);
 </script>
 
 <script>

@@ -177,16 +177,13 @@ const fetchAffiliates = async () => {
 
 const deleteAffiliateRequest = async (item) => {
   try {
-    const data = await $fetch(
-      `https://api.seduvibe.com/afiliates/remove-affiliate/${item}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch(`https://api.seduvibe.com/afiliates/remove-affiliate/${item}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     fetchAffiliates();
     deleteAffiliate.value.visible = false;
     showSnackbar("Afiliado deletado com sucesso!", "success");

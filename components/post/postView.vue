@@ -7,19 +7,9 @@
       filter
       v-model="selectedExtension"
     >
-      <v-chip value="all">
-        <p>({{ totalPosts }})</p>
-        &nbsp;Tudo&nbsp;
-        
-      </v-chip>
-      <v-chip value="image">
-        <p>({{ imagePosts }})</p>
-        &nbsp;Imagens&nbsp;
-      </v-chip>
-      <v-chip value="video">
-        <p>({{ videoPosts }})</p>
-        &nbsp;Vídeos&nbsp;
-      </v-chip>
+      <v-chip value="all"> &nbsp;Tudo&nbsp; </v-chip>
+      <v-chip value="image"> &nbsp;Imagens&nbsp; </v-chip>
+      <v-chip value="video"> &nbsp;Vídeos&nbsp; </v-chip>
     </v-chip-group>
     <v-card
       v-for="post in filteredPosts"
@@ -83,7 +73,7 @@
           </template>
         </div>
       </v-card-text>
-      <v-img width="100%" class="cursor-pointer mb-n10">
+      <v-card width="100%" class="cursor-pointer mb-n10" v-if="post?.content !== null">
         <template v-if="isImage(post.content)">
           <v-img :src="post?.content"></v-img>
         </template>
@@ -93,7 +83,7 @@
             Your browser does not support the video tag.
           </video>
         </template>
-      </v-img>
+      </v-card>
       <v-card-actions class="mt-2 mb-n9 ml-n6">
         <v-container>
           <v-btn color="primary" icon class="ma-4" @click="toggleLike(post)">
@@ -219,7 +209,6 @@ const comment = ref({
   content: null,
 });
 
-
 const idCreatorPublic = idStore.id;
 const cookie = useCookie("token");
 const deleteDialog = ref(false);
@@ -251,7 +240,7 @@ const toggleLike = async (post) => {
       showSnackbar("Você curtiu a postagem!", "success");
     }
 
-   fetchPosts(idCreatorPublic);
+    fetchPosts(idCreatorPublic);
   } catch (error) {
     console.error("Erro ao alternar curtida:", error);
   }
@@ -263,7 +252,7 @@ const filteredPosts = computed(() => {
     return posts.value;
   } else {
     const extensionFilter = selectedExtension.value === "image" ? ".jpg" : ".mp4";
-    return posts.value.filter((post) => post.content.endsWith(extensionFilter));
+    return posts.value.filter((post) => post?.content?.endsWith(extensionFilter));
   }
 });
 
@@ -287,7 +276,7 @@ const newComment = async (id) => {
     });
     comment.value.content = null;
     showSnackbar("Comentário feito com sucesso!", "success");
-   fetchPosts(idCreatorPublic);
+    fetchPosts(idCreatorPublic);
     console.log(data);
     console.log(error);
   } catch {
@@ -304,7 +293,7 @@ const newLike = async (id) => {
       },
     });
     showSnackbar("Vocẽ curtiu uma postagem!", "success");
-   fetchPosts(idCreatorPublic);
+    fetchPosts(idCreatorPublic);
     console.log(data);
     console.log(error);
   } catch {
@@ -321,7 +310,7 @@ const deleteLike = async (id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-   fetchPosts(idCreatorPublic);
+    fetchPosts(idCreatorPublic);
     console.log(data);
   } catch {
     //
@@ -337,7 +326,7 @@ const deletePost = async (id) => {
     });
     deleteDialog.value = false;
     showSnackbar("Postagem deletada com sucesso!", "success");
-   fetchPosts(idCreatorPublic);
+    fetchPosts(idCreatorPublic);
     console.log(data);
   } catch {
     //
@@ -353,7 +342,7 @@ const deleteComment = async (id) => {
     });
     deleteDialogComment.value = false;
     showSnackbar("Comentário deletado com sucesso!", "success");
-   fetchPosts(idCreatorPublic);
+    fetchPosts(idCreatorPublic);
     console.log(data);
   } catch {
     //
@@ -370,8 +359,8 @@ const fetchPosts = async (id) => {
 
   posts.value = postData?._rawValue?.reverse() || [];
   totalPosts.value = posts?.value?.length;
-  imagePosts.value = posts.value.filter((post) => post.content.endsWith(".jpg")).length;
-  videoPosts.value = posts.value.filter((post) => post.content.endsWith(".mp4")).length;
+  imagePosts.value = posts.value.filter((post) => post?.content?.endsWith(".jpg")).length || [];
+  videoPosts.value = posts.value.filter((post) => post?.content?.endsWith(".mp4")).length || [];
 };
 
 // Fetch like

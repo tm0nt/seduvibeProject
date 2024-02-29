@@ -1,9 +1,11 @@
 <template>
   <v-container>
     <h2>Pagamento direto</h2>
-    <p class="text-caption text-medium-emphasis mt-n2">Para receber pagamentos personalizados compartilhe seu link.</p>
+    <p class="text-caption text-medium-emphasis mt-n2">
+      Para receber pagamentos personalizados compartilhe seu link.
+    </p>
     <v-text-field
-    class="mt-4"
+      class="mt-4"
       v-model="directLink"
       variant="solo"
       bg-color="input_color"

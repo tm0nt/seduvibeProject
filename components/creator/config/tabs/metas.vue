@@ -16,6 +16,8 @@
       placeholder="Quanto você precisa?"
       prepend-inner-icon="mdi-coin"
       color="primary"
+      type="number"
+      hide-spin-buttons
       class="mt-n2"
       bg-color="input_color"
       v-model="amount"
@@ -23,13 +25,7 @@
     <v-btn color="primary" min-height="40" class="text-capitalize" block @click="saveData"
       >Salvar</v-btn
     >
-
-    <v-chip-group v-model="selectedFilter" class="mt-4">
-      <v-chip filter color="primary" value="all">Tudo</v-chip>
-      <v-chip filter color="primary" value="pending">Aguardando</v-chip>
-      <v-chip filter color="primary" value="completed">Concluído</v-chip>
-    </v-chip-group>
-
+    <v-divider class="my-4"></v-divider>
     <v-col v-if="metaList.length > 0" class="mt-4">
       <v-card
         v-for="metaItem in metaList"
@@ -37,8 +33,24 @@
         class="mx-auto rounded-xl elevation-4 mb-2"
         flat
         color="background"
+        link
+        @click="deleteDialog = true"
         :title="metaItem?.name"
       >
+        <v-dialog v-model="deleteDialog" width="600" persistent>
+          <v-card
+            class="rounded-xl elevation-0"
+            flat
+            prepend-icon="mdi-delete"
+            title="Confirmação"
+            subtitle="Você deseja deletar essa meta?"
+          >
+            <v-card-actions>
+              <v-btn color="primary" @click="deleteObjective(metaItem.id)">SIM</v-btn>
+              <v-btn @click="deleteDialog = false">NÃO</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <template v-slot:prepend>
           <v-icon color="primary">mdi-bullseye-arrow</v-icon>
         </template>
@@ -83,30 +95,12 @@
     >
       {{ snackbar.message }}
     </v-snackbar>
-    <v-dialog v-model="deleteDialog" width="600" persistent>
-      <v-card
-        class="rounded-xl elevation-0"
-        flat
-        prepend-icon="mdi-delete"
-        title="Confirmação"
-        subtitle="Você deseja deletar sua conta bancária?"
-      >
-        <v-card-actions>
-          <v-btn color="primary" @click="deleteAccount">SIM</v-btn>
-          <v-btn @click="deleteDialog = false">NÃO</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 const deleteDialog = ref(false);
-const openDeleteDialog = () => {
-  deleteDialog.value = true;
-};
-
 const snackbar = ref({
   show: false,
   message: "",
@@ -123,11 +117,13 @@ const showSnackbar = (message, color) => {
   };
 };
 
+const cookie = useCookie("token");
+const token = cookie.value;
+
 const name = ref("");
 const amount = ref("");
 const metaList = ref([]);
 const progress = ref(0);
-const selectedFilter = ref("all");
 
 const isMetaCompleted = (metaItem) => {
   return metaItem.collected === metaItem.amount;
@@ -141,10 +137,24 @@ const formatarMoeda = (valor) => {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 };
 
-const saveData = async () => {
-  const cookie = useCookie("token");
-  const token = cookie.value;
+const deleteObjective = async (id) => {
+  try {
+    const data = await $fetch(`https://api.seduvibe.com/delete_objective/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    fetchMetaData();
+    showSnackbar("Meta deletada com sucesso!", "error");
+    deleteDialog.value = false;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
+const saveData = async () => {
   const payload = {
     name: name.value,
     amount: Number(amount.value),
@@ -166,9 +176,8 @@ const saveData = async () => {
       body: JSON.stringify(payload),
     });
 
-    if (response.ok) {
-      const responseData = await response.json();
-      updateMetaList(responseData._rawValue.objectives);
+    if (response) {
+      fetchMetaData();
       showSnackbar("Meta criada com sucesso!", "success");
     } else {
       console.error("Erro ao criar meta:", response.statusText);
@@ -179,9 +188,6 @@ const saveData = async () => {
 };
 
 const fetchMetaData = async () => {
-  const cookie = useCookie("token");
-  const token = cookie.value;
-
   try {
     const { data: metaData } = await useFetch("https://api.seduvibe.com/list_objectives", {
       method: "GET",
@@ -191,15 +197,7 @@ const fetchMetaData = async () => {
       },
     });
 
-    if (selectedFilter.value === "all") {
-      metaList.value = metaData._rawValue.objectives.reverse();
-    } else {
-      metaList.value = metaData._rawValue.objectives
-        .filter((metaItem) => {
-          return isMetaCompleted(metaItem) === (selectedFilter.value === "completed");
-        })
-        .reverse();
-    }
+    metaList.value = metaData._rawValue.objectives.reverse();
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

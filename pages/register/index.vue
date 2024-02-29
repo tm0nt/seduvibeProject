@@ -220,9 +220,7 @@ import { useRegisterStore } from "~/store/register";
 import { ref } from "vue";
 
 definePageMeta({
-  middleware: [
-    'auth',
-  ],
+  middleware: ["auth"],
 });
 
 const password_one = ref("");

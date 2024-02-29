@@ -150,16 +150,13 @@ const showSnackbar = (message, color) => {
 
 const deleteAccount = async () => {
   try {
-    const data = await $fetch(
-      "https://api.seduvibe.com/delete_banking_account",
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch("https://api.seduvibe.com/delete_banking_account", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     console.log(data);
     showSnackbar("Conta deletada com sucesso!", "success");
@@ -180,7 +177,7 @@ const registrarConta = async () => {
   };
 
   try {
-    const data  = await $fetch("https://api.seduvibe.com/register_banking_data", {
+    const data = await $fetch("https://api.seduvibe.com/register_banking_data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -197,16 +194,13 @@ const registrarConta = async () => {
 };
 const fetchData = async () => {
   try {
-    const data = await $fetch(
-      "https://api.seduvibe.com/get_banking_data",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch("https://api.seduvibe.com/get_banking_data", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     contas.value = data?.bankingData;
     console.log(contas);

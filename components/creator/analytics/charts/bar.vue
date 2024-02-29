@@ -1,13 +1,18 @@
 <template>
   <div>
-<!--    <apexchart
+    <!--    <apexchart
       :key="series"
       height="200"
       width="100%"
       :options="options"
       :series="series"
     ></apexchart> -->
-    <v-progress-circular class="mx-auto d-flex align-center justify-center mt-4" color="primary" size="small" indeterminate></v-progress-circular>
+    <v-progress-circular
+      class="mx-auto d-flex align-center justify-center mt-4"
+      color="primary"
+      size="small"
+      indeterminate
+    ></v-progress-circular>
   </div>
 </template>
 

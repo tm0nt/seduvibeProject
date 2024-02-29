@@ -129,7 +129,7 @@ const changeCreatorId = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-  return navigateTo("/profile");
+    return navigateTo("/profile");
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

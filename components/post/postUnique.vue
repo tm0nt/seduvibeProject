@@ -332,18 +332,17 @@ const fetchPosts = async (idStore) => {
   const route = useRoute();
   const id = ref(route.params.slug);
 
-    const { data: postData, error } = await useFetch(
-      `https://api.seduvibe.com/posts/list_posts_unique/${id.value}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const { data: postData, error } = await useFetch(
+    `https://api.seduvibe.com/posts/list_posts_unique/${id.value}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-    console.log(postData?._rawValue);
-    posts.value = postData?._rawValue || [];
-
+  console.log(postData?._rawValue);
+  posts.value = postData?._rawValue || [];
 };
 
 // Fetch like

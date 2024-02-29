@@ -35,11 +35,7 @@
   </v-app>
 </template>
 
-
-
-
-<script setup>
-</script>
+<script setup></script>
 <script>
 import HeaderCreator from "../../../components/user/headerCreator";
 import ProfileComponent from "../../../components/user/profile/ProfileComponent";

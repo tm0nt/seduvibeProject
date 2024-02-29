@@ -37,9 +37,7 @@
     </VContainer>
   </VApp>
 </template>
-<script setup>
-
-</script>
+<script setup></script>
 <script>
 import UploadwithPost from "../../../components/post/UploadwithPost.vue";
 import headerCreator from "../../../components/creator/headerCreator";

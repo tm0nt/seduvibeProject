@@ -122,7 +122,7 @@ const token = cookie.value;
 
 const withdrawRequest = async (id, amount) => {
   try {
-    const data  = await $fetch("https://api.seduvibe.com/request_withdraw", {
+    const data = await $fetch("https://api.seduvibe.com/request_withdraw", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

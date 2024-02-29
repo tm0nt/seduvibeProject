@@ -1,13 +1,18 @@
 <template>
   <div>
- <!--  <apexchart
+    <!--  <apexchart
       :key="seriesKey"
       height="200"
       width="100%"
       :options="options"
       :series="series"
     ></apexchart> -->
-    <v-progress-circular class="mx-auto d-flex align-center justify-center mt-4" color="primary" size="small" indeterminate></v-progress-circular>
+    <v-progress-circular
+      class="mx-auto d-flex align-center justify-center mt-4"
+      color="primary"
+      size="small"
+      indeterminate
+    ></v-progress-circular>
   </div>
 </template>
 
@@ -21,7 +26,7 @@ const seriesKey = ref(0);
 
 const fetchData = async () => {
   try {
-    const data= await $fetch("https://api.seduvibe.com/analytics", {
+    const data = await $fetch("https://api.seduvibe.com/analytics", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -81,4 +86,3 @@ onMounted(() => {
 
 // ...
 </script>
-

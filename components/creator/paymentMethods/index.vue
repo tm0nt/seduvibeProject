@@ -6,74 +6,88 @@
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <v-form class="ma-4">
-          <!--
-          <v-row>
-            <v-col cols="12" md="12" lg="12">
-              <v-text-field
-                hide-spin-buttons
-                bg-color="input_color"
-                label="Titular"
-                type="text"
-                placeholder="Titular"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" md="12" lg="12">
-              <v-text-field
-                hide-spin-buttons
-                bg-color="input_color"
-                label="CPF"
-                type="number"
-                v-model="idPaymentStore.cpf"
-                class="mt-n6"
-                placeholder="CPF"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6" md="6" lg="6">
-              <v-text-field
-                hide-spin-buttons
-                bg-color="input_color"
-                label="Número"
-                class="mt-n6"
-                type="number"
-                placeholder="Número"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6" md="6" lg="6">
-              <v-text-field
-                hide-spin-buttons
-                bg-color="input_color"
-                class="mt-n6"
-                label="Mês"
-                type="number"
-                placeholder="Mês"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="6" md="6" lg="6">
-              <v-text-field
-                hide-spin-buttons
-                bg-color="input_color"
-                label="Ano"
-                type="number"
-                class="mt-n6"
-                placeholder="Ano"
-              ></v-text-field>
-            </v-col>
+          <v-col cols="12" md="12" lg="12">
+            <v-text-field
+              hide-spin-buttons
+              bg-color="input_color"
+              v-model="creditCard.name"
+              label="Titular"
+              type="text"
+              placeholder="Titular"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="12" lg="12">
+            <v-text-field
+              hide-spin-buttons
+              bg-color="input_color"
+              label="CPF"
+              type="number"
+              v-model="idPaymentStore.cpf"
+              class="mt-n6"
+              placeholder="CPF"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6" md="6" lg="6">
+            <v-text-field
+              hide-spin-buttons
+              bg-color="input_color"
+              label="Número"
+              v-model="creditCard.number"
+              class="mt-n6"
+              type="number"
+              placeholder="Número"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6" md="6" lg="6">
+            <v-text-field
+              hide-spin-buttons
+              bg-color="input_color"
+              class="mt-n6"
+              v-model="creditCard.mes"
+              label="Mês"
+              type="number"
+              placeholder="Mês"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="6" md="6" lg="6">
+            <v-text-field
+              hide-spin-buttons
+              bg-color="input_color"
+              label="Ano"
+              v-model="creditCard.ano"
+              type="number"
+              class="mt-n6"
+              placeholder="Ano"
+            ></v-text-field>
+          </v-col>
 
-            <v-col cols="6" md="6" lg="6">
-              <v-text-field
-                hide-spin-buttons
-                class="mt-n6"
-                bg-color="input_color"
-                label="CVV"
-                type="number"
-                placeholder="CVV"
-              ></v-text-field>
-            </v-col>
-            <v-btn block min-height="40" color="primary" class="text-capitalize"
-              >Fazer pagamento</v-btn
-            > 
-          </v-row> -->
-          <p class="text-caption text-center">Ainda estamos processando este método de pagamento</p>
+          <v-col cols="6" md="6" lg="6">
+            <v-text-field
+              hide-spin-buttons
+              class="mt-n6"
+              bg-color="input_color"
+              label="CVV"
+              type="number"
+              v-model="creditCard.cvv"
+              placeholder="CVV"
+            ></v-text-field>
+          </v-col>
+          <v-btn
+            block
+            min-height="40"
+            color="primary"
+            :disabled="pending === true"
+            @click="makePaymentCredit(2)"
+            class="text-capitalize"
+            ><p v-if="pending !== true">Fazer pagamento</p>
+            <v-progress-circular
+              v-if="pending === true"
+              indeterminate
+              color="primary"
+              :size="16"
+              :width="3"
+            ></v-progress-circular
+          ></v-btn>
         </v-form>
       </v-expansion-panel-text>
     </v-expansion-panel>
@@ -99,7 +113,7 @@
             min-height="40"
             color="primary"
             :disabled="pending === true"
-            @click="makePaymentPix(1);"
+            @click="makePaymentPix(1)"
             class="text-capitalize"
             ><p v-if="pending !== true">Fazer pagamento</p>
             <v-progress-circular
@@ -139,7 +153,11 @@
         <template v-if="paymentSuccessful">
           <v-icon size="64" color="primary">mdi-check-circle</v-icon>
           <p class="mb-2 mt-4">Pagamento concluído!</p>
-          <v-card-actions><v-btn @click="payPixDialog = false" variant="text" color="primary">OK</v-btn></v-card-actions>
+          <v-card-actions
+            ><v-btn @click="payPixDialog = false" variant="text" color="primary"
+              >OK</v-btn
+            ></v-card-actions
+          >
         </template>
         <template v-else>
           <p class="mb-2">Você está pagando via pix</p>
@@ -182,11 +200,18 @@
 import { useIdStorePublic } from "~/store/public";
 import { idPayment } from "~/store/payment";
 
-
-const emit = defineEmits(["closeDialog"])
+const emit = defineEmits(["closeDialog"]);
 
 const cookie = useCookie("token");
 const token = cookie.value;
+
+const creditCard = ref({
+  name: null,
+  number: null,
+  mes: null,
+  ano: null,
+  cvv: null,
+});
 
 const userStorePublic = useIdStorePublic();
 
@@ -226,7 +251,7 @@ const makePaymentPix = async (id) => {
       metadata: "userId:1,source:donation",
     };
 
-    const { data, pending: waiting } = await useFetch(
+    const { data, pending: waiting } = await $fetch(
       "https://payment.seduvibe.cloud/paymentProcess/pix",
       {
         method: "POST",
@@ -241,7 +266,7 @@ const makePaymentPix = async (id) => {
       payPixDialog.value = true;
       await checkPayment(data?.value.id, 1);
     }
-    emit("closeDialog")
+    emit("closeDialog");
   } catch (error) {
     console.error(error);
     // Trate os erros adequadamente
@@ -250,19 +275,50 @@ const makePaymentPix = async (id) => {
   }
 };
 
+const tokenCredit = async (number, holderName, expMonth, expYear, cvv) => {
+  try {
+    const token = await AbmexPay.encrypt({
+      number: number,
+      holderName: holderName,
+      expMonth: expMonth,
+      expYear: expYear,
+      cvv: cvv,
+    });
+    return token;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+const makePaymentCredit = async (id) => {
+  try {
+    pending.value = true;
+    console.log(id);
+    await tokenCredit();
+    pending.value = false;
+  } catch (error) {
+    console.error(error);
+  }
+};
 const checkPayment = async (paymentId, paymentMethod) => {
   try {
-    const { data } = await useFetch(`https://api.seduvibe.com/gateway/check-status/${paymentId}`, {
+    const data = await $fetch(`https://api.seduvibe.com/gateway/check-status/${paymentId}`, {
       method: "GET",
     });
 
-    if (data.value) {
+    if (data) {
       paymentSuccessful.value = true;
-      await successPayment(userStorePublic.id, idPaymentStore.subscriptionId, paymentMethod, idPaymentStore.setAmount);
+      await successPayment(
+        userStorePublic.id,
+        idPaymentStore.subscriptionId,
+        paymentMethod,
+        idPaymentStore.setAmount
+      );
     }
   } catch (error) {
     console.error(error);
-    // Trate os erros adequadamente
+    //
   }
 };
 
@@ -273,7 +329,7 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
   try {
     const makeSubscriptionRequest = async (url, data) => {
       try {
-        const response = await useFetch(url, {
+        const response = await $fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -282,8 +338,8 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
           body: JSON.stringify(data),
         });
 
-        if (response.data.value) {
-          console.log(response.data.value);
+        if (data) {
+          await clearDataPayment();
         } else {
           console.log(response.error);
         }
@@ -310,10 +366,9 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
     }
   } catch (error) {
     console.error("Error when subscribing:", error);
-    // 
+    //
   }
 };
-
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(idPaymentStore.setDataReceived.qrCode.qrcode);

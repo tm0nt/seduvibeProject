@@ -90,15 +90,12 @@ const notifs = ref([]);
 const selectedFilter = ref(0);
 const filterNotifications = ref(null);
 
-
 const fetchData = async () => {
   const cookie = useCookie("token");
   const token = cookie.value;
 
   try {
-    const 
-      data
-     = await $fetch("https://api.seduvibe.com/list_notifications", {
+    const data = await $fetch("https://api.seduvibe.com/list_notifications", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -8,10 +8,10 @@ export const useIdStore = defineStore("id", {
     user: "",
   }),
   actions: {
-    setAuth(auth){
+    setAuth(auth) {
       this.auth = auth;
     },
-    setUser(user){
+    setUser(user) {
       this.user = user;
     },
     setId(id) {

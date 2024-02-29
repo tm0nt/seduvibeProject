@@ -397,9 +397,9 @@ const fetchPosts = async (id) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  
+
   posts.value = data?.reverse() || [];
-  console.log(posts.value)
+  console.log(posts.value);
   totalPosts.value = posts?.length;
   imagePosts.value = posts.filter((post) => post.content.endsWith(".jpg")).length;
   videoPosts.value = posts.filter((post) => post.content.endsWith(".mp4")).length;

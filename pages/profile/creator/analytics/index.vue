@@ -122,7 +122,6 @@
                 </v-container>
               </v-card>
             </v-col>
-
           </v-row>
         </v-container>
       </v-col>
@@ -138,7 +137,7 @@ const analyticsFetch = ref(null);
 
 const fetchData = async () => {
   try {
-    const data  = await $fetch("https://api.seduvibe.com/analytics", {
+    const data = await $fetch("https://api.seduvibe.com/analytics", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

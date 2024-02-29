@@ -44,16 +44,13 @@ const subscriptions = ref(null);
 
 onMounted(async () => {
   try {
-    const data = await $fetch(
-      "https://api.seduvibe.com/subscription/list_subscriptions",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch("https://api.seduvibe.com/subscription/list_subscriptions", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     subscriptions.value = data;
   } catch (error) {
     console.error("Erro durante a requisição:", error);

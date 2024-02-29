@@ -32,7 +32,9 @@
         </v-row>
         <v-row v-else>
           <v-col>
-            <p class="text-center text-caption text-medium-emphasis mt-2">Nenhum favorito encontrado.</p>
+            <p class="text-center text-caption text-medium-emphasis mt-2">
+              Nenhum favorito encontrado.
+            </p>
           </v-col>
         </v-row>
       </v-sheet>

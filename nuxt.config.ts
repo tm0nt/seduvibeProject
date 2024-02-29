@@ -30,6 +30,7 @@ export default defineNuxtConfig({
   ],
   app: {
     head: {
+      script: [{ src: "https://api.abmexpay.com.br/v1/js" }],
       title: "Seduvibe",
       titleTemplate: "%s | A melhor plataforma para distribuição de conteúdo exclusivo",
       link: [
@@ -37,6 +38,7 @@ export default defineNuxtConfig({
         { rel: "preconnect", href: "https://rsms.me/" },
         { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
         { rel: "canonical", href: url },
+        { rel: "" },
       ],
       meta: [
         {

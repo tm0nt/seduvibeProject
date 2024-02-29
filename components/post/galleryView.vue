@@ -1,14 +1,13 @@
 <template>
   <v-row align="center" justify="center">
     <v-chip-group filter v-model="selectedFilter">
-      <v-chip :color="isSelectedFilter(0) ? 'purple' : ''" class="mr-2" :value="0">
-        Tudo
-      </v-chip>
+      <v-chip :color="isSelectedFilter(0) ? 'purple' : ''" class="mr-2" :value="0"> Tudo </v-chip>
       <v-chip :color="isSelectedFilter(1) ? 'purple' : ''" class="mr-2" :value="1">
         Assinantes
       </v-chip>
       <v-chip :color="isSelectedFilter(2) ? 'purple' : ''" class="mr-2" :value="2">
-        Afiliados      </v-chip>
+        Afiliados
+      </v-chip>
       <v-chip :color="isSelectedFilter(3) ? 'purple' : ''" class="mr-2" :value="3">
         Exclusivo
       </v-chip>
@@ -16,22 +15,25 @@
   </v-row>
 
   <v-row v-if="hasFilteredPosts">
-    <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" rounded="xl" cols="4" >
-      <template v-if="isVideo(n.content)">
-        <video :key="n.content" :width="200" controls v-if="n.content === null">
-          <source :src="n.content" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      </template>
-      <template >
-        <v-img  v-if="n.content === null" :src="n.content" aspect-ratio="1" cover class="bg-grey-lighten-2" rounded="xl">
-          <template v-slot:placeholder>
-            <v-row class="fill-height ma-0" align="center" justify="center">
-              <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
-            </v-row>
-          </template>
-        </v-img>
-      </template>
+    <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" rounded="xl" cols="4">
+      <v-card v-if="n.content !== null" class="rounded-xl elevation-0" flat>
+        <template>
+          <v-img
+            v-if="n.content === null"
+            :src="n.content"
+            aspect-ratio="1"
+            cover
+            class="bg-grey-lighten-2"
+            rounded="xl"
+          >
+            <template v-slot:placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
+              </v-row>
+            </template>
+          </v-img>
+        </template>
+      </v-card>
     </v-col>
   </v-row>
 
@@ -52,18 +54,13 @@ const cookie = useCookie("token");
 const token = cookie.value;
 
 const selectedFilter = ref(0);
-const { data: post } = await useFetch(`https://api.seduvibe.com/posts/list_all/${idUser}`, {
+const data = await $fetch(`https://api.seduvibe.com/posts/list_all/${idUser}`, {
   headers: {
     Authorization: `Bearer ${token}`,
   },
 });
-const posts = ref(post._rawValue.reverse());
-
-const isVideo = (url) => {
-  const videoExtensions = [".mp4", ".webm", ".ogg"];
-  const ext = url.slice(url.lastIndexOf(".") + 1);
-  return videoExtensions.includes(ext.toLowerCase());
-};
+console.log(data);
+const posts = ref(data?.reverse());
 
 const isSelectedFilter = (filterValue) => selectedFilter.value === filterValue;
 

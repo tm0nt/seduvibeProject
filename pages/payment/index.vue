@@ -249,7 +249,6 @@ const paymentInfo = ref({
 
 const selectedPrice = ref("");
 
-
 const selectedPlan = ref(null);
 const fetchData = async () => {
   const cookie = useCookie("token");
@@ -275,11 +274,14 @@ const historyTable = ref([]);
 
 const historyPayment = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/subscription/list_all_subscriptions_creator", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const data = await $fetch(
+      "https://api.seduvibe.com/subscription/list_all_subscriptions_creator",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     historyTable.value = data;
   } catch (error) {
     console.error(error);

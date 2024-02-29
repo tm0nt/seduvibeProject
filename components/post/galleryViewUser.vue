@@ -15,25 +15,32 @@
       </v-chip>
     </v-chip-group>
   </v-row>
-    <v-row v-if="hasFilteredPosts">
-      <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" cols="4">
-          <template v-if="isVideo(n.content)">
-            <video :key="n.content" :width="200" controls>
-              <source :src="n.content" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+  <v-row v-if="hasFilteredPosts">
+    <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" cols="4">
+      <template v-if="isVideo(n.content)">
+        <video :key="n.content" :width="200" controls>
+          <source :src="n.content" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </template>
+      <template v-else>
+        <v-img
+          :src="n.content"
+          aspect-ratio="1"
+          rounded="xl"
+          cover
+          class="bg-grey-lighten-2"
+          @click="redirectTo(n.id)"
+        >
+          <template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
+            </v-row>
           </template>
-          <template v-else>
-            <v-img :src="n.content" aspect-ratio="1" cover class="bg-grey-lighten-2" @click="redirectTo(n.id)">
-              <template v-slot:placeholder>
-                <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
-                </v-row>
-              </template>
-            </v-img>
-          </template>
-      </v-col>
-    </v-row>
+        </v-img>
+      </template>
+    </v-col>
+  </v-row>
 
   <v-row v-else>
     <v-col>
@@ -51,11 +58,14 @@ const token = cookie.value;
 const idStore = useIdStorePublic();
 const creatorIdPublic = idStore.id;
 const selectedFilter = ref(0);
-const { data: post } = await useFetch(`https://api.seduvibe.com/posts/list_all/${creatorIdPublic}`, {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-});
+const { data: post } = await useFetch(
+  `https://api.seduvibe.com/posts/list_all/${creatorIdPublic}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 const posts = ref(post._rawValue.reverse());
 
 // Helper function to check file extension for videos
@@ -74,7 +84,7 @@ const filteredPosts = computed(() => {
 });
 
 const hasFilteredPosts = computed(() => filteredPosts.value.length > 0);
-const redirectTo = async (id) =>{
-  return navigateTo(`/post/${id}`)
+const redirectTo = async (id) => {
+  return navigateTo(`/post/${id}`);
 };
 </script>

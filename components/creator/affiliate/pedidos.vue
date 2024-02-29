@@ -92,16 +92,13 @@ const viewRequestId = ref({
 
 const approvedRequest = async (id) => {
   try {
-    const data = await $fetch(
-      `https://api.seduvibe.com/afiliates/accept-affiliate-request/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch(`https://api.seduvibe.com/afiliates/accept-affiliate-request/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log(data);
     affiliatePending.value = data;
     showSnackbar("Afiliado aprovado com sucesso!", "success");
@@ -114,16 +111,13 @@ const approvedRequest = async (id) => {
 
 const rejectRequest = async (id) => {
   try {
-    const data = await $fetch(
-      `https://api.seduvibe.com/afiliates/reject-affiliate-request/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch(`https://api.seduvibe.com/afiliates/reject-affiliate-request/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log(data);
     showSnackbar("Afiliado reprovado com sucesso!", "success");
     affiliatePending.value = data;

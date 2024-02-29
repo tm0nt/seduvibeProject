@@ -55,16 +55,13 @@ const affiliateRequests = ref(null);
 
 onMounted(async () => {
   try {
-    const data = await $fetch(
-      "https://api.seduvibe.com/afiliates/user-affiliate-requests",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch("https://api.seduvibe.com/afiliates/user-affiliate-requests", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     affiliateRequests.value = data;
   } catch (error) {
     console.error("Erro durante a requisição:", error);

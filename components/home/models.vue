@@ -45,7 +45,6 @@
         </NuxtLink>
       </v-col>
     </template>
-  
   </v-row>
 </template>
 <script setup>
@@ -57,7 +56,7 @@ const selectedTribeIds = ref([]);
 
 const getData = async () => {
   try {
-    const creators  = await $fetch("https://api.seduvibe.com/find_creator");
+    const creators = await $fetch("https://api.seduvibe.com/find_creator");
     seduvibe.value = creators.users || [];
     console.log(creators._rawValue);
 
@@ -84,7 +83,7 @@ const filterUsers = async (ids) => {
       ids.length === 0
         ? "https://api.seduvibe.com/find_creator"
         : "https://api.seduvibe.com/filter";
-    const filteredUsers  = await $fetch(url, {
+    const filteredUsers = await $fetch(url, {
       method: "POST",
       body: JSON.stringify({ tribeIds: ids }),
       headers: { "Content-Type": "application/json" },

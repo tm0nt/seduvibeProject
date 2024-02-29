@@ -32,32 +32,51 @@
       <v-card class="rounded-xl elevation-6" flat>
         <v-card-title><v-icon @click="openDialog = false">mdi-close</v-icon></v-card-title>
         <v-card-text class="text-center">
-          <v-card prepend-icon="mdi-info" title="Tutorial" class="mb-4" subtitle="Assista para entender o funcionamento do sistema." rounded="xl" variant="tonal" link color="primary"></v-card>
           <v-card
-        prepend-avatar="https://s2.glbimg.com/NOeJtcflf8-o3Ik_GL7XmQ5e9UI=/smart/e.glbimg.com/og/ed/f/original/2021/11/25/melissamelmaia-260929933_273406538180340_4943085334324297278_n.jpg"
-        class="mx-auto"
-        max-width="500"
-        subtitle="@melmaia"
-        title="Mel Maia"
-      >
-        <v-card-text>
-          <v-row>
-            <v-col cols="auto">
-              <v-chip size="small" variant="outlined" color="primary">589 postagens</v-chip>
-            </v-col>
-            <v-col cols="auto">
-              <v-chip  size="small" variant="outlined" color="primary">Valor R$ 10,00</v-chip>
-            </v-col>
-            <v-col cols="auto">
-              <v-chip   size="small" variant="outlined" color="primary">Comissão 50%</v-chip>
-            </v-col>
-          </v-row>
-
-        </v-card-text>
-      </v-card>
+            prepend-icon="mdi-info"
+            title="Tutorial"
+            class="mb-4"
+            subtitle="Assista para entender o funcionamento do sistema."
+            rounded="xl"
+            variant="tonal"
+            link
+            color="primary"
+          ></v-card>
+          <v-card
+            prepend-avatar="https://s2.glbimg.com/NOeJtcflf8-o3Ik_GL7XmQ5e9UI=/smart/e.glbimg.com/og/ed/f/original/2021/11/25/melissamelmaia-260929933_273406538180340_4943085334324297278_n.jpg"
+            class="mx-auto"
+            max-width="500"
+            subtitle="@melmaia"
+            title="Mel Maia"
+          >
+            <v-card-text>
+              <v-row>
+                <v-col cols="auto">
+                  <v-chip size="small" variant="outlined" color="primary">589 postagens</v-chip>
+                </v-col>
+                <v-col cols="auto">
+                  <v-chip size="small" variant="outlined" color="primary">Valor R$ 10,00</v-chip>
+                </v-col>
+                <v-col cols="auto">
+                  <v-chip size="small" variant="outlined" color="primary">Comissão 50%</v-chip>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
           <v-form>
-            <v-text-field label="Usuário para checkout" bg-color="input_color" color="primary" prepend-inner-icon="mdi-at"></v-text-field>
-            <v-text-field label="Descrição" bg-color="input_color" class="mt-n2" color="primary" prepend-inner-icon="mdi-text"></v-text-field>
+            <v-text-field
+              label="Usuário para checkout"
+              bg-color="input_color"
+              color="primary"
+              prepend-inner-icon="mdi-at"
+            ></v-text-field>
+            <v-text-field
+              label="Descrição"
+              bg-color="input_color"
+              class="mt-n2"
+              color="primary"
+              prepend-inner-icon="mdi-text"
+            ></v-text-field>
             <v-btn color="primary" class="text-capitalize" block>Enviar</v-btn>
           </v-form>
         </v-card-text>
@@ -66,9 +85,7 @@
   </v-app>
 </template>
 
-
 <script setup>
-
 const openDialog = ref(false);
 </script>
 <script>

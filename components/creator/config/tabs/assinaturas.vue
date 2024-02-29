@@ -112,17 +112,14 @@ const saveSubscriptions = async () => {
     })),
   };
   try {
-    const data = await $fetch(
-      "https://api.seduvibe.com/subscription/choose_subscriptions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(subscriptionsData),
-      }
-    );
+    const data = await $fetch("https://api.seduvibe.com/subscription/choose_subscriptions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(subscriptionsData),
+    });
     console.log(data);
     showSnackbar("Dados atualizados!", "success");
     fetchData();
@@ -159,16 +156,13 @@ const showSnackbar = (message, color) => {
 
 const fetchData = async () => {
   try {
-    const data = await $fetch(
-      "https://api.seduvibe.com/subscription/list_values_subs",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await $fetch("https://api.seduvibe.com/subscription/list_values_subs", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (Array.isArray(data)) {
       data.forEach((subscriptionData) => {
