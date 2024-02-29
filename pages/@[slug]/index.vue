@@ -27,7 +27,7 @@
           <div class="mt-10">
             <v-row v-if="selectedTab === 0">
               <v-col>
-                <component v-if="active" :is="currentComponent" />
+                <component v-if="active?.subscriptionActive?.active" :is="currentComponent" />
                 <v-card
                   @click="showBlockMessage"
                   variant="tonal"
@@ -45,10 +45,10 @@
             </v-row>
             <v-row v-if="selectedTab === 1">
               <v-col>
-                <component v-if="active" :is="currentComponent" />
+                <component v-if="active?.subscriptionActive?.active" :is="currentComponent" />
                 <v-card
+                @click="showBlockMessage"
                   variant="tonal"
-                  @click="showBlockMessage"
                   link
                   width="150"
                   class="rounded-xl mx-auto"
@@ -79,27 +79,28 @@
           <p class="text-center mb-4">Apoie sua criadora assinando seu conteúdo</p>
           <v-chip-group filter color="primary" class="mb-1">
             <v-chip
-              @click="selectPlan('mensal')"
-              :class="{ 'primary--text': selectedPlan === 'mensal' }"
+              @click="selectPlan('Mensal')"
+              :class="{ 'primary--text': selectedPlan === 'Mensal' }"
               >Mensal</v-chip
             >
             <v-chip
-              @click="selectPlan('trimestral')"
-              :class="{ 'primary--text': selectedPlan === 'trimestral' }"
+              @click="selectPlan('Trimestral')"
+              :class="{ 'primary--text': selectedPlan === 'Trimestral' }"
               >Trimestral</v-chip
             >
             <v-chip
-              @click="selectPlan('semestral')"
-              :class="{ 'primary--text': selectedPlan === 'semestral' }"
+              @click="selectPlan('Semestral')"
+              :class="{ 'primary--text': selectedPlan === 'Semestral' }"
               >Semestral</v-chip
             >
             <v-chip
-              @click="selectPlan('anual')"
-              :class="{ 'primary--text': selectedPlan === 'anual' }"
+              @click="selectPlan('Anual')"
+              :class="{ 'primary--text': selectedPlan === 'Anual' }"
               >Anual</v-chip
             >
           </v-chip-group>
           <v-row class="mt-1" align="center" justify="center">
+            <p v-if="selectedPlan === null" class="text-caption text-medium-emphasis text-center ma-2">Selecione um período de assinatura acima</p>
             <v-col cols="8">
               <v-card
                 link
@@ -126,6 +127,7 @@
                 class="elevation-0 rounded-xl mx-auto"
                 link
                 flat
+                v-if="subscriptionList.list && subscriptionList.list.length === 0"
                 prepend-icon="mdi-error"
                 variant="tonal"
                 color="primary"
@@ -199,6 +201,14 @@ const showSnackbar = (message, color) => {
     timeout: 6000,
   };
 };
+
+const planIds = {
+  Mensal: 1,
+  Trimestral: 3,
+  Semestral: 4,
+  Anual: 2,
+};
+
 const active = ref(false);
 const subscriptionList = ref({
   visible: false,
@@ -218,8 +228,9 @@ const guardContentRequest = async (creatorId) => {
         },
       }
     );
-    active.value = data._rawValue.active;
+    active.value = data.value;
     console.log(data);
+    console.log(error);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
@@ -228,7 +239,7 @@ const guardContentRequest = async (creatorId) => {
 const showBlockMessage = async () => {
   showSnackbar("Você não possui acesso para ver este conteúdo!", "error");
 };
-const selectedPlan = ref("mensal");
+const selectedPlan = ref(null);
 const paymentDialogVisible = ref(false);
 const fetchData = async () => {
   try {
@@ -252,7 +263,8 @@ const route = useRoute();
 const user = ref(route.params.slug);
 
 const selectPlan = (plan) => {
-  selectedPlan.value = plan;
+  selectedPlan.value = plan;  
+  idPaymentStore.setSubsId(planIds[plan]);
 };
 const subscriptionValue = computed(() => {
   const selectedSubscription = subscriptionList.value.list.find(

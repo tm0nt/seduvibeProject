@@ -1,6 +1,6 @@
 <template>
   <v-bottom-navigation color="primary" bg-color="background" class="elevation-8">
-    <div v-if="token">
+    <div v-show="token">
       <v-btn class="my-btn" to="/home">
         <v-icon size="26">mdi-home</v-icon>
       </v-btn>
@@ -13,14 +13,11 @@
       <v-btn to="/payment" class="my-btn" v-if="creatorId === 1">
         <v-icon size="26">mdi-currency-usd</v-icon>
       </v-btn>
-      <!---    <v-btn to="/chat" class="my-btn">
-      <v-icon size="26">mdi-chat</v-icon>
-    </v-btn> -->
       <v-btn to="/profile" class="my-btn">
         <v-icon size="26">mdi-account</v-icon>
       </v-btn>
     </div>
-    <v-img v-else max-width="40" src="https://i.imgur.com/BrTfYSp.png"></v-img>
+    <v-img v-show="!token" max-width="40" src="https://i.imgur.com/BrTfYSp.png"></v-img>
   </v-bottom-navigation>
 </template>
 <script setup>

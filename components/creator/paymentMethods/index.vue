@@ -98,10 +98,18 @@
             block
             min-height="40"
             color="primary"
-            @click="makePaymentPix(1)"
+            :disabled="pending === true"
+            @click="makePaymentPix(1);"
             class="text-capitalize"
-            >Fazer pagamento</v-btn
-          >
+            ><p v-if="pending !== true">Fazer pagamento</p>
+            <v-progress-circular
+              v-if="pending === true"
+              indeterminate
+              color="primary"
+              :size="16"
+              :width="3"
+            ></v-progress-circular
+          ></v-btn>
         </v-form>
       </v-expansion-panel-text>
     </v-expansion-panel>
@@ -122,7 +130,7 @@
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
-  <v-dialog v-model="payPixDialog" width="400" persistent>
+  <v-dialog v-model="payPixDialog" width="800" persistent>
     <v-card class="rounded-xl elevation-6" color="background" flat>
       <v-card-title>
         <v-icon @click="payPixDialog = false">mdi-close</v-icon>
@@ -131,20 +139,15 @@
         <template v-if="paymentSuccessful">
           <v-icon size="64" color="primary">mdi-check-circle</v-icon>
           <p class="mb-2 mt-4">Pagamento concluído!</p>
-          <v-card-actions><v-btn variant="text" color="primary">OK</v-btn></v-card-actions>
+          <v-card-actions><v-btn @click="payPixDialog = false" variant="text" color="primary">OK</v-btn></v-card-actions>
         </template>
         <template v-else>
           <p class="mb-2">Você está pagando via pix</p>
           <v-card
             class="elevation-0 mx-auto d-flex align-center justify-center rounded-xl"
-            width="250"
+            width="600"
             flat
           >
-            <qrcode-vue
-              :value="idPaymentStore?.setDataReceived?.qrCode"
-              :size="238"
-              level="H"
-            ></qrcode-vue>
           </v-card>
           <v-chip class="mt-2" color="primary" prepend-icon="mdi-coin">
             R$ {{ idPaymentStore?.setDataReceived?.value / 100 }}
@@ -175,19 +178,17 @@
     {{ snackbar.message }}
   </v-snackbar>
 </template>
-<script>
-import QrcodeVue from "qrcode.vue";
-export default {
-  components: {
-    QrcodeVue,
-  },
-};
-</script>
 <script setup>
+import { useIdStorePublic } from "~/store/public";
 import { idPayment } from "~/store/payment";
 
+
+const emit = defineEmits(["closeDialog"])
+
 const cookie = useCookie("token");
-const token = cookie.amount;
+const token = cookie.value;
+
+const userStorePublic = useIdStorePublic();
 
 const snackbar = ref({
   show: false,
@@ -208,11 +209,13 @@ const showSnackbar = (message, color) => {
 const idPaymentStore = idPayment();
 const paymentSuccessful = ref(false);
 
-
+const pending = ref(null);
 const payPixDialog = ref(false);
 
-const makePaymentPix = async () => {
+const makePaymentPix = async (id) => {
   try {
+    pending.value = true; // Configura como "pending" ao iniciar o processo de pagamento
+
     const amountInCents = (idPaymentStore.setAmount * 100).toFixed(2);
 
     const requestBody = {
@@ -223,31 +226,39 @@ const makePaymentPix = async () => {
       metadata: "userId:1,source:donation",
     };
 
-    const { data } = await useFetch("https://payment.seduvibe.cloud/paymentProcess/pix", {
-      method: "POST",
-      body: JSON.stringify(requestBody),
-    });
+    const { data, pending: waiting } = await useFetch(
+      "https://payment.seduvibe.cloud/paymentProcess/pix",
+      {
+        method: "POST",
+        body: JSON.stringify(requestBody),
+      }
+    );
+
+    pending.value = waiting.value; // Atualiza o valor de "pending" com base na resposta do servidor
 
     if (data) {
-      console.log(data.value.id);
       idPaymentStore.setDataReceived = data;
       payPixDialog.value = true;
-      await checkPayment(data.value.id);
+      await checkPayment(data?.value.id, 1);
     }
+    emit("closeDialog")
   } catch (error) {
     console.error(error);
     // Trate os erros adequadamente
+  } finally {
+    pending.value = false; // Certifique-se de limpar o estado "pending" independentemente do resultado
   }
 };
 
-const checkPayment = async (paymentId) => {
+const checkPayment = async (paymentId, paymentMethod) => {
   try {
     const { data } = await useFetch(`https://api.seduvibe.com/gateway/check-status/${paymentId}`, {
       method: "GET",
     });
 
-    if(data.value){
+    if (data.value) {
       paymentSuccessful.value = true;
+      await successPayment(userStorePublic.id, idPaymentStore.subscriptionId, paymentMethod, idPaymentStore.setAmount);
     }
   } catch (error) {
     console.error(error);
@@ -258,13 +269,51 @@ const checkPayment = async (paymentId) => {
 const clearDataPayment = async () => {
   idPaymentStore.setDataReceived = null;
 };
-
-const sucessPayment = async (type, id, creator, plan) => {
+const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
   try {
+    const makeSubscriptionRequest = async (url, data) => {
+      try {
+        const response = await useFetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (response.data.value) {
+          console.log(response.data.value);
+        } else {
+          console.log(response.error);
+        }
+      } catch (error) {
+        console.error("Error in subscription request:", error);
+        throw error;
+      }
+    };
+
+    if (subscriptionId >= 1 && subscriptionId <= 4) {
+      await makeSubscriptionRequest(`https://api.seduvibe.com/subscription/user_sub/${id}`, {
+        subscriptionId,
+        paymentMethodId,
+      });
+    } else if (subscriptionId >= 5 && subscriptionId <= 8) {
+      await makeSubscriptionRequest(`https://api.seduvibe.com/subscription/creator_sub`, {
+        subscriptionId,
+        paymentMethodId,
+      });
+    } else {
+      await makeSubscriptionRequest(`https://api.seduvibe.com/donate/${id}`, {
+        amount,
+      });
+    }
   } catch (error) {
-    console.log(error);
+    console.error("Error when subscribing:", error);
+    // 
   }
 };
+
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(idPaymentStore.setDataReceived.qrCode.qrcode);

@@ -2,16 +2,15 @@
   <v-row align="center" justify="center">
     <v-chip-group filter v-model="selectedFilter">
       <v-chip :color="isSelectedFilter(0) ? 'purple' : ''" class="mr-2" :value="0">
-        Tudo&nbsp;<v-icon append>mdi-all-inclusive</v-icon>
+        Tudo
       </v-chip>
       <v-chip :color="isSelectedFilter(1) ? 'purple' : ''" class="mr-2" :value="1">
-        Assinantes&nbsp;<v-icon append>mdi-account-multiple</v-icon>
+        Assinantes
       </v-chip>
       <v-chip :color="isSelectedFilter(2) ? 'purple' : ''" class="mr-2" :value="2">
-        Afiliados&nbsp;<v-icon append>mdi-account-group</v-icon>
-      </v-chip>
+        Afiliados      </v-chip>
       <v-chip :color="isSelectedFilter(3) ? 'purple' : ''" class="mr-2" :value="3">
-        Exclusivo&nbsp;<v-icon append>mdi-lock</v-icon>
+        Exclusivo
       </v-chip>
     </v-chip-group>
   </v-row>

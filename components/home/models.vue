@@ -45,17 +45,7 @@
         </NuxtLink>
       </v-col>
     </template>
-    <v-btn
-      v-if="showLoadMoreButton && seduvibe.length > currentPage * itemsPerPage"
-      dark
-      color="purple"
-      small
-      :disabled="isLoading"
-      block
-      @click="loadMoreItems"
-    >
-      {{ isLoading ? "Procurando..." : "Ver Mais" }}
-    </v-btn>
+  
   </v-row>
 </template>
 <script setup>
@@ -67,14 +57,13 @@ const selectedTribeIds = ref([]);
 
 const getData = async () => {
   try {
-    const { data: creators } = await useFetch("https://api.seduvibe.com/find_creator");
-    seduvibe.value = creators?._rawValue.users || [];
+    const creators  = await $fetch("https://api.seduvibe.com/find_creator");
+    seduvibe.value = creators.users || [];
     console.log(creators._rawValue);
 
-    const { data: tribesData } = await useFetch("https://api.seduvibe.com/list_tribos");
-    tribes.value = tribesData?._rawValue.tribos || [];
+    const tribesData = await $fetch("https://api.seduvibe.com/list_tribos");
+    tribes.value = tribesData.tribos || [];
 
-    // Inicialize selectedTribeIds com todos os IDs de tribos
     selectedTribeIds.value = tribes.value.map((tribe) => tribe.id);
   } catch (error) {
     console.error("Erro ao carregar os dados:", error);
@@ -95,13 +84,13 @@ const filterUsers = async (ids) => {
       ids.length === 0
         ? "https://api.seduvibe.com/find_creator"
         : "https://api.seduvibe.com/filter";
-    const { data: filteredUsers } = await useFetch(url, {
+    const filteredUsers  = await $fetch(url, {
       method: "POST",
       body: JSON.stringify({ tribeIds: ids }),
       headers: { "Content-Type": "application/json" },
     });
 
-    seduvibe.value = filteredUsers?._rawValue.users || [];
+    seduvibe.value = filteredUsers?.users || [];
   } catch (error) {
     console.error("Erro ao filtrar os usuários:", error);
   }

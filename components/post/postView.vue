@@ -10,17 +10,15 @@
       <v-chip value="all">
         <p>({{ totalPosts }})</p>
         &nbsp;Tudo&nbsp;
-        <v-icon append>mdi-all-inclusive</v-icon>
+        
       </v-chip>
       <v-chip value="image">
         <p>({{ imagePosts }})</p>
         &nbsp;Imagens&nbsp;
-        <v-icon append>mdi-image</v-icon>
       </v-chip>
       <v-chip value="video">
         <p>({{ videoPosts }})</p>
         &nbsp;Vídeos&nbsp;
-        <v-icon append>mdi-video</v-icon>
       </v-chip>
     </v-chip-group>
     <v-card
@@ -181,11 +179,11 @@
   <v-toolbar color="rgb(0,0,0,0)" height="100"></v-toolbar>
 </template>
 <script setup>
-import { useIdStore } from "~/store/id";
+import { useIdStorePublic } from "~/store/public";
 import { ref, computed } from "vue";
 
 const deleteDialogComment = ref(false);
-const idStore = useIdStore();
+const idStore = useIdStorePublic();
 const snackbar = ref({
   show: false,
   message: "",
@@ -221,6 +219,8 @@ const comment = ref({
   content: null,
 });
 
+
+const idCreatorPublic = idStore.id;
 const cookie = useCookie("token");
 const deleteDialog = ref(false);
 const token = cookie.value;
@@ -234,7 +234,7 @@ const videoPosts = ref(0);
 
 // Share
 const sharePublication = (id) => {
-  navigator.clipboard.writeText(`https://seduvibe.com/@lais/post/${id}`);
+  navigator.clipboard.writeText(`https://seduvibe.com/post/${id}`);
   showSnackbar("Publicação copiada com sucesso!", "success");
 };
 
@@ -251,7 +251,7 @@ const toggleLike = async (post) => {
       showSnackbar("Você curtiu a postagem!", "success");
     }
 
-    fetchPosts();
+   fetchPosts(idCreatorPublic);
   } catch (error) {
     console.error("Erro ao alternar curtida:", error);
   }
@@ -287,7 +287,7 @@ const newComment = async (id) => {
     });
     comment.value.content = null;
     showSnackbar("Comentário feito com sucesso!", "success");
-    fetchPosts();
+   fetchPosts(idCreatorPublic);
     console.log(data);
     console.log(error);
   } catch {
@@ -304,7 +304,7 @@ const newLike = async (id) => {
       },
     });
     showSnackbar("Vocẽ curtiu uma postagem!", "success");
-    fetchPosts();
+   fetchPosts(idCreatorPublic);
     console.log(data);
     console.log(error);
   } catch {
@@ -321,7 +321,7 @@ const deleteLike = async (id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    fetchPosts();
+   fetchPosts(idCreatorPublic);
     console.log(data);
   } catch {
     //
@@ -337,7 +337,7 @@ const deletePost = async (id) => {
     });
     deleteDialog.value = false;
     showSnackbar("Postagem deletada com sucesso!", "success");
-    fetchPosts();
+   fetchPosts(idCreatorPublic);
     console.log(data);
   } catch {
     //
@@ -353,7 +353,7 @@ const deleteComment = async (id) => {
     });
     deleteDialogComment.value = false;
     showSnackbar("Comentário deletado com sucesso!", "success");
-    fetchPosts();
+   fetchPosts(idCreatorPublic);
     console.log(data);
   } catch {
     //
@@ -361,8 +361,8 @@ const deleteComment = async (id) => {
 };
 
 //Fetch Post
-const fetchPosts = async () => {
-  const { data: postData } = await useFetch("https://api.seduvibe.com/posts/list_all/14", {
+const fetchPosts = async (id) => {
+  const { data: postData } = await useFetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -379,5 +379,5 @@ const isCurrentUserLiked = (likes) => {
   return likes.some((like) => like.userId === idStore.id);
 };
 
-fetchPosts();
+fetchPosts(idCreatorPublic);
 </script>

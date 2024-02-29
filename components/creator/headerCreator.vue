@@ -2,7 +2,7 @@
   <VCard class="rounded-lg" flat height="150">
     <template v-slot:image>
       <VImg eager cover position="center" :src="info.coverPicture">
-        <v-card class="ml-4 mt-4 elevation-0" flat color="primary" variant="tonal" width="50" >
+        <v-card class="ml-4 mt-4 elevation-0" flat color="primary" variant="tonal" width="50">
           <VBtn @click="changeInfoData.cover = true" class="text-capitalize">
             <v-icon color="primary">mdi-camera</v-icon>
           </VBtn>
@@ -16,7 +16,7 @@
       <v-btn
         fab
         color="primary"
-        :disabled="fetchData?._rawValue?.social_media[0]?.instagram === null || ''"
+        :disabled="social_media[0]?.instagram === null || ''"
         :href="social_media.instagram"
         variant="text"
       >
@@ -25,7 +25,7 @@
       <v-btn
         fab
         color="primary"
-        :disabled="fetchData?._rawValue?.social_media[0]?.instagram === null || ''"
+        :disabled="social_media[0]?.instagram === null || ''"
         :href="social_media.telegram"
         class="ml-n4"
         variant="text"
@@ -36,7 +36,7 @@
         fab
         color="primary"
         :href="social_media.twitter"
-        :disabled="fetchData?._rawValue?.social_media[0]?.twitter === null || ''"
+        :disabled="social_media[0]?.twitter === null || ''"
         class="ml-n4"
         variant="text"
       >
@@ -108,7 +108,7 @@
     </v-col>
     <v-spacer></v-spacer>
     <v-col cols="auto" class="text-caption mt-2">
-      <v-chip small class="text-capitalize" color="primary">
+      <v-chip small class="text-capitalize" color="primary" @click="showDialogSub = true">
         <v-icon color="primary" size="26" class="ma-1">mdi-account</v-icon
         >{{ userSubsCount?.totalUsers }} subs
       </v-chip>
@@ -217,6 +217,29 @@
       </v-form>
     </VCard>
   </VDialog>
+  <VDialog v-model="showDialogSub" width="600" persistent>
+    <v-card class="elevation-6 rounded-xl overflow-auto" color="background" flat height="300">
+      <v-card-title><v-icon @click="showDialogSub = false">mdi-close</v-icon></v-card-title>
+      <v-card-text class="text-center">
+        <v-row>
+          <v-col cols="auto" v-for="userName in userSubsCount.userNames">
+            <v-card
+              class="rounded-xl elevation-0"
+              width="250"
+              flat
+              variant="tonal"
+              color="primary"
+              :title="userName"
+              prepend-icon="mdi-account"
+            ></v-card>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions class="text-center">
+        <v-btn color="primary" @click="showDialogSub = false">OK</v-btn>
+      </v-card-actions>
+    </v-card>
+  </VDialog>
 
   <VToolbar flat color="rgb(0,0,0,0)" height="15"></VToolbar>
   <VRow>
@@ -260,6 +283,8 @@ const PicturesUser = ref({
   cover: null,
   profile: null,
 });
+
+const showDialogSub = ref(false);
 
 const snackbar = ref({
   show: false,
@@ -327,7 +352,7 @@ const userSubsCount = ref(null);
 
 const countUserSubs = async () => {
   try {
-    const { data, error } = await useFetch(
+    const data= await $fetch(
       "https://api.seduvibe.com/subscription/subs_users_count/",
       {
         method: "GET",
@@ -337,8 +362,8 @@ const countUserSubs = async () => {
         },
       }
     );
+    userSubsCount.value = data;
     console.log(data);
-    userSubsCount.value = data.value;
   } catch (error) {
     console.error(error);
   }
@@ -346,7 +371,7 @@ const countUserSubs = async () => {
 
 const changeDescription = async () => {
   try {
-    const { data } = await useFetch("https://api.seduvibe.com/change_user_data", {
+    const data  = await $fetch("https://api.seduvibe.com/change_user_data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -391,9 +416,9 @@ async function handleFileSubmitCover() {
       Authorization: `Bearer ${token}`,
     },
   };
-  const { data, error } = await useFetch("https://api.seduvibe.com/uploadCover", options);
+  const data = await $fetch("https://api.seduvibe.com/uploadCover", options);
 
-  if (data.value) {
+  if (data) {
     changeInfoData.value.cover = false;
     fetchDataFromAPI();
     showSnackbar("Você alterou sua capa com sucesso!", "success");
@@ -416,9 +441,9 @@ async function handleFileSubmitPicture() {
       Authorization: `Bearer ${token}`,
     },
   };
-  const { data, error } = await useFetch("https://api.seduvibe.com/uploadPicture", options);
+  const data = await $fetch("https://api.seduvibe.com/uploadPicture", options);
 
-  if (data.value) {
+  if (data) {
     changeInfoData.value.profile = false;
     fetchDataFromAPI();
     showSnackbar("Você alterou sua foto de perfil com sucesso!", "success");
@@ -433,7 +458,7 @@ const copyToClipboard = () => {
 };
 const fetchDataFromAPI = async () => {
   try {
-    const { data: fetchData } = await useFetch("https://api.seduvibe.com/creator_list", {
+    const data  = await $fetch("https://api.seduvibe.com/creator_list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -442,20 +467,20 @@ const fetchDataFromAPI = async () => {
     });
     countUserSubs();
     social_media.value = {
-      instagram: "https://instagram/" + fetchData?._rawValue?.social_media[0]?.instagram,
-      telegram: "https://t.me/@" + fetchData?._rawValue?.social_media[0]?.telegram,
-      twitter: "https://x.com/" + fetchData?._rawValue?.social_media[0]?.twitter,
+      instagram: "https://instagram/" + data.social_media[0]?.instagram,
+      telegram: "https://t.me/@" + data.social_media[0]?.telegram,
+      twitter: "https://x.com/" + data.social_media[0]?.twitter,
     };
 
     info.value = {
-      nome: fetchData?._rawValue?.users[0]?.name,
-      user: fetchData?._rawValue?.users[0]?.user,
-      bio: fetchData?._rawValue?.users[0]?.bio,
-      coverPicture: fetchData?._rawValue?.users[0]?.coverPicture,
-      profilePicture: fetchData?._rawValue?.users[0]?.profilePicture,
+      nome: data.users[0]?.name,
+      user: data.users[0]?.user,
+      bio: data.users[0]?.bio,
+      coverPicture: data.users[0]?.coverPicture,
+      profilePicture: data.users[0]?.profilePicture,
     };
 
-    console.log("Requisição realizada com sucesso:", fetchData);
+    console.log("Requisição realizada com sucesso:", data);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

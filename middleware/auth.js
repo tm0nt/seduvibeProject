@@ -2,16 +2,17 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const cookie = useCookie("token");
   const token = cookie.value;
 
-  if ((to.path === "/login" || to.path === "/register")) {
+  if (to.path === "/login" || to.path === "/register") {
     try {
-      const { data, error } = await useFetch("https://api.seduvibe.com/", {
+      const data = await $fetch("https://api.seduvibe.com/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (data.value) {
+
+      if (data) {
         return navigateTo("/profile/");
-      } else if (error.value) {
+      } else {
         console.error("Error fetching creator value:", error);
       }
     } catch (error) {

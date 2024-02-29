@@ -91,7 +91,7 @@
       <v-btn fab variant="text" class="ml-n4" color="primary" :disabled="true"
         ><v-icon size="26">mdi-chat</v-icon></v-btn
       >
-      <v-btn fab variant="text" class="ml-n4" @click="donation.visible = true" color="primary"
+      <v-btn fab variant="text" class="ml-n4" @click="donationVisible" color="primary"
         ><v-icon size="26">mdi-gift</v-icon></v-btn
       >
     </v-col>
@@ -174,13 +174,14 @@ export default {
 };
 </script>
 <script setup>
+import { useIdStorePublic } from "~/store/public";
 import nuxtStorage from "nuxt-storage";
 import { idPayment } from "~/store/payment";
 import { ref } from "vue";
 import { useTheme } from "vuetify";
 const theme = useTheme();
 const isFavorite = ref(false);
-
+const userIdPublic = useIdStorePublic();
 const valueDonate = ref(null);
 const idPaymentStore = idPayment();
 
@@ -216,6 +217,12 @@ const removeFromFavorites = async (id) => {
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
+};
+
+const donationVisible = async() => {
+  idPaymentStore.setSubsId("donation");
+  donation.value.visible = true;
+  
 };
 // Adicionar
 const addToFavorites = async (id) => {
@@ -337,6 +344,7 @@ const fetchData = async () => {
     );
     checkFavorites(data._rawValue.userData.id);
     profileFetch.value = data._rawValue;
+    userIdPublic.setId(profileFetch.value.userData.id);
     social_media.value.instagram.user = profileFetch.value.userData.socialMedia.instagram;
     social_media.value.twitter.user = profileFetch.value.userData.socialMedia.twitter;
     social_media.value.telegram.user = profileFetch.value.userData.socialMedia.telegram;

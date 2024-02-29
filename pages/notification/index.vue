@@ -88,25 +88,23 @@ import { ref, computed } from "vue";
 
 const notifs = ref([]);
 const selectedFilter = ref(0);
+const filterNotifications = ref(null);
+
 
 const fetchData = async () => {
   const cookie = useCookie("token");
   const token = cookie.value;
 
   try {
-    const {
-      data: notif,
-      pending,
-      error,
-      refresh,
-    } = await useFetch("https://api.seduvibe.com/list_notifications", {
+    const 
+      data
+     = await $fetch("https://api.seduvibe.com/list_notifications", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    notifs.value = notif?._rawValue.notifications || [];
-    // No need to set filteredNotifs.value here, it will be computed automatically
+    notifs.value = data.notifications || [];
   } catch (error) {
     console.error("Error fetching notifications:", error);
   }

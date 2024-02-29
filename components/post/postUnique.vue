@@ -211,7 +211,7 @@ const id = storeId.id;
 
 // Share
 const sharePublication = (id) => {
-  navigator.clipboard.writeText(`https://seduvibe.com/@lais/post/${id}`);
+  navigator.clipboard.writeText(`https://seduvibe.com/post/${id}`);
   showSnackbar("Publicação copiada com sucesso!", "success");
 };
 
@@ -328,19 +328,22 @@ const deleteComment = async (id) => {
 };
 
 //Fetch Post
-const fetchPosts = async () => {
+const fetchPosts = async (idStore) => {
   const route = useRoute();
   const id = ref(route.params.slug);
-  const { data: postData, error } = await useFetch(
-    `https://api.seduvibe.com/posts/list_posts_unique/${id.value}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  console.log(postData._rawValue);
-  posts.value = postData?._rawValue || [];
+
+    const { data: postData, error } = await useFetch(
+      `https://api.seduvibe.com/posts/list_posts_unique/${id.value}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(postData?._rawValue);
+    posts.value = postData?._rawValue || [];
+
 };
 
 // Fetch like

@@ -11,17 +11,14 @@
         <v-chip value="all">
           <p>({{ totalPosts }})</p>
           &nbsp;Tudo&nbsp;
-          <v-icon append>mdi-all-inclusive</v-icon>
         </v-chip>
         <v-chip value="image">
           <p>({{ imagePosts }})</p>
           &nbsp;Imagens&nbsp;
-          <v-icon append>mdi-image</v-icon>
         </v-chip>
         <v-chip value="video">
           <p>({{ videoPosts }})</p>
           &nbsp;Vídeos&nbsp;
-          <v-icon append>mdi-video</v-icon>
         </v-chip>
       </v-chip-group>
     </v-col>

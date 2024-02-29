@@ -54,26 +54,13 @@
             <h2 class="mt-5">Pagamentos</h2>
             <p class="text-caption text-medium-emphasis mt-n2 mb-4">Seus últimos pagamentos.</p>
             <v-row class="mt-5">
-              <v-btn
-                :disabled="loading"
-                append-icon="mdi-refresh"
-                text="Atualizar"
-                variant="text"
-                class="mb-2"
-                @click="onClick"
-              ></v-btn>
-
               <v-data-table
-                :loading="loading"
                 class="rounded-xl"
                 :headers="headers"
                 :items="historyTable"
                 no-data-text="Nenhum pagamento realizado"
                 items-per-page-text="Pagamento por página"
               >
-                <template v-slot:loading>
-                  <v-skeleton-loader type="table-row@2"></v-skeleton-loader>
-                </template>
               </v-data-table>
             </v-row>
           </v-container>
@@ -91,7 +78,7 @@
           <v-row>
             <v-col cols="12">
               <v-stepper mobile class="elevation-0" flat bg-color="background" v-model="e1">
-                <template v-slot:default="{ prev, next }">
+                <template>
                   <v-stepper-header class="elevation-0" color="primary">
                     <v-stepper-item color="primary" :complete="e1 > 0" value="1"></v-stepper-item>
 
@@ -143,7 +130,9 @@
                               {{ plan?.description }}
                             </p>
                             <h3 class="ma-4">
-                              {{ selectedFilter === "mensal" ? plan?.priceMensal : plan?.priceAnual }}
+                              {{
+                                selectedFilter === "mensal" ? plan?.priceMensal : plan?.priceAnual
+                              }}
                             </h3>
                           </v-card>
                         </v-col>
@@ -174,7 +163,7 @@
                       </v-card>
 
                       <v-card class="elevation-0 mx-auto rounded-xl mt-2" color="background" flat>
-                        <PaymentMethod />
+                        <PaymentMethod @closeDialog="closeDialogPayment" />
                       </v-card>
                     </v-stepper-window-item>
                   </v-stepper-window>
@@ -207,8 +196,6 @@ const idPaymentStore = idPayment();
 const payment = ref([]);
 const selectedFilter = ref("mensal");
 const infoPlanDialog = ref(false);
-const loading = ref(false);
-
 
 const showDialog = ref(false);
 const filteredPlans = computed(() => {
@@ -219,6 +206,8 @@ const filteredPlans = computed(() => {
 const plans = ref([
   {
     id: 1,
+    idMensal: 5,
+    idAnual: 6,
     name: "Básico",
     benefits: "Postagens limitadas (15)",
     description: "Ideal para iniciantes em criação",
@@ -227,6 +216,8 @@ const plans = ref([
   },
   {
     id: 2,
+    idMensal: 8,
+    idAnual: 7,
     name: "Premium",
     description: "Ideal para criadores consolidados",
     benefits:
@@ -241,6 +232,14 @@ const headers = [
     title: "Identificador",
     key: "id",
   },
+  {
+    title: "Plano",
+    key: "subscriptionData.name",
+  },
+  {
+    title: "Duração(Meses)",
+    key: "subscriptionData.duration",
+  },
 ];
 
 const paymentInfo = ref({
@@ -250,12 +249,6 @@ const paymentInfo = ref({
 
 const selectedPrice = ref("");
 
-const onClick = () => {
-  loading.value = true;
-  setTimeout(() => {
-    loading.value = false;
-  }, 2000);
-};
 
 const selectedPlan = ref(null);
 const fetchData = async () => {
@@ -263,7 +256,7 @@ const fetchData = async () => {
   const token = cookie.value;
 
   try {
-    const { data } = await useFetch(
+    const data = await $fetch(
       "https://api.seduvibe.com/subscription/list_subscriptions_creator_active",
       {
         headers: {
@@ -272,31 +265,26 @@ const fetchData = async () => {
       }
     );
 
-    payment.value = data?._rawValue || [];
+    payment.value = data || [];
   } catch (error) {
     console.error("Error fetching subscriptions:", error);
   }
 };
 
-const historyTable = ref(null);
+const historyTable = ref([]);
 
 const historyPayment = async () => {
   try {
-    const { data, error } = useFetch(
-      "https://api.seduvibe.com/subscription/list_all_subscriptions_creator",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    console.log(data.value);
-    historyTable.value = data.value;
+    const data = await $fetch("https://api.seduvibe.com/subscription/list_all_subscriptions_creator", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    historyTable.value = data;
   } catch (error) {
     console.error(error);
   }
 };
-
 
 const getSubscriptionTitle = (data) => {
   if (data.length > 0) {
@@ -333,6 +321,13 @@ const selectPlan = (plan) => {
   };
   e1.value = 1;
   idPaymentStore.setAmount = selectedPrice.value;
+  const subId = selectedFilter.value === "mensal" ? plan.idMensal : plan.idAnual;
+  idPaymentStore.setSubsId(subId);
+};
+
+const closeDialogPayment = () => {
+  showDialog.value = false;
+  fetchData();
 };
 fetchData();
 historyPayment();

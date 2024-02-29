@@ -9,6 +9,7 @@ export const idPayment = defineStore("idPayment", {
     name: null,
     dataReceived: null,
     paymentLatest: null,
+    subscriptionId: null,
   }),
   actions: {
     setCpf(cpf) {
@@ -31,6 +32,9 @@ export const idPayment = defineStore("idPayment", {
     },
     setDataReceived(dataReceived) {
       this.dataReceived = dataReceived;
+    },
+    setSubsId(subscriptionId) {
+      this.subscriptionId = subscriptionId;
     },
   },
 });
