@@ -31,15 +31,7 @@
               type="number"
               hide-spin-buttons
             ></v-text-field>
-            <v-text-field
-              v-model="info.phone"
-              type="number"
-              hide-spin-buttons
-              placeholder="Celular"
-              prepend-inner-icon="mdi-cellphone"
-              bg-color="input_color"
-              maxlength="14"
-            ></v-text-field>
+
             <v-text-field
               v-model="info.email"
               placeholder="Email"
@@ -53,9 +45,9 @@
                   color="primary"
                   @click="openDialog = true"
                 >
-                  Email não verificado
+                 Não verificado
                 </v-chip>
-                <v-chip v-else color="purple" class="mt-n1" dark> Email verificado </v-chip>
+                <v-chip v-else color="purple" class="mt-n1" dark>Verificado </v-chip>
               </template>
             </v-text-field>
 
@@ -152,7 +144,6 @@ onMounted(async () => {
       usuario: data.users[0]?.user,
       name: data.users[0]?.name,
       cpf: data.data_personal[0].cpf,
-      phone: data.data_personal[0].phone,
       email: data.users[0]?.email,
       email_confirmed: data.users[0].emailConfirmed,
     };
