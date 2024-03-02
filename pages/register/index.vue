@@ -91,11 +91,11 @@
             <h2 class="text-center mb-2 font-weight-light">O que você é?</h2>
             <p class="text-caption text-center mt-n2 mb-4">Fale-nos sobre você.</p>
             <VRow>
-              <VCol class="mb-n2">
+              <VCol class="mb-n2" cols="auto">
                 <VCard
                   class="mx-auto elevation-0 rounded-xl"
                   flat
-                  width="344"
+                  width="100%"
                   color="input_color"
                   link
                   subtitle="Quero começar a produzir"
@@ -111,11 +111,11 @@
                   <VCardText>Escolha esse opção se você quer trabalhar na plataforma.</VCardText>
                 </VCard>
               </VCol>
-              <VCol class="mt-n2">
+              <VCol class="mt-n2" cols="autp">
                 <VCard
                   class="mx-auto elevation-0 rounded-xl"
                   flat
-                  width="344"
+                  width="100%"
                   color="input_color"
                   link
                   subtitle="Quero apoiar meu criador"

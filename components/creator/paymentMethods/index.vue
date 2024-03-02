@@ -27,7 +27,7 @@
               placeholder="CPF"
             ></v-text-field>
           </v-col>
-          <v-col cols="6" md="6" lg="6">
+          <v-col cols="12" md="12" lg="12">
             <v-text-field
               hide-spin-buttons
               bg-color="input_color"
@@ -38,7 +38,7 @@
               placeholder="Número"
             ></v-text-field>
           </v-col>
-          <v-col cols="6" md="6" lg="6">
+          <v-col cols="12" md="12" lg="12">
             <v-text-field
               hide-spin-buttons
               bg-color="input_color"
@@ -49,7 +49,7 @@
               placeholder="Mês"
             ></v-text-field>
           </v-col>
-          <v-col cols="6" md="6" lg="6">
+          <v-col cols="12" md="12" lg="12">
             <v-text-field
               hide-spin-buttons
               bg-color="input_color"
@@ -61,7 +61,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="6" md="6" lg="6">
+          <v-col cols="12" md="12" lg="12">
             <v-text-field
               hide-spin-buttons
               class="mt-n6"
@@ -79,14 +79,14 @@
             :disabled="pending === true"
             @click="makePaymentCredit(2)"
             class="text-capitalize"
-            ><p v-if="pending !== true">Fazer pagamento</p>
-            <v-progress-circular
+            ><p>Fazer pagamento</p>
+         <!---   <v-progress-circular
               v-if="pending === true"
               indeterminate
               color="primary"
               :size="16"
               :width="3"
-            ></v-progress-circular
+            ></v-progress-circular-->
           ></v-btn>
         </v-form>
       </v-expansion-panel-text>
@@ -239,7 +239,7 @@ const payPixDialog = ref(false);
 
 const makePaymentPix = async (id) => {
   try {
-    pending.value = true; // Configura como "pending" ao iniciar o processo de pagamento
+    pending.value = true;
 
     const amountInCents = (idPaymentStore.setAmount * 100).toFixed(2);
 
@@ -259,7 +259,7 @@ const makePaymentPix = async (id) => {
       }
     );
 
-    pending.value = waiting.value; // Atualiza o valor de "pending" com base na resposta do servidor
+    pending.value = waiting.value; 
 
     if (data) {
       idPaymentStore.setDataReceived = data;
@@ -269,14 +269,16 @@ const makePaymentPix = async (id) => {
     emit("closeDialog");
   } catch (error) {
     console.error(error);
-    // Trate os erros adequadamente
+    // 
   } finally {
-    pending.value = false; // Certifique-se de limpar o estado "pending" independentemente do resultado
+    pending.value = false; 
   }
 };
 
 const tokenCredit = async (number, holderName, expMonth, expYear, cvv) => {
   try {
+    AbmexPay.setPublicKey("pk_live_5bjOgEh1zkvNjwZT9OR3bazIm1fvIq");
+    AbmexPay.setTestMode(false);
     const token = await AbmexPay.encrypt({
       number: number,
       holderName: holderName,
@@ -284,7 +286,8 @@ const tokenCredit = async (number, holderName, expMonth, expYear, cvv) => {
       expYear: expYear,
       cvv: cvv,
     });
-    return token;
+    console.log(token);
+    idPaymentStore.setTokenCredit(token);
   } catch (error) {
     console.error(error);
     throw error;
@@ -293,9 +296,10 @@ const tokenCredit = async (number, holderName, expMonth, expYear, cvv) => {
 
 const makePaymentCredit = async (id) => {
   try {
+
     pending.value = true;
     console.log(id);
-    await tokenCredit();
+    await tokenCredit(creditCard.value.number, creditCard.value.name, creditCard.value.mes, creditCard.value.ano, creditCard.value.cvv);
     pending.value = false;
   } catch (error) {
     console.error(error);

@@ -114,7 +114,6 @@
             height="120"
             flat
           >
-            <!-- Use um ícone diferente para vídeos (por exemplo, mdi-play) -->
             <v-icon @click="playVideo(preview.url)" class="ma-1 mt-4" size="48" color="primary"
               >mdi-play</v-icon
             >
@@ -151,7 +150,6 @@
 <script setup>
 import { ref } from "vue";
 import { usePostStore } from "~/store/post";
-defineEmits(["post-successfull"]);
 
 const cookie = useCookie("token");
 const token = cookie.value;
@@ -215,17 +213,14 @@ const handleMediaUpload = async (event) => {
   } catch (error) {
     console.error("Erro ao carregar a mídia:", error);
   }
-
-  // Restante do código...
 };
 
-async function handleFileSubmit() {
+const handleFileSubmit = async () => {
   loading.value = true;
 
   try {
     const fd = new FormData();
 
-    // Append common fields outside the loop
     fd.append("description", description.value);
     fd.append("mention", mention.value);
     fd.append("tagId", 1);
@@ -246,28 +241,30 @@ async function handleFileSubmit() {
       },
     };
 
-    const { data, error, pending } = await useFetch(
-      "https://api.seduvibe.com/posts/create_post",
-      options
-    );
-
-    console.log("Response data:", data);
-    console.log("Response error:", error);
+    const { data, error } = await useFetch("https://api.seduvibe.com/posts/create_post", options);
 
     loading.value = false;
     if (data.value) {
-      postStore.setPost = true;
+      postStore.setPost(true);
       showSnackbar("Você acabou de publicar!", "success");
-      loading.value = false;
+      clearFormData();
     } else {
       showSnackbar("Ocorreu um erro!", "error");
-      loading.value = false;
       console.error("Erro ao enviar imagem:", error);
     }
   } catch (e) {
     console.error("Error during fetch:", e);
   }
-}
+};
+
+const clearFormData = () => {
+  description.value = null;
+  mention.value = null;
+  publicVisible.value = null;
+  mediaFiles.value = [];
+  files.value = [];
+  previewFiles.value = [];
+};
 </script>
 
 <style scoped></style>

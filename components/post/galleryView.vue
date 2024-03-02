@@ -1,7 +1,9 @@
 <template>
   <v-row align="center" justify="center">
     <v-chip-group filter v-model="selectedFilter">
-      <v-chip :color="isSelectedFilter(0) ? 'purple' : ''" class="mr-2" :value="0"> Tudo </v-chip>
+      <v-chip :color="isSelectedFilter(0) ? 'purple' : ''" class="mr-2" :value="0">
+        Tudo
+      </v-chip>
       <v-chip :color="isSelectedFilter(1) ? 'purple' : ''" class="mr-2" :value="1">
         Assinantes
       </v-chip>
@@ -15,25 +17,15 @@
   </v-row>
 
   <v-row v-if="hasFilteredPosts">
-    <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" rounded="xl" cols="4">
-      <v-card v-if="n.content !== null" class="rounded-xl elevation-0" flat>
-        <template>
-          <v-img
-            v-if="n.content === null"
-            :src="n.content"
-            aspect-ratio="1"
-            cover
-            class="bg-grey-lighten-2"
-            rounded="xl"
-          >
-            <template v-slot:placeholder>
-              <v-row class="fill-height ma-0" align="center" justify="center">
-                <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
-              </v-row>
-            </template>
-          </v-img>
-        </template>
+    <v-col v-for="n in filteredPosts" :key="n.id" class="child-flex" cols="4">
+      <NuxtLink :to="'/post/'+n.id">
+      <v-card class="elevation-0 mb-n2" flat rounded="xl" width="250">
+        <v-img v-if="isVideo(n.content)" cover :src="n.content">
+          <v-icon class="video-icon">mdi-play</v-icon>
+        </v-img>
+        <v-img aspect-ratio="0.85" class="ml-1" v-else cover :src="n.content"></v-img>
       </v-card>
+    </NuxtLink>
     </v-col>
   </v-row>
 
@@ -54,13 +46,18 @@ const cookie = useCookie("token");
 const token = cookie.value;
 
 const selectedFilter = ref(0);
-const data = await $fetch(`https://api.seduvibe.com/posts/list_all/${idUser}`, {
+const { data: post } = await useFetch(`https://api.seduvibe.com/posts/list_all/${idUser}`, {
   headers: {
     Authorization: `Bearer ${token}`,
   },
 });
-console.log(data);
-const posts = ref(data?.reverse());
+const posts = ref(post._rawValue.reverse());
+
+const isVideo = (url) => {
+  const videoExtensions = [".mp4", ".webm", ".ogg"];
+  const ext = url.slice(url.lastIndexOf(".") + 1);
+  return videoExtensions.includes(ext.toLowerCase());
+};
 
 const isSelectedFilter = (filterValue) => selectedFilter.value === filterValue;
 
@@ -72,3 +69,14 @@ const filteredPosts = computed(() => {
 
 const hasFilteredPosts = computed(() => filteredPosts.value.length > 0);
 </script>
+
+<style scoped>
+.video-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 2em;
+}
+</style>

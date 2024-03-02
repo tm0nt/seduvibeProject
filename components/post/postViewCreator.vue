@@ -2,31 +2,26 @@
   <v-row align="center" justify="center">
     <v-col cols="12" class="mx-auto d-flex align-center justify-center">
       <v-chip-group
-        selected-class="primary"
-        color="primary"
-        mandatory
-        filter
-        v-model="selectedExtension"
-      >
-        <v-chip value="all">
-          <p>({{ totalPosts }})</p>
-          &nbsp;Tudo&nbsp;
-        </v-chip>
-        <v-chip value="image">
-          <p>({{ imagePosts }})</p>
-          &nbsp;Imagens&nbsp;
-        </v-chip>
-        <v-chip value="video">
-          <p>({{ videoPosts }})</p>
-          &nbsp;Vídeos&nbsp;
-        </v-chip>
-      </v-chip-group>
+      selected-class="primary"
+      color="primary"
+      mandatory
+      filter
+      v-model="selectedExtension"
+    >
+      <v-chip value="all">
+        &nbsp;Tudo&nbsp;
+      </v-chip>
+      <v-chip value="image">
+        &nbsp;Imagens&nbsp;
+      </v-chip>
+      <v-chip value="video">
+        &nbsp;Vídeos&nbsp;
+      </v-chip>
+    </v-chip-group>
     </v-col>
     <v-row>
-      <v-col cols="12" class="mt-2">
-        <p v-if="filteredPosts.length === 0" class="text-center text-caption text-medium-emphasis">
-          Nenhum publicação encontrada
-        </p>
+      <v-col  cols="12" class="mt-2">
+      <p v-if="filteredPosts.length === 0" class="text-center text-caption text-medium-emphasis">Nenhum publicação encontrada</p>
       </v-col>
     </v-row>
     <v-card
@@ -35,6 +30,7 @@
       width="600"
       color="postBackground"
     >
+    
       <v-card-title class="d-flex align-center">
         <v-avatar size="50">
           <v-img cover :src="post?.userData?.profilePicture"></v-img>
@@ -86,7 +82,7 @@
           </template>
         </div>
       </v-card-text>
-      <v-card width="100%" class="cursor-pointer mb-n10" v-if="post.content != null">
+      <v-img width="100%" class="cursor-pointer mb-n10">
         <template v-if="isImage(post.content)">
           <v-img :src="post?.content"></v-img>
         </template>
@@ -96,7 +92,7 @@
             Your browser does not support the video tag.
           </video>
         </template>
-      </v-card>
+      </v-img>
       <v-card-actions class="mt-2 mb-n9 ml-n6">
         <v-container>
           <v-btn color="primary" icon class="ma-4" @click="toggleLike(post)">
@@ -181,39 +177,36 @@
   </v-snackbar>
 </template>
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import { useIdStore } from "~/store/id";
 import { usePostStore } from "~/store/post";
+
 
 const postStore = usePostStore();
 // Fetch creatorId
 const storeId = useIdStore();
 const idUser = storeId.id;
-watch(
-  () => postStore.post,
-  (newPostValue, oldPostValue) => {
-    console.log(`postStore.post mudou de ${oldPostValue} para ${newPostValue}`);
 
-    if (newPostValue) {
-      console.log("postStore.post é verdadeiro, executando operação...");
 
-      try {
-        // Execute a operação desejada, como fetchPost(idUser)
-        fetchPost(idUser);
+watch(() => postStore.post, (newPostValue, oldPostValue) => {
+  console.log(`postStore.post mudou de ${oldPostValue} para ${newPostValue}`);
 
-        console.log("Operação concluída com sucesso.");
+  if (newPostValue) {
+    console.log("postStore.post é verdadeiro, executando operação...");
 
-        // Após a operação ser concluída, defina postStore.post de volta para false
-        postStore.setPost(false);
+    try {
+      fetchPosts(idUser);
 
-        console.log("postStore.post foi definido como false.");
-      } catch (error) {
-        console.error("Erro ao executar a operação:", error);
-      }
+      console.log("Operação concluída com sucesso.");
+
+      postStore.setPost(false);
+
+      console.log("postStore.post foi definido como false.");
+    } catch (error) {
+      console.error("Erro ao executar a operação:", error);
     }
-  },
-  { deep: true } // Adicionando a opção deep para assistir alterações profundas
-);
+  }
+});
 
 const deleteDialogComment = ref(false);
 
@@ -309,7 +302,7 @@ const newComment = async (id) => {
   });
   try {
     console.log(comment_payload);
-    const data = await $fetch(`https://api.seduvibe.com/posts/create_comment`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/create_comment`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -328,7 +321,7 @@ const newComment = async (id) => {
 
 const newLike = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/posts/like/${id}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/like/${id}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -346,7 +339,7 @@ const newLike = async (id) => {
 // Delete
 const deleteLike = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/posts/unlike/${id}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/unlike/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -360,7 +353,7 @@ const deleteLike = async (id) => {
 };
 const deletePost = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/posts/delete_post/${id}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/delete_post/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -376,7 +369,7 @@ const deletePost = async (id) => {
 };
 const deleteComment = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/posts/delete_comment/${id}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/delete_comment/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -392,17 +385,14 @@ const deleteComment = async (id) => {
 };
 //Fetch Post
 const fetchPosts = async (id) => {
-  const data = await $fetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
+
+  const { data: postData } = await useFetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-  posts.value = data?.reverse() || [];
-  console.log(posts.value);
-  totalPosts.value = posts?.length;
-  imagePosts.value = posts.filter((post) => post.content.endsWith(".jpg")).length;
-  videoPosts.value = posts.filter((post) => post.content.endsWith(".mp4")).length;
+  posts.value = postData?._rawValue?.reverse() || [];
 };
 
 // Fetch like

@@ -10,8 +10,12 @@ export const idPayment = defineStore("idPayment", {
     dataReceived: null,
     paymentLatest: null,
     subscriptionId: null,
+    tokenCredit: null,
   }),
   actions: {
+    setTokenCredit(token){
+      this.tokenCredit = token;
+    },
     setCpf(cpf) {
       this.cpf = cpf;
     },
