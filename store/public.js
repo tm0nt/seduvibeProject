@@ -13,7 +13,8 @@ export const useIdStorePublic = defineStore("idPublic", {
     setCreatorId(creatorId) {
       this.creatorId = creatorId;
     },
-    setContributeId(contribute){
-      this.contributeId = contribute;    }
+    setContributeId(contribute) {
+      this.contributeId = contribute;
+    },
   },
 });

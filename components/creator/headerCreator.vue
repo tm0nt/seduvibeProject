@@ -2,12 +2,14 @@
   <VCard class="rounded-lg" flat height="150">
     <template v-slot:image>
       <VImg eager cover position="center" :src="info.coverPicture">
-        <v-card class="ml-4 mt-4 elevation-0" flat color="primary" variant="tonal" width="50">
-          <VBtn @click="changeInfoData.cover = true" class="text-capitalize">
+          <VBtn @click="changeInfoData.cover = true" color="background" class="text-capitalize ma-4">
             <v-icon color="primary">mdi-camera</v-icon>
           </VBtn>
-        </v-card></VImg
-      >
+        <template v-slot:placeholder>
+          <v-row align="center" class="fill-height ma-0" justify="center">
+            <v-progress-circular color="primary" indeterminate></v-progress-circular>
+          </v-row> </template
+      ></VImg>
     </template>
   </VCard>
 
@@ -16,7 +18,7 @@
       <v-btn
         fab
         color="primary"
-        :disabled="social_media[0]?.instagram === null || ''"
+        :disabled="social_media.instagram === null "
         :href="social_media.instagram"
         variant="text"
       >
@@ -25,7 +27,7 @@
       <v-btn
         fab
         color="primary"
-        :disabled="social_media[0]?.instagram === null || ''"
+        :disabled="social_media.telegram === null"
         :href="social_media.telegram"
         class="ml-n4"
         variant="text"
@@ -36,7 +38,7 @@
         fab
         color="primary"
         :href="social_media.twitter"
-        :disabled="social_media[0]?.twitter === null || ''"
+        :disabled="social_media.twitter === null"
         class="ml-n4"
         variant="text"
       >
@@ -48,12 +50,15 @@
       <div class="text-center mt-n15">
         <v-menu width="250" height="250">
           <template v-slot:activator="{ props }">
-            <VAvatar
-              style="border: 3px solid background"
-              size="120"
-              v-bind="props"
-              :image="info.profilePicture"
-            ></VAvatar>
+            <VAvatar style="border: 3px solid background" size="120" v-bind="props">
+              <VImg cover :src="info.profilePicture">
+                <template v-slot:placeholder>
+                  <v-row align="center" class="fill-height ma-0" justify="center">
+                    <v-progress-circular color="primary" indeterminate></v-progress-circular>
+                  </v-row>
+                </template>
+              </VImg>
+            </VAvatar>
           </template>
           <v-card color="background" class="elevation-4 rounded-xl overflow-y-visible">
             <v-card-text>
@@ -108,7 +113,7 @@
     </v-col>
     <v-spacer></v-spacer>
     <v-col cols="auto" class="text-caption mt-2">
-      <v-chip small class="text-capitalize" color="primary" @click="showDialogSub = true">
+      <v-chip small class="text-capitalize" v-if="userSubsCount?.length !== 0" color="primary" @click="showDialogSub = true">
         <v-icon color="primary" size="26" class="ma-1">mdi-account</v-icon
         >{{ userSubsCount?.totalUsers }} subs
       </v-chip>
@@ -158,8 +163,21 @@
           prepend-inner-icon="mdi-camera"
           @change="handleUploadCover"
         ></v-file-input>
+        <v-card  class="rounded-xl elevation-0" flat  v-if="imagePreviewCover" width="300">
+          <v-img
+          aspect-ratio="1.2"
+          :src="imagePreviewCover"
+        cover
+          alt="Prévia de imagem de capa"
+        >
+          <v-btn color="background" size="small" class="ma-4" @click="imagePreviewCover = null"
+            ><v-icon color="primary">mdi-close</v-icon></v-btn
+          >
+        </v-img>
+        </v-card>
+        
 
-        <VBtn type="submit" class="text-capitalize" block color="primary" min-height="40"
+        <VBtn type="submit" class="text-capitalize mt-4" block color="primary" min-height="40"
           >Alterar</VBtn
         >
       </v-form>
@@ -187,7 +205,19 @@
           chips
           prepend-inner-icon="mdi-camera"
         ></v-file-input>
-        <VBtn class="text-capitalize" type="submit" block color="primary" min-height="40"
+        <v-card  class="rounded-xl elevation-0" flat  v-if="imagePreviewProfile" width="300">
+        <v-img
+          :src="imagePreviewProfile"
+          alt="Prévia de imagem de perfil"
+          cover
+          aspect-ratio="1.2"
+        >
+          <v-btn color="background" size="small" class="ma-4" @click="imagePreviewProfile = null"
+            ><v-icon color="primary">mdi-close</v-icon></v-btn
+          >
+        </v-img>
+        </v-card>
+        <VBtn class="text-capitalize mt-4" type="submit" block color="primary" min-height="40"
           >Alterar</VBtn
         >
       </v-form>
@@ -221,12 +251,14 @@
     <v-card class="elevation-6 rounded-xl overflow-auto" color="background" flat height="300">
       <v-card-title><v-icon @click="showDialogSub = false">mdi-close</v-icon></v-card-title>
       <v-card-text class="text-center">
+        <h4 class="text-subtitle-1 mb-4 text-medium-emphasis">Lista de assinantes</h4>
         <v-row>
-          <v-col cols="auto" v-for="userName in userSubsCount.userNames">
+          <v-col cols="6" v-for="userName in userSubsCount.userNames">
             <v-card
               class="rounded-xl elevation-0"
-              width="250"
+              width="auto"
               flat
+              link
               variant="tonal"
               color="primary"
               :title="userName"
@@ -259,11 +291,17 @@
     <v-snackbar
       v-model="snackbar.show"
       :color="snackbar.color"
+      location="center"
       rounded="pill"
       :timeout="snackbar.timeout"
       top
     >
       {{ snackbar.message }}
+      <template v-slot:actions>
+        <v-btn variant="text" @click="snackbar.show = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
     </v-snackbar>
   </VRow>
 </template>
@@ -278,6 +316,8 @@ const changeInfoData = ref({
   profile: false,
   bio: false,
 });
+
+const imagePreviewProfile = ref(null);
 
 const PicturesUser = ref({
   cover: null,
@@ -313,6 +353,8 @@ const social_media = ref({
   telegram: null,
   twitter: null,
 });
+
+const imagePreviewCover = ref(null);
 const info = ref({
   nome: null,
   user: null,
@@ -391,12 +433,24 @@ const files = ref(null);
 
 function handleUploadCover(event) {
   files.value = event.target.files;
-  console.log(files.value);
+  if (files.value) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreviewCover.value = e.target.result;
+    };
+    reader.readAsDataURL(files.value[0]);
+  }
 }
 
 function handleUploadPicture(event) {
   filesPicture.value = event.target.files;
-  console.log(filesPicture.value);
+  if (filesPicture.value) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreviewProfile.value = e.target.result;
+    };
+    reader.readAsDataURL(filesPicture.value[0]);
+  }
 }
 
 async function handleFileSubmitCover() {
@@ -419,6 +473,8 @@ async function handleFileSubmitCover() {
     changeInfoData.value.cover = false;
     fetchDataFromAPI();
     showSnackbar("Você alterou sua capa com sucesso!", "success");
+    files.value = null;
+    imagePreviewCover.value = null;
   } else {
     console.error("Erro ao enviar imagem:", error);
   }
@@ -444,6 +500,8 @@ async function handleFileSubmitPicture() {
     changeInfoData.value.profile = false;
     fetchDataFromAPI();
     showSnackbar("Você alterou sua foto de perfil com sucesso!", "success");
+    filesPicture.value = null;
+    imagePreviewProfile.value = null;
   } else {
     console.error("Erro ao enviar imagem:", error);
   }
@@ -462,26 +520,37 @@ const fetchDataFromAPI = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    countUserSubs();
-    social_media.value = {
-      instagram: "https://instagram/" + data.social_media[0]?.instagram,
-      telegram: "https://t.me/@" + data.social_media[0]?.telegram,
-      twitter: "https://x.com/" + data.social_media[0]?.twitter,
-    };
 
-    info.value = {
-      nome: data.users[0]?.name,
-      user: data.users[0]?.user,
-      bio: data.users[0]?.bio,
-      coverPicture: data.users[0]?.coverPicture,
-      profilePicture: data.users[0]?.profilePicture,
-    };
+    if (data) {
+      countUserSubs();
+
+      const socialMediaData = data.social_media[0];
+      if (socialMediaData && socialMediaData.length !== 0) {
+        social_media.value = {
+          instagram: "https://instagram.com/" + socialMediaData.instagram,
+          telegram: "https://t.me/@" + socialMediaData.telegram,
+          twitter: "https://x.com/" + socialMediaData.twitter,
+        };
+      }
+
+      const userData = data.users[0];
+      if (userData) {
+        info.value = {
+          nome: userData.name,
+          user: userData.user,
+          bio: userData.bio,
+          coverPicture: userData.coverPicture,
+          profilePicture: userData.profilePicture,
+        };
+      }
+    }
 
     console.log("Requisição realizada com sucesso:", data);
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
 };
+
 
 fetchDataFromAPI();
 </script>

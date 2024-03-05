@@ -80,14 +80,15 @@
             @click="makePaymentCredit(2)"
             class="text-capitalize"
             ><p>Fazer pagamento</p>
-         <!---   <v-progress-circular
+            <!---   <v-progress-circular
               v-if="pending === true"
               indeterminate
               color="primary"
               :size="16"
               :width="3"
             ></v-progress-circular-->
-          ></v-btn>
+            ></v-btn
+          >
         </v-form>
       </v-expansion-panel-text>
     </v-expansion-panel>
@@ -251,15 +252,14 @@ const makePaymentPix = async (id) => {
       metadata: "userId:1,source:donation",
     };
 
-    const { data, pending: waiting } = await $fetch(
+    const data = await $fetch(
       "https://payment.seduvibe.cloud/paymentProcess/pix",
       {
         method: "POST",
         body: JSON.stringify(requestBody),
       }
     );
-
-    pending.value = waiting.value; 
+;
 
     if (data) {
       idPaymentStore.setDataReceived = data;
@@ -269,9 +269,9 @@ const makePaymentPix = async (id) => {
     emit("closeDialog");
   } catch (error) {
     console.error(error);
-    // 
+    //
   } finally {
-    pending.value = false; 
+    pending.value = false;
   }
 };
 
@@ -296,10 +296,15 @@ const tokenCredit = async (number, holderName, expMonth, expYear, cvv) => {
 
 const makePaymentCredit = async (id) => {
   try {
-
     pending.value = true;
     console.log(id);
-    await tokenCredit(creditCard.value.number, creditCard.value.name, creditCard.value.mes, creditCard.value.ano, creditCard.value.cvv);
+    await tokenCredit(
+      creditCard.value.number,
+      creditCard.value.name,
+      creditCard.value.mes,
+      creditCard.value.ano,
+      creditCard.value.cvv
+    );
     pending.value = false;
   } catch (error) {
     console.error(error);
@@ -364,15 +369,14 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount, contr
         subscriptionId,
         paymentMethodId,
       });
-    } else if(subscriptionId == "donation") {
+    } else if (subscriptionId == "donation") {
       await makeSubscriptionRequest(`https://api.seduvibe.com/donate/${id}`, {
         amount,
       });
-    }
-    else if(subscriptionId == "contribute"){
+    } else if (subscriptionId == "contribute") {
       await makeSubscriptionRequest(`https://api.seduvibe.com/contribute/${contributeId}`, {
-        value: amount
-      })
+        value: amount,
+      });
     }
   } catch (error) {
     console.error("Error when subscribing:", error);

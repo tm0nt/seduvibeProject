@@ -1,20 +1,27 @@
 <template>
-  <VContainer fluid class="fill-height my-12">
-    <VRow no-gutters align="center" justify="center" class="fill-height">
+  <VContainer fluid class="fill-height">
+    <VRow no-gutters align="center" justify="center" class="my-13">
       <VCol cols="12" md="6" lg="5" sm="6">
         <VRow no-gutters align="center" justify="center">
-          <VCol cols="9" md="6">
-            <div class="text-surface">
+          <VCol cols="9" md="6" class="">
+            <VToolbar height="90" color="rgb(0,0,0,0)"></VToolbar>
+            <div class="text-surface mt-md-n15">
               <VImg
                 src="https://i.imgur.com/BrTfYSp.png"
                 width="60"
                 alt="Plataforma para vender conteúdo exclusivo"
-                class="mx-auto mb-10 text-center"
+                class="mx-auto text-center"
                 format="webp"
                 loading="lazy"
                 preload
-              ></VImg>
-              <h2 class="text-headline mt-15">Login</h2>
+              >
+                <template v-slot:placeholder>
+                  <v-row align="center" class="fill-height ma-0" justify="center">
+                    <v-progress-circular color="primary" indeterminate></v-progress-circular>
+                  </v-row>
+                </template>
+              </VImg>
+              <h2 class="text-headline mt-6">Login</h2>
               <p class="mt-n2 text-medium-emphasis text-caption mb-4">
                 Entre para apoiar seus criadores
               </p>
@@ -79,8 +86,19 @@
       </VCol>
       <advertising />
     </VRow>
-    <v-snackbar v-model="useAuthStore().snackbar.show" :color="useAuthStore().snackbar.color" top>
+    <v-snackbar
+      v-model="useAuthStore().snackbar.show"
+      :color="useAuthStore().snackbar.color"
+      top
+      location="center"
+      rounded="pill"
+    >
       {{ useAuthStore().snackbar.text }}
+      <template v-slot:actions>
+        <v-btn variant="text" @click="useAuthStore().snackbar.show = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
     </v-snackbar>
   </VContainer>
 </template>

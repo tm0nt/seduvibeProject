@@ -11,9 +11,9 @@
           </h2>
           <p class="text-caption text-medium-emphasis mt-n1">Atualizações a todo instante.</p>
           <v-card
-            color="input_color"
+            color="background"
             rounded="xl"
-            class="mt-4 d-flex justify-center align-center"
+            class="mt-4 d-flex elevation-6 justify-center align-center"
             flat
           >
             <v-row class="ma-2" align="center" justify="center">
@@ -50,7 +50,7 @@
               </v-col>
             </v-row>
           </v-card>
-          <v-card class="rounded-xl mt-4" color="input_color" flat>
+          <v-card class="rounded-xl mt-4 elevation-6 " color="background" flat>
             <v-container class="ma-2">
               <h4>Gerencie afiliados</h4>
               <p class="text-caption text-medium-emphasis">Visualize, aprove e remova afiliados</p>
@@ -78,7 +78,7 @@
               </v-window>
             </v-container>
           </v-card>
-          <v-card class="rounded-xl mt-4" color="input_color" flat>
+          <v-card class="rounded-xl mt-4 elevation-6" color="background" flat>
             <v-container class="ma-2">
               <h4>Sua comissão</h4>
               <p class="text-caption text-medium-emphasis">Acompanhe o volume de suas comissões.</p>
@@ -89,7 +89,7 @@
           </v-card>
           <v-row>
             <v-col cols="12" md="12" lg="12">
-              <v-card class="rounded-xl mt-4" color="input_color" flat>
+              <v-card class="rounded-xl mt-4 elevation-6" color="background" flat>
                 <v-container class="ma-2">
                   <h4>Ranking</h4>
                   <p class="text-caption text-medium-emphasis">Mais vendas realizadas</p>

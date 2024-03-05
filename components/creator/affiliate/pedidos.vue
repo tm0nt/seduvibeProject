@@ -1,10 +1,10 @@
 <template>
   <v-data-table
     :headers="headers"
+    color="background"
     no-data-text="Você não possui afiliados"
     items-per-page-text="Afiliados"
     :items="affiliatePending && affiliatePending.length ? affiliatePending : []"
-    theme="dark"
   >
     <template v-slot:item.actions="{ item }">
       <v-icon class="me-2" @click="viewRequest(item)"> mdi-dock-window </v-icon>

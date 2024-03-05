@@ -137,7 +137,7 @@ const formatarMoeda = (valor) => {
 
 const DonationMeta = (item) => {
   DonationMetaDialog.value = { item: item, visible: true };
-  
+
   idStore.contributeId(item.id);
 };
 

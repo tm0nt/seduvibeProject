@@ -11,9 +11,9 @@
           </h2>
           <p class="text-caption text-medium-emphasis mt-n1">Atualizações a todo instante.</p>
           <v-card
-            color="input_color"
+            color="background"
             rounded="xl"
-            class="mt-4 d-flex justify-center align-center"
+            class="mt-4 d-flex elevation-6 justify-center align-center"
             flat
           >
             <v-row class="ma-2" align="center" justify="center">
@@ -43,7 +43,7 @@
               </v-col>
             </v-row>
           </v-card>
-          <v-card class="rounded-xl mt-4" color="input_color" flat>
+          <v-card class="rounded-xl mt-4 elevation-6" color="background" flat>
             <v-container class="ma-2">
               <h4>Assinaturas timeline</h4>
               <p class="text-caption text-medium-emphasis">
@@ -54,7 +54,7 @@
               </ClientOnly>
             </v-container>
           </v-card>
-          <v-card class="rounded-xl mt-4" color="input_color" flat>
+          <v-card class="rounded-xl mt-4 elevation-6" color="background" flat>
             <v-container class="ma-2">
               <h4>Faturamento timeline</h4>
               <p class="text-caption text-medium-emphasis">

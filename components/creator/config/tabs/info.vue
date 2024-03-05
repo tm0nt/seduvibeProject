@@ -48,9 +48,8 @@
         <v-col cols="12" md="6" class="mt-n8">
           <v-text-field
             v-model="info.dataNascimento"
-            placeholder="Nascimento"
-            label="Nascimento"
-            type="date"
+            placeholder="Data de nascimento"
+            label="Data de nascimento"
             hide-spin-buttons
             color="primary"
             required
@@ -60,9 +59,9 @@
         </v-col>
         <v-col cols="12" md="6" class="mt-n8">
           <v-text-field
-            v-model="info.endereco"
-            placeholder="Endereço"
-            label="Endereço"
+            v-model="info.city"
+            placeholder="Cidade"
+            label="Cidade"
             bg-color="input_color"
             required
             color="primary"
@@ -71,17 +70,14 @@
         </v-col>
         <v-col cols="12" md="6" class="mt-n8">
           <v-text-field
-            v-model="info.cep"
+            v-model="info.state"
             v-maska
-            data-maska="#####-###"
             bg-color="input_color"
-            label="CEP"
-            placeholder="CEP"
-            type="number"
-            hide-spin-buttons
+            label="Estado"
+            placeholder="Estado"
             color="primary"
             required
-            prepend-inner-icon="mdi-post"
+            prepend-inner-icon="mdi-earth"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -116,6 +112,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import { format } from "date-fns";  
 
 const cookie = useCookie("token");
 const token = cookie.value;
@@ -125,9 +122,12 @@ const info = ref({
   phone: null,
   nomeCompleto: null,
   dataNascimento: null,
-  endereco: null,
-  cep: null,
+  city: null,
+  state: null,
 });
+const formattedDataNascimento = (data) => {
+  return format(new Date(data), "dd/MM/yyyy");
+};
 
 onMounted(async () => {
   try {
@@ -143,9 +143,9 @@ onMounted(async () => {
       nomeCompleto: fetchData?._rawValue?.users[0]?.name,
       cpf: fetchData?._rawValue?.data_personal[0]?.cpf,
       phone: fetchData?._rawValue?.data_personal[0]?.phone,
-      dataNascimento: fetchData?._rawValue?.data_personal[0]?.dateOfBirth,
-      endereco: fetchData?._rawValue?.data_personal[0]?.street,
-      cep: fetchData?._rawValue?.data_personal[0]?.cep,
+      dataNascimento: formattedDataNascimento(fetchData?._rawValue?.data_personal[0]?.dateOfBirth),
+      city: fetchData?._rawValue?.data_personal[0]?.city,
+      state: fetchData?._rawValue?.data_personal[0]?.state,
     };
 
     console.log("Requisição realizada com sucesso:", fetchData);
@@ -179,8 +179,8 @@ const submitForm = async () => {
         cpf: info.value.cpf,
         phone: info.value.phone,
         dateOfBirth: info.value.dataNascimento,
-        street: info.value.endereco,
-        cep: info.value.cep,
+        city: info.value.city,
+        state: info.value.state,
       }),
     });
     showSnackbar("Dados atualizados!", "success");

@@ -2,26 +2,22 @@
   <v-row align="center" justify="center">
     <v-col cols="12" class="mx-auto d-flex align-center justify-center">
       <v-chip-group
-      selected-class="primary"
-      color="primary"
-      mandatory
-      filter
-      v-model="selectedExtension"
-    >
-      <v-chip value="all">
-        &nbsp;Tudo&nbsp;
-      </v-chip>
-      <v-chip value="image">
-        &nbsp;Imagens&nbsp;
-      </v-chip>
-      <v-chip value="video">
-        &nbsp;Vídeos&nbsp;
-      </v-chip>
-    </v-chip-group>
+        selected-class="primary"
+        color="primary"
+        mandatory
+        filter
+        v-model="selectedExtension"
+      >
+        <v-chip value="all"> &nbsp;Tudo&nbsp; </v-chip>
+        <v-chip value="image"> &nbsp;Imagens&nbsp; </v-chip>
+        <v-chip value="video"> &nbsp;Vídeos&nbsp; </v-chip>
+      </v-chip-group>
     </v-col>
     <v-row>
-      <v-col  cols="12" class="mt-2">
-      <p v-if="filteredPosts.length === 0" class="text-center text-caption text-medium-emphasis">Nenhum publicação encontrada</p>
+      <v-col cols="12" class="mt-2">
+        <p v-if="filteredPosts.length === 0" class="text-center text-caption text-medium-emphasis">
+          Nenhum publicação encontrada
+        </p>
       </v-col>
     </v-row>
     <v-card
@@ -30,7 +26,6 @@
       width="600"
       color="postBackground"
     >
-    
       <v-card-title class="d-flex align-center">
         <v-avatar size="50">
           <v-img cover :src="post?.userData?.profilePicture"></v-img>
@@ -181,32 +176,33 @@ import { ref, computed, watchEffect } from "vue";
 import { useIdStore } from "~/store/id";
 import { usePostStore } from "~/store/post";
 
-
 const postStore = usePostStore();
 // Fetch creatorId
 const storeId = useIdStore();
 const idUser = storeId.id;
 
+watch(
+  () => postStore.post,
+  (newPostValue, oldPostValue) => {
+    console.log(`postStore.post mudou de ${oldPostValue} para ${newPostValue}`);
 
-watch(() => postStore.post, (newPostValue, oldPostValue) => {
-  console.log(`postStore.post mudou de ${oldPostValue} para ${newPostValue}`);
+    if (newPostValue) {
+      console.log("postStore.post é verdadeiro, executando operação...");
 
-  if (newPostValue) {
-    console.log("postStore.post é verdadeiro, executando operação...");
+      try {
+        fetchPosts(idUser);
 
-    try {
-      fetchPosts(idUser);
+        console.log("Operação concluída com sucesso.");
 
-      console.log("Operação concluída com sucesso.");
+        postStore.setPost(false);
 
-      postStore.setPost(false);
-
-      console.log("postStore.post foi definido como false.");
-    } catch (error) {
-      console.error("Erro ao executar a operação:", error);
+        console.log("postStore.post foi definido como false.");
+      } catch (error) {
+        console.error("Erro ao executar a operação:", error);
+      }
     }
   }
-});
+);
 
 const deleteDialogComment = ref(false);
 
@@ -385,7 +381,6 @@ const deleteComment = async (id) => {
 };
 //Fetch Post
 const fetchPosts = async (id) => {
-
   const { data: postData } = await useFetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,

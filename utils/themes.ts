@@ -8,7 +8,7 @@ export const light: ThemeDefinition = {
   colors: {
     headline: "#303030",
     background: "#FFFFFF",
-    input_color: "#bbbbbb",
+    input_color: "#f0f0f0",
     surface: "#404040",
     primary: "#A020F0",
     body: "#bbbbbb",

@@ -54,13 +54,19 @@
             <h2 class="mt-5">Pagamentos</h2>
             <p class="text-caption text-medium-emphasis mt-n2 mb-4">Seus últimos pagamentos.</p>
             <v-row class="mt-5">
+
+
               <v-data-table
+                :loading="loading"
                 class="rounded-xl"
                 :headers="headers"
                 :items="historyTable"
                 no-data-text="Nenhum pagamento realizado"
                 items-per-page-text="Pagamento por página"
               >
+                <template v-slot:loading>
+                  <v-skeleton-loader type="table-row@2"></v-skeleton-loader>
+                </template>
               </v-data-table>
             </v-row>
           </v-container>
@@ -78,7 +84,7 @@
           <v-row>
             <v-col cols="12">
               <v-stepper mobile class="elevation-0" flat bg-color="background" v-model="e1">
-                <template>
+                <template v-slot:default="{ prev, next }">
                   <v-stepper-header class="elevation-0" color="primary">
                     <v-stepper-item color="primary" :complete="e1 > 0" value="1"></v-stepper-item>
 
@@ -130,9 +136,7 @@
                               {{ plan?.description }}
                             </p>
                             <h3 class="ma-4">
-                              {{
-                                selectedFilter === "mensal" ? plan?.priceMensal : plan?.priceAnual
-                              }}
+                              {{ selectedFilter === "mensal" ? plan?.priceMensal : plan?.priceAnual }}
                             </h3>
                           </v-card>
                         </v-col>
@@ -163,7 +167,7 @@
                       </v-card>
 
                       <v-card class="elevation-0 mx-auto rounded-xl mt-2" color="background" flat>
-                        <PaymentMethod @closeDialog="closeDialogPayment" />
+                        <PaymentMethod />
                       </v-card>
                     </v-stepper-window-item>
                   </v-stepper-window>
@@ -196,6 +200,8 @@ const idPaymentStore = idPayment();
 const payment = ref([]);
 const selectedFilter = ref("mensal");
 const infoPlanDialog = ref(false);
+const loading = ref(false);
+
 
 const showDialog = ref(false);
 const filteredPlans = computed(() => {
@@ -206,8 +212,6 @@ const filteredPlans = computed(() => {
 const plans = ref([
   {
     id: 1,
-    idMensal: 5,
-    idAnual: 6,
     name: "Básico",
     benefits: "Postagens limitadas (15)",
     description: "Ideal para iniciantes em criação",
@@ -216,8 +220,6 @@ const plans = ref([
   },
   {
     id: 2,
-    idMensal: 8,
-    idAnual: 7,
     name: "Premium",
     description: "Ideal para criadores consolidados",
     benefits:
@@ -255,7 +257,7 @@ const fetchData = async () => {
   const token = cookie.value;
 
   try {
-    const data = await $fetch(
+    const { data } = await useFetch(
       "https://api.seduvibe.com/subscription/list_subscriptions_creator_active",
       {
         headers: {
@@ -264,17 +266,17 @@ const fetchData = async () => {
       }
     );
 
-    payment.value = data || [];
+    payment.value = data?._rawValue || [];
   } catch (error) {
     console.error("Error fetching subscriptions:", error);
   }
 };
 
-const historyTable = ref([]);
+const historyTable = ref(null);
 
 const historyPayment = async () => {
   try {
-    const data = await $fetch(
+    const { data, error } = useFetch(
       "https://api.seduvibe.com/subscription/list_all_subscriptions_creator",
       {
         headers: {
@@ -282,11 +284,13 @@ const historyPayment = async () => {
         },
       }
     );
-    historyTable.value = data;
+    console.log(data.value);
+    historyTable.value = data.value;
   } catch (error) {
     console.error(error);
   }
 };
+
 
 const getSubscriptionTitle = (data) => {
   if (data.length > 0) {
@@ -323,13 +327,6 @@ const selectPlan = (plan) => {
   };
   e1.value = 1;
   idPaymentStore.setAmount = selectedPrice.value;
-  const subId = selectedFilter.value === "mensal" ? plan.idMensal : plan.idAnual;
-  idPaymentStore.setSubsId(subId);
-};
-
-const closeDialogPayment = () => {
-  showDialog.value = false;
-  fetchData();
 };
 fetchData();
 historyPayment();

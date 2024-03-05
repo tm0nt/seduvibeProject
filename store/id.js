@@ -2,8 +2,8 @@ import { defineStore } from "pinia";
 
 export const useIdStore = defineStore("id", {
   state: () => ({
-    creatorId: "",
-    id: "",
+    creatorId: null,
+    id: null,
     auth: false,
     user: "",
   }),

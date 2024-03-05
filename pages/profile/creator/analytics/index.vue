@@ -19,9 +19,9 @@
             >Período</v-btn
           >
           <v-card
-            color="input_color"
+            color="background"
             rounded="xl"
-            class="mt-4 d-flex justify-center align-center"
+            class="mt-4  elevation-6 d-flex justify-center align-center"
             flat
           >
             <v-row class="ma-2" align="center" justify="center">
@@ -59,7 +59,7 @@
               </v-col>
             </v-row>
           </v-card>
-          <v-card class="rounded-xl mt-4" color="input_color" flat>
+          <v-card class="rounded-xl mt-4 elevation-6"  color="background" flat>
             <v-container class="ma-2">
               <h4>Vendas por dia</h4>
               <p class="text-caption text-medium-emphasis">Veja seu progresso mensal.</p>
@@ -70,7 +70,7 @@
           </v-card>
           <v-row>
             <v-col cols="12">
-              <v-card class="rounded-xl mt-4" color="input_color" flat>
+              <v-card class="rounded-xl mt-4 elevation-6" color="background" flat>
                 <v-container class="ma-2">
                   <h4>Vendas por método</h4>
                   <p class="text-caption mb-2">Acompanhe o volume diário da sua empresa.</p>

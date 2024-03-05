@@ -3,10 +3,24 @@
     <VRow no-gutters align="center" justify="center" class="fill-height">
       <VCol cols="12" md="6" lg="5" sm="6">
         <VRow no-gutters align="center" justify="center">
-          <VCol cols="9" md="6">
+          <VCol cols="9" md="6" class="mt-md-n8">
+            <VToolbar height="90" color="rgb(0,0,0,0)"></VToolbar>
             <div class="text-surface">
-              <VImg src="https://i.imgur.com/BrTfYSp.png" width="60" class="mx-auto mb-10"></VImg>
-              <h2 class="text-headline mt-15">Crie sua conta</h2>
+              <VImg
+                src="https://i.imgur.com/BrTfYSp.png"
+                width="60"
+                class="mx-auto"
+                format="webp"
+                loading="lazy"
+                preload
+              >
+                <template v-slot:placeholder>
+                  <v-row align="center" class="fill-height ma-0" justify="center">
+                    <v-progress-circular color="primary" indeterminate></v-progress-circular>
+                  </v-row>
+                </template>
+              </VImg>
+              <h2 class="text-headline mt-6">Crie sua conta</h2>
               <p class="mt-n2 text-medium-emphasis text-caption mb-4">Para usar nossa plataforma</p>
             </div>
 
@@ -79,7 +93,7 @@
           </VCol>
         </VRow>
       </VCol>
-      <advertising />
+      <advertising class="mt-md-8" />
     </VRow>
     <VDialog persistent v-model="dialogOpen" width="400">
       <VCard color="background" class="rounded-xl">
@@ -206,11 +220,18 @@
       </VCard>
     </VDialog>
     <v-snackbar
+      location="center"
+      rounded="pill"
       v-model="useRegisterStore().snackbar.show"
       :color="useRegisterStore().snackbar.color"
       top
     >
       {{ useRegisterStore().snackbar.text }}
+      <template v-slot:actions>
+        <v-btn variant="text" @click="useRegisterStore().snackbar.show = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
     </v-snackbar>
   </VContainer>
 </template>

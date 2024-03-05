@@ -120,7 +120,7 @@ const setAffiliateData = async () => {
   try {
     if (valorAssinatura.value) {
       const cleanedValue = valorAssinatura.value.replace(/[^\d.,]/g, "");
-      const { data } = await useFetch(
+      const { data, error } = await useFetch(
         "https://api.seduvibe.com/afiliates/set-affiliate-product-value",
         {
           method: "PUT",
@@ -131,6 +131,7 @@ const setAffiliateData = async () => {
           body: JSON.stringify({ productValue: cleanedValue }),
         }
       );
+      console.log(error)
       showSnackbar("Dados atualizados com sucesso!", "success");
     }
     if (porcentagemComissao.value) {

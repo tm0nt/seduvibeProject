@@ -17,12 +17,13 @@
     <v-card
       v-if="searchText?.length > 0 || filteredUsers.length > 0"
       height="400"
-      class="overflow-y-auto elevation-0 mt-2"
+      color="background"
+      class="overflow-y-auto elevation-0 rounded-xl mt-2"
       flat
     >
       <v-row v-if="filteredUsers.length > 0">
         <v-col v-for="user in filteredUsers" :key="user.id" cols="12">
-          <v-card class="elevation-0 transparent" flat>
+          <v-card class="elevation-0 rounded-xl" flat color="background">
             <router-link :to="{ path: `/@${user.user}` }" style="text-decoration: none">
               <v-row align="center" justify="center">
                 <v-col cols="1" class="mr-2">
@@ -51,7 +52,7 @@
       </v-row>
       <v-row v-else>
         <v-col v-for="user in users" :key="user.id" cols="12">
-          <v-card class="elevation-0 transparent" flat>
+          <v-card class="elevation-0 transparent" flat color="background">
             <router-link :to="{ path: `/@${user.user}` }" style="text-decoration: none">
               <v-row align="center" justify="center">
                 <v-col cols="1" class="mr-2">

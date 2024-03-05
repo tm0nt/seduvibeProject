@@ -86,8 +86,9 @@
         color="background"
         class="elevation-6 rounded-xl"
         flat
-        title="Você deseja tornar-se criador(a)?"
-        subtitle="Você não conseguirá se tornar um usuário novamente."
+        width="100%"
+        title="Confirmação"
+        subtitle="Você deseja ser criador(a)?"
         prepend-icon="mdi-account-alert"
       >
         <v-card-actions>
@@ -120,21 +121,6 @@ const showSnackbar = (message, color) => {
   };
 };
 
-const changeCreatorId = async () => {
-  try {
-    const data = await $fetch("https://api.seduvibe.com/updateCreator", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return navigateTo("/profile");
-  } catch (error) {
-    console.error("Erro durante a requisição:", error);
-  }
-};
-
 const cookie = useCookie("token");
 const token = cookie.value;
 const info = ref({
@@ -160,6 +146,27 @@ const logout = () => {
     }, 2000);
   } catch (error) {
     console.error("Error during logout:", error);
+  }
+};
+
+const changeCreatorId = async () => {
+  try {
+    const data = await $fetch("https://api.seduvibe.com/updateCreator", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    showSnackbar("Você mudou o seu tipo de conta, refaça o login", "success");
+    setTimeout(() => {
+      if (data) {
+        cookie.value = null;
+        navigateTo("/login");
+      }
+    }, 2000);
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
   }
 };
 

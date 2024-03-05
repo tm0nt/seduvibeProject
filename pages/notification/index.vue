@@ -46,7 +46,7 @@
                 </v-chip-group>
               </v-col>
             </v-row>
-            <v-card class="mt-5 rounded-xl flat elevation-0">
+            <v-card class="mt-5 rounded-xl flat elevation-0" color="background">
               <v-row v-if="filteredNotifs?.length > 0">
                 <v-col>
                   <v-card

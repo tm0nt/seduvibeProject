@@ -45,7 +45,7 @@
                   color="primary"
                   @click="openDialog = true"
                 >
-                 Não verificado
+                  Não verificado
                 </v-chip>
                 <v-chip v-else color="purple" class="mt-n1" dark>Verificado </v-chip>
               </template>

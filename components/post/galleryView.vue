@@ -1,9 +1,7 @@
 <template>
   <v-row align="center" justify="center">
     <v-chip-group filter v-model="selectedFilter">
-      <v-chip :color="isSelectedFilter(0) ? 'purple' : ''" class="mr-2" :value="0">
-        Tudo
-      </v-chip>
+      <v-chip :color="isSelectedFilter(0) ? 'purple' : ''" class="mr-2" :value="0"> Tudo </v-chip>
       <v-chip :color="isSelectedFilter(1) ? 'purple' : ''" class="mr-2" :value="1">
         Assinantes
       </v-chip>
@@ -18,14 +16,14 @@
 
   <v-row v-if="hasFilteredPosts">
     <v-col v-for="n in filteredPosts" :key="n.id" class="child-flex" cols="4">
-      <NuxtLink :to="'/post/'+n.id">
-      <v-card class="elevation-0 mb-n2" flat rounded="xl" width="250">
-        <v-img v-if="isVideo(n.content)" cover :src="n.content">
-          <v-icon class="video-icon">mdi-play</v-icon>
-        </v-img>
-        <v-img aspect-ratio="0.85" class="ml-1" v-else cover :src="n.content"></v-img>
-      </v-card>
-    </NuxtLink>
+      <NuxtLink :to="'/post/' + n.id">
+        <v-card class="elevation-0 mb-n2" flat rounded="xl" width="250">
+          <v-img v-if="isVideo(n.content)" cover :src="n.content">
+            <v-icon class="video-icon">mdi-play</v-icon>
+          </v-img>
+          <v-img aspect-ratio="0.85" class="ml-1" v-else cover :src="n.content"></v-img>
+        </v-card>
+      </NuxtLink>
     </v-col>
   </v-row>
 

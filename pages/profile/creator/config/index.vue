@@ -64,47 +64,56 @@
   </VApp>
 </template>
 
-<script>
-import navbarHeader from "../../../../components/creator/headerCreator";
-import navbarView from "../../../../components/navbar";
-import MeuPerfil from "../../../../components/creator/config/tabs/perfil.vue";
-import Info from "../../../../components/creator/config/tabs/info.vue";
-import Assinaturas from "../../../../components/creator/config/tabs/assinaturas.vue";
-import Tribos from "../../../../components/creator/config/tabs/tribos.vue";
-import Contas from "../../../../components/creator/config/tabs/contas.vue";
-import Afiliados from "../../../../components/creator/config/tabs/afiliados.vue";
-import Metas from "../../../../components/creator/config/tabs/metas.vue";
-import PaymentDirect from "../../../../components/creator/config/tabs/direct.vue";
+<script setup>
+import { ref, shallowRef, defineComponent } from 'vue';
+import navbarHeader from "@/components/creator/headerCreator.vue";
+import navbarView from "@/components/navbar.vue";
+import MeuPerfil from "@/components/creator/config/tabs/perfil.vue";
+import Info from "@/components/creator/config/tabs/info.vue";
+import Assinaturas from "@/components/creator/config/tabs/assinaturas.vue";
+import Tribos from "@/components/creator/config/tabs/tribos.vue";
+import Contas from "@/components/creator/config/tabs/contas.vue";
+import Afiliados from "@/components/creator/config/tabs/afiliados.vue";
+import Metas from "@/components/creator/config/tabs/metas.vue";
+import PaymentDirect from "@/components/creator/config/tabs/direct.vue";
 
-export default {
-  data: () => ({
-    items: [
-      { text: "Redes sociais", icon: "mdi-web", component: MeuPerfil },
-      { text: "Informações pessoais", icon: "mdi-account-details", component: Info },
-      { text: "Metas", icon: "mdi-target", component: Metas },
-      { text: "Assinaturas", icon: "mdi-currency-usd", component: Assinaturas },
-      { text: "Tribos", icon: "mdi-flag-variant", component: Tribos },
-      { text: "Contas", icon: "mdi-bank", component: Contas },
-      { text: "Afiliados", icon: "mdi-account-group", component: Afiliados },
-      { text: "Pagamento direto", icon: "mdi-link-variant-plus", component: PaymentDirect },
-    ],
-    selectedComponent: null,
-  }),
-  methods: {
-    selectComponent(item) {
-      this.selectedComponent = item.component;
-    },
-  },
-  components: {
-    MeuPerfil,
-    Assinaturas,
-    Tribos,
-    Afiliados,
-    Contas,
-    Info,
-    navbarHeader,
-    navbarView,
-    PaymentDirect,
-  },
+const items = ref([
+  { text: "Redes sociais", icon: "mdi-web", component: MeuPerfil },
+  { text: "Informações pessoais", icon: "mdi-account-details", component: Info },
+  { text: "Metas", icon: "mdi-target", component: Metas },
+  { text: "Assinaturas", icon: "mdi-currency-usd", component: Assinaturas },
+  { text: "Tribos", icon: "mdi-flag-variant", component: Tribos },
+  { text: "Contas", icon: "mdi-bank", component: Contas },
+  { text: "Afiliados", icon: "mdi-account-group", component: Afiliados },
+  { text: "Pagamento direto", icon: "mdi-link-variant-plus", component: PaymentDirect },
+]);
+
+const selectedComponent = shallowRef(null);
+
+const selectComponent = (item) => {
+  selectedComponent.value = item.component;
 };
+
+const components = {
+  MeuPerfil,
+  Assinaturas,
+  Tribos,
+  Afiliados,
+  Contas,
+  Info,
+  navbarHeader,
+  navbarView,
+  PaymentDirect,
+};
+
+defineComponent({
+  components,
+  setup() {
+    return {
+      items,
+      selectedComponent,
+      selectComponent,
+    };
+  },
+});
 </script>

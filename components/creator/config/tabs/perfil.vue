@@ -68,6 +68,7 @@
             placeholder="Twitter"
             prepend-inner-icon="mdi-twitter"
             bg-color="input_color"
+            v-model="twitter"
             color="primary"
           ></v-text-field>
         </v-col>
@@ -77,6 +78,7 @@
             placeholder="Instagram"
             label="Instagram"
             prepend-inner-icon="mdi-instagram"
+            v-model="instagram"
             color="primary"
             bg-color="input_color"
           ></v-text-field>
@@ -86,6 +88,7 @@
           <v-text-field
             label="Telegram"
             placeholder="Telegram"
+            v-model="telegram"
             color="primary"
             prepend-inner-icon="mdi-send-circle"
             bg-color="input_color"
@@ -98,6 +101,7 @@
             prepend-inner-icon="mdi-web"
             label="Amazon Wishlist"
             color="primary"
+            v-model="wishlist"
             bg-color="input_color"
           ></v-text-field>
         </v-col>
@@ -123,10 +127,16 @@
       v-model="snackbar.show"
       :color="snackbar.color"
       rounded="pill"
+      location="center"
       :timeout="snackbar.timeout"
       top
     >
       {{ snackbar.message }}
+      <template v-slot:actions>
+        <v-btn variant="text" @click="snackbar.show = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
     </v-snackbar>
   </v-container>
 </template>
@@ -196,14 +206,14 @@ const saveChanges = async () => {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        instagram: social_media.value.instagram,
-        telegram: social_media.value.telegram,
-        twitter: social_media.value.twitter,
-        wishlist: social_media.value.wishlist,
+        instagram: instagram.value,
+        telegram: telegram.value,
+        twitter: twitter.value,
+        wishlist: wishlist.value,
       }),
     });
+    console.log(data)
     showSnackbar("Dados atualizados!", "success");
-    console.log("Changes saved successfully:", saveData);
   } catch (error) {
     console.error("Error while saving changes:", error);
   }

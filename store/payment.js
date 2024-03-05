@@ -13,7 +13,7 @@ export const idPayment = defineStore("idPayment", {
     tokenCredit: null,
   }),
   actions: {
-    setTokenCredit(token){
+    setTokenCredit(token) {
       this.tokenCredit = token;
     },
     setCpf(cpf) {

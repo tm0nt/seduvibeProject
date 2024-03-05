@@ -17,13 +17,13 @@
             prepend-inner-icon="mdi-account"
           ></v-text-field>
           <v-select
-            v-model="bank_name"
+            v-model="banks[0]"
             color="primary"
             bg-color="input_color"
             label="Banco"
             class="mt-n2"
             variant="solo"
-            :items="['Caixa']"
+            :items="banks"
             prepend-inner-icon="mdi-bank"
           ></v-select>
         </v-col>
@@ -125,6 +125,10 @@ const deleteDialog = ref(false);
 const cookie = useCookie("token");
 const token = cookie.value;
 
+
+const banks = ref([]);
+
+
 const toggleCampos = () => {
   mostrarCampos.value = !mostrarCampos.value;
 };
@@ -209,5 +213,25 @@ const fetchData = async () => {
   }
 };
 
+const downloadBanking = async () => {
+  try {
+    const data = await $fetch("https://api.seduvibe.com/show-bank", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    banks.value = data.banks.map(({ code, bank }) => {
+      const formattedCode = code !== null && code !== undefined ? code.toString().padStart(3, '0') : '';
+      return `${formattedCode} - ${bank}`;
+    });
+    
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
+  }
+};
+
 onMounted(fetchData);
+downloadBanking();
 </script>

@@ -59,7 +59,7 @@
           ></v-text-field>
         </v-col>
       </v-row>
-
+      <p class="text-caption mb-4 text-medium-emphasis">Adicione o valor de 0 para <strong>NÃO</strong> adicionar um tipo de assinatura.</p>
       <v-btn
         @click="validateAndSave"
         class="text-capitalize"

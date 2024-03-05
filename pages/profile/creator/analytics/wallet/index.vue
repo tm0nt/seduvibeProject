@@ -11,7 +11,7 @@
           </h2>
           <p class="text-caption text-medium-emphasis mt-n1">Atualizações a todo instante.</p>
           <v-card
-            color="input_color"
+            color="background elevation-6"
             rounded="xl"
             class="mt-4 d-flex justify-center align-center"
             flat
@@ -66,7 +66,7 @@
               </v-col>
             </v-row>
           </v-card>
-          <v-card class="rounded-xl mt-4" color="input_color" flat>
+          <v-card class="rounded-xl mt-4 elevation-6" color="background" flat>
             <v-container class="ma-2">
               <h4>Pedir um saque</h4>
               <p class="text-caption text-medium-emphasis">
@@ -80,7 +80,7 @@
               <v-window v-model="tab">
                 <v-window-item v-for="item in items" :key="item" :value="item">
                   <v-form>
-                    <v-card color="input_color" rounded="xl" flat>
+                    <v-card color="background" rounded="xl" flat>
                       <v-row v-if="item === 'PIX'">
                         <v-col class="ma-4">
                           <v-text-field
@@ -88,18 +88,19 @@
                             :disabled="true"
                             :readonly="true"
                             type="number"
+                            variant="solo"
                             hide-spin-buttons
-                            color="input_color"
-                            outlined
+                            bg-color="input_color"
                           ></v-text-field>
                           <v-text-field
                             label="Valor"
-                            prepend-inner-icon="mdi-cash"
-                            hide-spin-buttons
-                            color="input_color"
-                            v-model="withdraw.pix.amount"
+                            prepend-inner-icon="mdi-coin"
                             type="number"
-                            outlined
+                            hide-spin-buttons
+        
+                            variant="solo"
+                            bg-color="input_color"
+                            v-model="withdraw.pix.amount"
                           ></v-text-field>
                           <v-btn
                             color="primary"
@@ -147,7 +148,7 @@
           </v-card>
           <v-row>
             <v-col cols="12" md="12" lg="12" class="mt-4">
-              <v-card class="transparent rounded-xl">
+              <v-card color="background elevation-6" class="rounded-xl">
                 <v-data-table
                   :headers="headers"
                   no-data-text="Nenhum saque encontrado"
