@@ -5,7 +5,7 @@
         Cartão de crédito
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <v-form class="ma-4">
+        <v-form>
           <v-col cols="12" md="12" lg="12">
             <v-text-field
               hide-spin-buttons

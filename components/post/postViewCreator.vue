@@ -28,7 +28,13 @@
     >
       <v-card-title class="d-flex align-center">
         <v-avatar size="50">
-          <v-img cover :src="post?.userData?.profilePicture"></v-img>
+          <v-img cover :src="post?.userData?.profilePicture">
+            <template v-slot:placeholder>
+          <v-row align="center" class="fill-height ma-0" justify="center">
+            <v-progress-circular color="primary" indeterminate></v-progress-circular>
+          </v-row> 
+        </template>
+          </v-img>
         </v-avatar>
 
         <div class="ml-2">
@@ -78,8 +84,19 @@
         </div>
       </v-card-text>
       <v-img width="100%" class="cursor-pointer mb-n10">
+        <template v-slot:placeholder>
+          <v-row align="center" class="fill-height ma-0" justify="center">
+            <v-progress-circular color="primary" indeterminate></v-progress-circular>
+          </v-row> 
+        </template>
         <template v-if="isImage(post.content)">
-          <v-img :src="post?.content"></v-img>
+          <v-img :src="post?.content">
+            <template v-slot:placeholder>
+          <v-row align="center" class="fill-height ma-0" justify="center">
+            <v-progress-circular color="primary" indeterminate></v-progress-circular>
+          </v-row> 
+        </template>
+          </v-img>
         </template>
         <template v-else-if="isVideo(post.content)">
           <video width="100%" controls>
@@ -392,7 +409,7 @@ const fetchPosts = async (id) => {
 
 // Fetch like
 const isCurrentUserLiked = (likes) => {
-  return likes.some((like) => like.userId === id);
+  return likes.some((like) => like.userId === idUser);
 };
 
 fetchPosts(idUser);

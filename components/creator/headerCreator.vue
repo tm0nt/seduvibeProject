@@ -306,6 +306,7 @@
   </VRow>
 </template>
 <script setup>
+import { useIdStore } from "~/store/id";
 import nuxtStorage from "nuxt-storage";
 import { ref } from "vue";
 import { useTheme } from "vuetify";
@@ -316,7 +317,7 @@ const changeInfoData = ref({
   profile: false,
   bio: false,
 });
-
+const idStore = useIdStore();
 const imagePreviewProfile = ref(null);
 
 const PicturesUser = ref({
@@ -344,7 +345,7 @@ const showSnackbar = (message, color) => {
 
 const shareProfile = ref({
   value: false,
-  url: "https://seduvibe.com/@lais",
+  url: "https://seduvibe.com/@"+idStore.user,
 });
 const cookie = useCookie("token");
 const token = cookie.value;

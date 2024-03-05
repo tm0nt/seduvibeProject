@@ -11,6 +11,7 @@
             rows="2"
             rounded="xl"
             class="mb-n4"
+            prepend-inner-icon="mdi-text"
             v-model="description"
             bg-color="input_color"
             placeholder="Escreva algo"
@@ -24,10 +25,12 @@
             rounded="xl"
             clearable
             v-model="mention"
+            prepend-inner-icon="mdi-at"
             color="primary"
             clear-icon="mdi-close-circle"
             placeholder="Mencione perfis"
           ></v-text-field>
+          <p class="text-caption text-medium-emphasis mt-n4 ml-2">Ex: criador1,criador2</p>
         </v-col>
         <v-col cols="6" class="mt-n4">
           <v-combobox
@@ -37,9 +40,9 @@
             density="comfortable"
             placeholder="Público"
             :items="[
-              { key: 'Assinantes', value: '1' },
-              { key: 'Afiliados', value: '2' },
-              { key: 'Exclusivo', value: '3' },
+              { key: 'Assinantes', value: 1 },
+              { key: 'Afiliados', value: 2 },
+              { key: 'Exclusivo', value: 3 },
             ]"
             item-title="key"
             item-value="value"
@@ -78,13 +81,26 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row class="mt-1 ml-1" align="center">
+  <v-text-field
+    bg-color="input_color"
+    rounded="xl"
+    class="mt-4"
+    clearable
+    v-model="valor"
+    prepend-inner-icon="mdi-coin"
+    v-show="publicVisible === 3" 
+    color="primary"
+    clear-icon="mdi-close-circle"
+    placeholder="Valor"
+  ></v-text-field>
+      <v-row class="mt-n4 ml-1" align="center">
         <v-file-input
           label="Envie uma mídia"
           chips
           rounded="xl"
           variant="solo"
           bg-color="input_color"
+          class="mt-3"
           prepend-inner-icon="mdi-camera"
           prepend-icon=""
           type="file"
@@ -99,12 +115,12 @@
             :image="preview.url"
             class="rounded-xl elevation-0"
             v-if="preview.type === 'image'"
-            width="120"
+            width="150"
             height="120"
             flat
           >
-            <v-btn size="x-small" class="ma-1 mt-4" icon @click="removeFile(index)">
-              <v-icon color="red" size="16">mdi-close</v-icon>
+            <v-btn size="x-small" class="ma-4" color="background" @click="removeFile(index)">
+              <v-icon color="primary" size="16">mdi-close</v-icon>
             </v-btn>
           </v-card>
           <v-card
@@ -171,6 +187,8 @@ const showSnackbar = (message, color) => {
     timeout: 4000,
   };
 };
+
+const valor = ref(null);
 
 const removeFile = (index) => {
   mediaFiles.value.splice(index, 1); // Remove o arquivo da lista de mídias
@@ -264,6 +282,7 @@ const clearFormData = () => {
   mediaFiles.value = [];
   files.value = [];
   previewFiles.value = [];
+  valor.value = null;
 };
 </script>
 
