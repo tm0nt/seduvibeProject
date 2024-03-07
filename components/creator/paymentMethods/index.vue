@@ -5,90 +5,75 @@
         Cartão de crédito
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <v-form>
-          <v-col cols="12" md="12" lg="12">
-            <v-text-field
-              hide-spin-buttons
-              bg-color="input_color"
-              v-model="creditCard.name"
-              label="Titular"
-              type="text"
-              placeholder="Titular"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" md="12" lg="12">
-            <v-text-field
-              hide-spin-buttons
-              bg-color="input_color"
-              label="CPF"
-              type="number"
-              v-model="idPaymentStore.cpf"
-              class="mt-n6"
-              placeholder="CPF"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" md="12" lg="12">
-            <v-text-field
-              hide-spin-buttons
-              bg-color="input_color"
-              label="Número"
-              v-model="creditCard.number"
-              class="mt-n6"
-              type="number"
-              placeholder="Número"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" md="12" lg="12">
-            <v-text-field
-              hide-spin-buttons
-              bg-color="input_color"
-              class="mt-n6"
-              v-model="creditCard.mes"
-              label="Mês"
-              type="number"
-              placeholder="Mês"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" md="12" lg="12">
-            <v-text-field
-              hide-spin-buttons
-              bg-color="input_color"
-              label="Ano"
-              v-model="creditCard.ano"
-              type="number"
-              class="mt-n6"
-              placeholder="Ano"
-            ></v-text-field>
-          </v-col>
+        <v-form class="ma-4">
+          <!--
+          <v-row>
+            <v-col cols="12" md="12" lg="12">
+              <v-text-field
+                hide-spin-buttons
+                bg-color="input_color"
+                label="Titular"
+                type="text"
+                placeholder="Titular"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="12" lg="12">
+              <v-text-field
+                hide-spin-buttons
+                bg-color="input_color"
+                label="CPF"
+                type="number"
+                v-model="idPaymentStore.cpf"
+                class="mt-n6"
+                placeholder="CPF"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" md="6" lg="6">
+              <v-text-field
+                hide-spin-buttons
+                bg-color="input_color"
+                label="Número"
+                class="mt-n6"
+                type="number"
+                placeholder="Número"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" md="6" lg="6">
+              <v-text-field
+                hide-spin-buttons
+                bg-color="input_color"
+                class="mt-n6"
+                label="Mês"
+                type="number"
+                placeholder="Mês"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6" md="6" lg="6">
+              <v-text-field
+                hide-spin-buttons
+                bg-color="input_color"
+                label="Ano"
+                type="number"
+                class="mt-n6"
+                placeholder="Ano"
+              ></v-text-field>
+            </v-col>
 
-          <v-col cols="12" md="12" lg="12">
-            <v-text-field
-              hide-spin-buttons
-              class="mt-n6"
-              bg-color="input_color"
-              label="CVV"
-              type="number"
-              v-model="creditCard.cvv"
-              placeholder="CVV"
-            ></v-text-field>
-          </v-col>
-          <v-btn
-            block
-            min-height="40"
-            color="primary"
-            :disabled="pending === true"
-            @click="makePaymentCredit(2)"
-            class="text-capitalize"
-            ><p>Fazer pagamento</p>
-            <!---   <v-progress-circular
-              v-if="pending === true"
-              indeterminate
-              color="primary"
-              :size="16"
-              :width="3"
-            ></v-progress-circular-->
-            ></v-btn
-          >
+            <v-col cols="6" md="6" lg="6">
+              <v-text-field
+                hide-spin-buttons
+                class="mt-n6"
+                bg-color="input_color"
+                label="CVV"
+                type="number"
+                placeholder="CVV"
+              ></v-text-field>
+            </v-col>
+            <v-btn block min-height="40" color="primary" class="text-capitalize"
+              >Fazer pagamento</v-btn
+            > 
+          </v-row> -->
+          <p class="text-caption text-center">Ainda estamos processando este método de pagamento</p>
         </v-form>
       </v-expansion-panel-text>
     </v-expansion-panel>
@@ -114,7 +99,7 @@
             min-height="40"
             color="primary"
             :disabled="pending === true"
-            @click="makePaymentPix(1)"
+            @click="makePaymentPix(1);"
             class="text-capitalize"
             ><p v-if="pending !== true">Fazer pagamento</p>
             <v-progress-circular
@@ -154,11 +139,7 @@
         <template v-if="paymentSuccessful">
           <v-icon size="64" color="primary">mdi-check-circle</v-icon>
           <p class="mb-2 mt-4">Pagamento concluído!</p>
-          <v-card-actions
-            ><v-btn @click="payPixDialog = false" variant="text" color="primary"
-              >OK</v-btn
-            ></v-card-actions
-          >
+          <v-card-actions><v-btn @click="payPixDialog = false" variant="text" color="primary">OK</v-btn></v-card-actions>
         </template>
         <template v-else>
           <p class="mb-2">Você está pagando via pix</p>
@@ -201,18 +182,11 @@
 import { useIdStorePublic } from "~/store/public";
 import { idPayment } from "~/store/payment";
 
-const emit = defineEmits(["closeDialog"]);
+
+const emit = defineEmits(["closeDialog"])
 
 const cookie = useCookie("token");
 const token = cookie.value;
-
-const creditCard = ref({
-  name: null,
-  number: null,
-  mes: null,
-  ano: null,
-  cvv: null,
-});
 
 const userStorePublic = useIdStorePublic();
 
@@ -240,7 +214,7 @@ const payPixDialog = ref(false);
 
 const makePaymentPix = async (id) => {
   try {
-    pending.value = true;
+    pending.value = true; // Configura como "pending" ao iniciar o processo de pagamento
 
     const amountInCents = (idPaymentStore.setAmount * 100).toFixed(2);
 
@@ -252,94 +226,54 @@ const makePaymentPix = async (id) => {
       metadata: "userId:1,source:donation",
     };
 
-    const data = await $fetch(
+    const { data, pending: waiting } = await useFetch(
       "https://payment.seduvibe.cloud/paymentProcess/pix",
       {
         method: "POST",
         body: JSON.stringify(requestBody),
       }
     );
-;
 
-    if (data) {
-      idPaymentStore.setDataReceived = data;
+    pending.value = waiting.value; // Atualiza o valor de "pending" com base na resposta do servidor
+
+    if (data.value) {
+      idPaymentStore.setDataReceived = data.value;
       payPixDialog.value = true;
       await checkPayment(data?.value.id, 1);
     }
-    emit("closeDialog");
+    emit("closeDialog")
   } catch (error) {
     console.error(error);
-    //
+    // Trate os erros adequadamente
   } finally {
-    pending.value = false;
+    pending.value = false; // Certifique-se de limpar o estado "pending" independentemente do resultado
   }
 };
 
-const tokenCredit = async (number, holderName, expMonth, expYear, cvv) => {
-  try {
-    AbmexPay.setPublicKey("pk_live_5bjOgEh1zkvNjwZT9OR3bazIm1fvIq");
-    AbmexPay.setTestMode(false);
-    const token = await AbmexPay.encrypt({
-      number: number,
-      holderName: holderName,
-      expMonth: expMonth,
-      expYear: expYear,
-      cvv: cvv,
-    });
-    console.log(token);
-    idPaymentStore.setTokenCredit(token);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-const makePaymentCredit = async (id) => {
-  try {
-    pending.value = true;
-    console.log(id);
-    await tokenCredit(
-      creditCard.value.number,
-      creditCard.value.name,
-      creditCard.value.mes,
-      creditCard.value.ano,
-      creditCard.value.cvv
-    );
-    pending.value = false;
-  } catch (error) {
-    console.error(error);
-  }
-};
 const checkPayment = async (paymentId, paymentMethod) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/gateway/check-status/${paymentId}`, {
+    const { data } = await useFetch(`https://api.seduvibe.com/gateway/check-status/${paymentId}`, {
       method: "GET",
     });
 
-    if (data) {
+    if (data.value) {
       paymentSuccessful.value = true;
-      await successPayment(
-        userStorePublic.id,
-        idPaymentStore.subscriptionId,
-        paymentMethod,
-        idPaymentStore.setAmount,
-        userStorePublic.contributeId
-      );
+      await successPayment(userStorePublic.id, idPaymentStore.subscriptionId, paymentMethod, idPaymentStore.setAmount);
     }
   } catch (error) {
     console.error(error);
-    //
+    // Trate os erros adequadamente
   }
 };
 
 const clearDataPayment = async () => {
   idPaymentStore.setDataReceived = null;
 };
-const successPayment = async (id, subscriptionId, paymentMethodId, amount, contributeId) => {
+const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
   try {
     const makeSubscriptionRequest = async (url, data) => {
       try {
-        const response = await $fetch(url, {
+        const response = await useFetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -348,8 +282,8 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount, contr
           body: JSON.stringify(data),
         });
 
-        if (data) {
-          await clearDataPayment();
+        if (response.data.value) {
+          console.log(response.data.value);
         } else {
           console.log(response.error);
         }
@@ -369,20 +303,17 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount, contr
         subscriptionId,
         paymentMethodId,
       });
-    } else if (subscriptionId == "donation") {
+    } else {
       await makeSubscriptionRequest(`https://api.seduvibe.com/donate/${id}`, {
         amount,
-      });
-    } else if (subscriptionId == "contribute") {
-      await makeSubscriptionRequest(`https://api.seduvibe.com/contribute/${contributeId}`, {
-        value: amount,
       });
     }
   } catch (error) {
     console.error("Error when subscribing:", error);
-    //
+    // 
   }
 };
+
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(idPaymentStore.setDataReceived.qrCode.qrcode);

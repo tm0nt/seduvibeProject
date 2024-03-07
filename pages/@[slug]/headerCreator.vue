@@ -83,7 +83,7 @@
     <v-spacer></v-spacer>
 
     <v-col cols="auto" class="text-caption mt-2 ml-n2">
-      <v-btn fab variant="text" color="primary" @click="toggleFavorite(profileFetch?.userData?.id)">
+      <v-btn fab :disabled="noLogin" variant="text" color="primary" @click="toggleFavorite(profileFetch?.userData?.id)">
         <v-icon size="26">
           {{ isFavorite ? "mdi-heart" : "mdi-heart-outline" }}
         </v-icon></v-btn
@@ -175,15 +175,18 @@ export default {
 </script>
 <script setup>
 import { useIdStorePublic } from "~/store/public";
+import { useIdStore } from "~/store/id";
 import nuxtStorage from "nuxt-storage";
 import { idPayment } from "~/store/payment";
 import { ref } from "vue";
 import { useTheme } from "vuetify";
 const theme = useTheme();
 const isFavorite = ref(false);
+const idStore = useIdStore();
 const userIdPublic = useIdStorePublic();
 const valueDonate = ref(null);
 const idPaymentStore = idPayment();
+const noLogin = ref(null);
 
 watch(valueDonate, (newValue) => {
   idPaymentStore.setAmount = newValue;
@@ -248,6 +251,7 @@ const checkFavorites = async (id) => {
     });
     isFavorite.value = data?.isFavorite;
   } catch (error) {
+    noLogin.value = true;
     console.error("Erro durante a requisição:", error);
   }
 };
@@ -347,9 +351,21 @@ const fetchData = async (userName) => {
   }
 };
 
+const noLoginFetch = async () => {
+  try{
+    if (idStore.auth === false){
+      noLogin.value = true;
+    }
+  }catch(error){
+    //
+  }
+};
+
 const shareProfile = ref({
   value: false,
   url: "https://seduvibe.com/@" + route.params.slug,
 });
+
 fetchData(user.value);
+noLoginFetch();
 </script>

@@ -76,7 +76,7 @@
     <v-dialog v-model="showDialog" persistent width="800" transition="dialog-top-transition">
       <v-card class="rounded-xl" color="background">
         <v-card-title>
-          <v-btn @click="showDialog = false" variant="text" fab
+          <v-btn @click="showDialog = false; e1 = 0" variant="text" fab
             ><v-icon size="x-large">mdi-close</v-icon></v-btn
           ></v-card-title
         >

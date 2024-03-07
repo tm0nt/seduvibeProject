@@ -15,15 +15,29 @@
   </v-row>
 
   <v-row v-if="hasFilteredPosts">
-    <v-col v-for="n in filteredPosts" :key="n.id" class="child-flex" cols="4">
-      <NuxtLink :to="'/post/' + n.id">
-        <v-card class="elevation-0 mb-n2" flat rounded="xl" width="250">
-          <v-img v-if="isVideo(n.content)" cover :src="n.content">
-            <v-icon class="video-icon">mdi-play</v-icon>
-          </v-img>
-          <v-img aspect-ratio="0.85" class="ml-1" v-else cover :src="n.content"></v-img>
-        </v-card>
-      </NuxtLink>
+    <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" cols="4">
+      <template v-if="isVideo(n.content)">
+        <video :key="n.content" :width="200" controls>
+          <source :src="n.content" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </template>
+      <template v-else>
+        <v-img
+          :src="n.content"
+          aspect-ratio="1"
+          rounded="xl"
+          cover
+          class="bg-grey-lighten-2"
+          @click="redirectTo(n.id)"
+        >
+          <template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular indeterminate color="grey-lighten-5"></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
+      </template>
     </v-col>
   </v-row>
 
@@ -49,6 +63,10 @@ const { data: post } = await useFetch(`https://api.seduvibe.com/posts/list_all/$
     Authorization: `Bearer ${token}`,
   },
 });
+
+const redirectTo = async (id) => {
+  return navigateTo(`/post/${id}`);
+};
 const posts = ref(post._rawValue.reverse());
 
 const isVideo = (url) => {
