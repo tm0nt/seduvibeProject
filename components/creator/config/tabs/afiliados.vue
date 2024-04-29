@@ -24,7 +24,7 @@ Copy code
           step="0.01"
           :hint="valorComissao.toFixed(2)"
           label="Porcentagem por venda"
-          class="mt-2"
+          class="mt-n4"
           color="primary"
           bg-color="input_color"
           :value="porcentagemComissao || null"
@@ -35,6 +35,20 @@ Copy code
         ></v-text-field>
       </v-col>
       <v-row>
+        <v-col cols="12">
+          <v-alert
+            closable
+            v-model="infoMessage.v"
+            class="rounded-xl"
+            type="info"
+            variant="tonal"
+            :color="infoMessage.color"
+          >
+            <template v-slot:title>
+              <p class="text-caption">{{ infoMessage.text }}</p>
+            </template>
+          </v-alert>
+        </v-col>
         <v-col cols="6">
           <v-btn
             @click="setAffiliateData"
@@ -52,7 +66,7 @@ Copy code
             to="/profile/creator/analytics/affiliate"
             color="primary"
             class="text-capitalize"
-            variant="outlined"
+            variant="tonal"
             min-height="40"
             block
           >
@@ -61,15 +75,6 @@ Copy code
         </v-col>
       </v-row>
     </v-form>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      rounded="pill"
-      :timeout="snackbar.timeout"
-      top
-    >
-      {{ snackbar.message }}
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -90,21 +95,11 @@ const rangeRuleComissao = (value) => {
   return isValidRange || "De 1% até 80%";
 };
 
-const snackbar = ref({
-  show: false,
-  message: "",
-  color: "success",
-  timeout: 4000,
+const infoMessage = ref({
+  v: false,
+  text: null,
+  color: null,
 });
-const showSnackbar = (message, color) => {
-  snackbar.value = {
-    show: true,
-    message,
-    color,
-    timeout: 6000,
-  };
-};
-
 const valorAssinatura = ref(null);
 const porcentagemComissao = ref(0);
 const valorComissao = ref(0);
@@ -118,6 +113,12 @@ const calcularComissao = () => {
 
 const setAffiliateData = async () => {
   try {
+    if (!valorAssinatura.value || !valorComissao.value) {
+      infoMessage.value.text = "Preencha os campos";
+      infoMessage.value.v = true;
+      infoMessage.value.color = "red";
+      return;
+    }
     if (valorAssinatura.value) {
       const cleanedValue = valorAssinatura.value.replace(/[^\d.,]/g, "");
       const { data, error } = await useFetch(
@@ -132,7 +133,9 @@ const setAffiliateData = async () => {
         }
       );
       console.log(error);
-      showSnackbar("Dados atualizados com sucesso!", "success");
+      infoMessage.value.text = "Dados atualizados";
+      infoMessage.value.v = true;
+      infoMessage.value.color = "success";
     }
     if (porcentagemComissao.value) {
       const { data } = await useFetch(

@@ -22,6 +22,18 @@
       bg-color="input_color"
       v-model="amount"
     ></v-text-field>
+    <v-alert
+      v-model="infoMessage.v"
+      closable
+      class="mt-n2 mb-4 rounded-xl"
+      type="info"
+      variant="tonal"
+      :color="infoMessage.color"
+    >
+      <template v-slot:title>
+        <p class="text-caption">{{ infoMessage.text }}</p>
+      </template>
+    </v-alert>
     <v-btn color="primary" min-height="40" class="text-capitalize" block @click="saveData"
       >Salvar</v-btn
     >
@@ -41,6 +53,7 @@
           <v-card
             class="rounded-xl elevation-0"
             flat
+            color="background"
             prepend-icon="mdi-delete"
             title="Confirmação"
             subtitle="Você deseja deletar essa meta?"
@@ -83,39 +96,15 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-alert v-else variant="outlined" type="info" color="primary" class="rounded-xl mt-5">
+    <v-alert v-else variant="tonal" type="info" color="primary" class="rounded-xl mt-5">
       Nenhuma meta encontrada.
     </v-alert>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      rounded="pill"
-      :timeout="snackbar.timeout"
-      top
-    >
-      {{ snackbar.message }}
-    </v-snackbar>
   </v-container>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 const deleteDialog = ref(false);
-const snackbar = ref({
-  show: false,
-  message: "",
-  color: "success",
-  timeout: 4000,
-});
-
-const showSnackbar = (message, color) => {
-  snackbar.value = {
-    show: true,
-    message,
-    color,
-    timeout: 6000,
-  };
-};
 
 const cookie = useCookie("token");
 const token = cookie.value;
@@ -147,12 +136,20 @@ const deleteObjective = async (id) => {
       },
     });
     fetchMetaData();
-    showSnackbar("Meta deletada com sucesso!", "error");
+    infoMessage.value.text = "Meta deletada com sucesso!";
+    infoMessage.value.v = true;
+    infoMessage.value.color = "success";
     deleteDialog.value = false;
   } catch (error) {
     console.error(error);
   }
 };
+
+const infoMessage = ref({
+  v: false,
+  text: null,
+  color: null,
+});
 
 const saveData = async () => {
   const payload = {
@@ -162,7 +159,9 @@ const saveData = async () => {
   };
 
   if (!payload.name || isNaN(payload.amount)) {
-    showSnackbar("Por favor, preencha todos os campos corretamente.", "error");
+    infoMessage.value.text = "Preencha todos os campos";
+    infoMessage.value.v = true;
+    infoMessage.value.color = "red";
     return;
   }
 
@@ -178,7 +177,9 @@ const saveData = async () => {
 
     if (response) {
       fetchMetaData();
-      showSnackbar("Meta criada com sucesso!", "success");
+      infoMessage.value.text = "Meta criada";
+      infoMessage.value.v = true;
+      infoMessage.value.color = "success";
     } else {
       console.error("Erro ao criar meta:", response.statusText);
     }

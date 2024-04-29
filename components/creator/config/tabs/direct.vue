@@ -12,50 +12,41 @@
       color="primary"
       @click="copyToClipboard"
       readonly
-      prepend-inner-icon="mdi-infinity"
     >
       <template v-slot:append-inner>
         <v-icon @click="copyToClipboard">mdi-content-copy</v-icon>
       </template>
     </v-text-field>
-
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      rounded="pill"
-      :timeout="snackbar.timeout"
-      top
+    <v-alert
+      closable
+      v-model="infoMessage.v"
+      class="rounded-xl"
+      type="info"
+      variant="tonal"
+      :color="infoMessage.color"
     >
-      {{ snackbar.message }}
-    </v-snackbar>
+      <template v-slot:title>
+        <p class="text-caption">{{ infoMessage.text }}</p>
+      </template>
+    </v-alert>
   </v-container>
 </template>
 <script setup>
 import { useIdStore } from "~/store/id";
 
 const idStore = useIdStore();
-
-const snackbar = ref({
-  show: false,
-  message: "",
-  color: "success",
-  timeout: 4000,
+const infoMessage = ref({
+  v: false,
+  text: null,
+  color: null,
 });
-
-const showSnackbar = (message, color) => {
-  snackbar.value = {
-    show: true,
-    message,
-    color,
-    timeout: 4000,
-  };
-};
-
 const user = idStore.user;
 const directLink = ref(`https://seduvibe.com/direct/${user}`);
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(directLink.value);
-  showSnackbar("Link copiado com sucesso!", "success");
+  infoMessage.value.text = "Copiado com sucesso";
+  infoMessage.value.v = true;
+  infoMessage.value.color = "success";
 };
 </script>

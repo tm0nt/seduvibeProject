@@ -23,7 +23,7 @@
                 class="text-capitalize"
                 block
                 to="/profile/creator/analytics/"
-                variant="outlined"
+                variant="tonal"
                 color="primary"
               >
                 <v-icon class="ma-1">mdi-chart-donut</v-icon>Analytics

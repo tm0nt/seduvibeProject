@@ -329,7 +329,7 @@ const registerFetch = async () => {
     return;
   }
   infoMessagePassword.value = false;
-  dialogPassword = false;
+  dialogPassword.value = false;
   await useRegisterStore().registerUser({
     user: registerData.value.user,
     name: registerData.value.name,

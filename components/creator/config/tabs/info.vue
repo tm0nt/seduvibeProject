@@ -83,31 +83,67 @@
       </v-row>
       <v-row>
         <v-col cols="12" class="mt-n6 mb-2">
-          <v-alert outlined class="rounded-xl" type="error" color="red"
-            >É necessário ter mais de 18 anos.</v-alert
+          <v-alert
+            closable
+            v-model="infoMessage.v"
+            class="rounded-xl"
+            type="info"
+            variant="tonal"
+            :color="infoMessage.color"
           >
+            <template v-slot:title>
+              <p class="text-caption">{{ infoMessage.text }}</p>
+            </template>
+          </v-alert>
         </v-col>
         <v-col cols="6">
           <v-btn block min-height="40" type="submit" class="text-capitalize" color="primary"
             >Salvar</v-btn
           > </v-col
         ><v-col cols="6">
-          <v-btn min-height="40" block color="primary" class="text-capitalize" variant="outlined"
+          <v-btn
+            min-height="40"
+            @click="deleteAccountDialog = true"
+            block
+            color="primary"
+            class="text-capitalize"
+            variant="tonal"
             >Deletar conta</v-btn
           >
         </v-col>
       </v-row>
     </v-form>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      rounded="pill"
-      :timeout="snackbar.timeout"
-      top
-    >
-      {{ snackbar.message }}
-    </v-snackbar>
   </v-container>
+  <v-dialog v-model="deleteAccountDialog" width="600" persistent>
+    <v-card
+      color="background"
+      rounded="xl"
+      title="Deseja deletar sua conta?"
+      subtitle="Não será possível recuperar os dados!!"
+      prepend-icon="mdi-delete"
+    >
+      <v-card-actions>
+        <v-row class="ma-4">
+          <v-col cols="6">
+            <v-btn color="primary" min-height="40" class="text-capitalize" block variant="elevated"
+              >Sim</v-btn
+            >
+          </v-col>
+          <v-col cols="6">
+            <v-btn
+              block
+              color="primary"
+              min-height="40"
+              class="text-capitalize"
+              variant="tonal"
+              @click="deleteAccountDialog = false"
+              >Não</v-btn
+            >
+          </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -116,6 +152,20 @@ import { format } from "date-fns";
 
 const cookie = useCookie("token");
 const token = cookie.value;
+const deleteAccountDialog = ref(false);
+
+const deleteAccount = async () => {
+  try {
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const infoMessage = ref({
+  v: false,
+  text: null,
+  color: null,
+});
 
 const info = ref({
   cpf: null,
@@ -153,22 +203,21 @@ onMounted(async () => {
     console.error("Erro durante a requisição:", error);
   }
 });
-const snackbar = ref({
-  show: false,
-  message: "",
-  color: "success",
-  timeout: 4000,
-});
-const showSnackbar = (message, color) => {
-  snackbar.value = {
-    show: true,
-    message,
-    color,
-    timeout: 6000,
-  };
-};
 const submitForm = async () => {
   try {
+    if (
+      !info.value.city ||
+      !info.value.state ||
+      !info.value.dataNascimento ||
+      !info.value.cpf ||
+      !info.value.phone ||
+      !info.value.nomeCompleto
+    ) {
+      infoMessage.value.text = "Preencha todos os campos";
+      infoMessage.value.v = true;
+      infoMessage.value.color = "red";
+      return;
+    }
     const { data: saveData } = await useFetch("https://api.seduvibe.com/change_personal_data", {
       method: "POST",
       headers: {
@@ -183,8 +232,9 @@ const submitForm = async () => {
         state: info.value.state,
       }),
     });
-    showSnackbar("Dados atualizados!", "success");
-    console.log("Informações salvas com sucesso:", saveData);
+    infoMessage.value.text = "Dados atualizados";
+    infoMessage.value.v = true;
+    infoMessage.value.color = "success";
   } catch (error) {
     console.error("Erro ao salvar informações:", error);
   }

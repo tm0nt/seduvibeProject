@@ -44,7 +44,7 @@
                   flat
                   v-else
                   ><v-card-text class="text-center">
-                    <v-icon color="primary" size="30">mdi-lock-outline</v-icon>
+                    <v-icon color="primary" size="30">mdi-lock</v-icon>
                   </v-card-text></v-card
                 >
               </v-col>
@@ -62,7 +62,7 @@
                   flat
                   v-else
                   ><v-card-text class="text-center">
-                    <v-icon color="primary" size="30">mdi-lock-outline</v-icon>
+                    <v-icon color="primary" size="30">mdi-lock</v-icon>
                   </v-card-text></v-card
                 >
               </v-col>

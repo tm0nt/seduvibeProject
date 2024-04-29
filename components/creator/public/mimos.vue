@@ -42,7 +42,7 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-alert v-else variant="outlined" type="info" color="primary" class="rounded-xl mt-5">
+    <v-alert v-else variant="tonal" type="info" color="primary" class="rounded-xl mt-5">
       Nenhuma meta encontrada.
     </v-alert>
 

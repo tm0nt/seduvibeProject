@@ -63,7 +63,7 @@
             height="120"
             flat
           >
-            <v-btn size="x-small"  class="ma-1 mt-4" icon @click="removeMedia(index)">
+            <v-btn size="x-small" class="ma-1 mt-4" icon @click="removeMedia(index)">
               <v-icon color="red" size="16">mdi-close</v-icon>
             </v-btn>
           </v-card>
@@ -118,8 +118,14 @@
             height="120"
             flat
           >
-            <v-btn size="small" class="ma-4" variant="tonal" color="primary" @click="removeFile(index)">
-              <v-icon size="16">mdi-close</v-icon>
+            <v-btn
+              size="small"
+              class="ma-4"
+              variant="elevated"
+              color="background"
+              @click="removeFile(index)"
+            >
+              <v-icon size="16" color="primary">mdi-close</v-icon>
             </v-btn>
           </v-card>
           <v-card
@@ -150,13 +156,35 @@
       >
         Publicar
       </v-btn>
-      <v-alert type="success" class="mt-2" v-model="infoMessage.visible" variant="tonal" border="start" colapse color="green"><template v-slot:title>
-        <p class="text-caption">{{infoMessage.text}}</p>
-      </template> </v-alert>
-      <v-alert type="info" class="mt-2" v-model="infoMessage.visibleError" variant="tonal" border="start" colapse  color="red">
-    <template v-slot:title>
-        <p class="text-caption">{{infoMessage.text}}</p>
-      </template> </v-alert>
+      <v-alert
+        type="success"
+        rounded="xl"
+        class="mt-2"
+        v-model="infoMessage.visible"
+        variant="tonal"
+        closable
+        border="start"
+        colapse
+        color="green"
+        ><template v-slot:title>
+          <p class="text-caption">{{ infoMessage.text }}</p>
+        </template>
+      </v-alert>
+      <v-alert
+        type="info"
+        class="mt-2"
+        rounded="xl"
+        closable
+        v-model="infoMessage.visibleError"
+        variant="tonal"
+        border="start"
+        colapse
+        color="red"
+      >
+        <template v-slot:title>
+          <p class="text-caption">{{ infoMessage.text }}</p>
+        </template>
+      </v-alert>
     </v-form>
     <v-snackbar
       v-model="snackbar.show"
@@ -244,7 +272,7 @@ const infoMessage = ref({
   visibleError: false,
   visible: false,
   text: "",
-})
+});
 const handleFileSubmit = async () => {
   loading.value = true;
 
@@ -273,11 +301,11 @@ const handleFileSubmit = async () => {
     loading.value = false;
     if (data.value) {
       postStore.setPost(true);
-      infoMessage.value.text = "Postagem publicada!"
-      infoMessage.value = true;
+      infoMessage.value.text = "Postagem publicada!";
+      infoMessage.value.visible = true;
       clearFormData();
     } else {
-      infoMessage.value.text = "Aconteceu algum erro!"
+      infoMessage.value.text = "Aconteceu algum erro!";
       infoMessage.value.visibleError = true;
     }
   } catch (e) {

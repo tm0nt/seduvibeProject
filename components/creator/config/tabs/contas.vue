@@ -47,6 +47,18 @@
             prepend-inner-icon="mdi-credit-card"
           ></v-text-field>
         </v-col>
+        <v-alert
+          closable
+          v-model="infoMessage.v"
+          class="rounded-xl"
+          type="info"
+          variant="tonal"
+          :color="infoMessage.color"
+        >
+          <template v-slot:title>
+            <p class="text-caption">{{ infoMessage.text }}</p>
+          </template>
+        </v-alert>
         <v-col cols="12">
           <v-btn
             @click="registrarConta"
@@ -67,7 +79,8 @@
       class="mx-auto my-5 rounded-xl elevation-0"
       title="Conta principal"
       v-if="contas?.name_account !== null"
-      variant="tonal"
+      variant="outlined"
+      append-icon="mdi-delete"
       color="primary"
       flat
       @click="openDeleteDialog"
@@ -81,7 +94,7 @@
         <p>Agência {{ contas?.agency_account }} | Conta {{ contas?.number_account }}</p>
       </v-card-text>
     </v-card>
-    <v-alert v-else variant="outlined" type="info" color="primary" class="rounded-xl mt-5">
+    <v-alert v-else variant="tonal" type="info" color="primary" class="rounded-xl mt-5">
       Nenhuma conta encontrada.
     </v-alert>
     <v-dialog v-model="deleteDialog" width="600" persistent>
@@ -96,20 +109,33 @@
           <v-icon color="primary">mdi-delete</v-icon>
         </template>
         <v-card-actions>
-          <v-btn color="primary" @click="deleteAccount">SIM</v-btn>
-          <v-btn @click="deleteDialog = false">NÃO</v-btn>
+          <v-row class="ma-2">
+            <v-col cols="6">
+              <v-btn
+                color="primary"
+                min-height="40"
+                block
+                variant="elevated"
+                @click="deleteAccount"
+                class="text-capitalize"
+                >Sim</v-btn
+              >
+            </v-col>
+            <v-col cols="6">
+              <v-btn
+                @click="deleteDialog = false"
+                min-height="40"
+                block
+                variant="tonal"
+                color="primary"
+                class="text-capitalize"
+                >Não</v-btn
+              >
+            </v-col>
+          </v-row>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      rounded="pill"
-      :timeout="snackbar.timeout"
-      top
-    >
-      {{ snackbar.message }}
-    </v-snackbar>
   </v-container>
 </template>
 <script setup>
@@ -135,21 +161,6 @@ const openDeleteDialog = () => {
   deleteDialog.value = true;
 };
 
-const snackbar = ref({
-  show: false,
-  message: "",
-  color: "success",
-  timeout: 4000,
-});
-const showSnackbar = (message, color) => {
-  snackbar.value = {
-    show: true,
-    message,
-    color,
-    timeout: 6000,
-  };
-};
-
 const deleteAccount = async () => {
   try {
     const data = await $fetch("https://api.seduvibe.com/delete_banking_account", {
@@ -159,9 +170,9 @@ const deleteAccount = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    console.log(data);
-    showSnackbar("Conta deletada com sucesso!", "success");
+    infoMessage.value.text = "Conta deletada com sucesso!";
+    infoMessage.value.v = true;
+    infoMessage.value.color = "success";
     fetchData();
   } catch (error) {
     console.error("Erro durante a requisição:", error);
@@ -170,15 +181,27 @@ const deleteAccount = async () => {
   }
 };
 
+const infoMessage = ref({
+  v: false,
+  text: null,
+  color: null,
+});
+
 const registrarConta = async () => {
   const payload = {
     name_account: name_account.value,
-    bank_name: bank_name.value,
+    bank_name: banks.value[0],
     agency_account: agency.value,
     number_account: conta_number.value,
   };
 
   try {
+    if (!name_account.value || !agency.value || !conta_number.value) {
+      infoMessage.value.text = "Preencha todos os campos";
+      infoMessage.value.v = true;
+      infoMessage.value.color = "red";
+      return;
+    }
     const data = await $fetch("https://api.seduvibe.com/register_banking_data", {
       method: "POST",
       headers: {
@@ -187,9 +210,12 @@ const registrarConta = async () => {
       },
       body: JSON.stringify(payload),
     });
-
-    showSnackbar("Conta cadastrada!", "success");
-    fetchData();
+    if (data) {
+      infoMessage.value.text = "Conta cadastrada com sucesso!";
+      infoMessage.value.v = true;
+      infoMessage.value.color = "success";
+      fetchData();
+    }
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

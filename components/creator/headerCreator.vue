@@ -51,7 +51,7 @@
         <v-menu width="250" height="250">
           <template v-slot:activator="{ props }">
             <VAvatar style="border: 3px solid background" size="120" v-bind="props">
-              <VImg cover :src="info.profilePicture">
+              <VImg cover :src="info.profilePicture" v-bind="props">
                 <template v-slot:placeholder>
                   <v-row align="center" class="fill-height ma-0" justify="center">
                     <v-progress-circular color="primary" indeterminate></v-progress-circular>
@@ -525,7 +525,6 @@ const fetchDataFromAPI = async () => {
       countUserSubs();
       const socialMediaData = data.social_media[0];
       if (socialMediaData) {
-
         if (socialMediaData.instagram !== null) {
           social_media.value.instagram = "https://instagram.com/" + socialMediaData.instagram;
         }

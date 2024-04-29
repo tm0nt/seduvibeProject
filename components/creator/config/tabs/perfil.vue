@@ -105,6 +105,21 @@
             bg-color="input_color"
           ></v-text-field>
         </v-col>
+        <v-col cols="12" class="mt-n6">
+          <v-alert
+            closable
+            v-model="infoMessage.v"
+            class="rounded-xl"
+            type="info"
+            variant="tonal"
+            :color="infoMessage.color"
+          >
+            <template v-slot:title>
+              <p class="text-caption">{{ infoMessage.text }}</p>
+            </template>
+          </v-alert></v-col
+        >
+
         <v-col cols="6">
           <v-btn color="primary" @click="saveChanges" block class="text-capitalize" min-height="40"
             >Salvar</v-btn
@@ -116,28 +131,13 @@
             block
             class="text-capitalize"
             min-height="40"
-            variant="outlined"
+            variant="tonal"
             @click="changePassword = true"
             >Alterar Senha</v-btn
           >
         </v-col>
       </v-row>
     </v-form>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      rounded="pill"
-      location="center"
-      :timeout="snackbar.timeout"
-      top
-    >
-      {{ snackbar.message }}
-      <template v-slot:actions>
-        <v-btn variant="text" @click="snackbar.show = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
   </v-container>
 </template>
 <script setup>
@@ -182,23 +182,21 @@ const fetchCreatorList = async () => {
     console.error("Erro durante a requisição:", error);
   }
 };
-const snackbar = ref({
-  show: false,
-  message: "",
-  color: "success",
-  timeout: 4000,
+
+const infoMessage = ref({
+  v: false,
+  text: null,
+  color: null,
 });
-const showSnackbar = (message, color) => {
-  snackbar.value = {
-    show: true,
-    message,
-    color,
-    timeout: 6000,
-  };
-};
 
 const saveChanges = async () => {
   try {
+    if (!telegram.value || !instagram.value || !twitter.value || !wishlist.value) {
+      infoMessage.value.text = "Preencha os campos!";
+      infoMessage.value.v = true;
+      infoMessage.value.color = "red";
+      return;
+    }
     const data = await $fetch("https://api.seduvibe.com/change_social_media", {
       method: "POST",
       headers: {
@@ -213,7 +211,9 @@ const saveChanges = async () => {
       }),
     });
     console.log(data);
-    showSnackbar("Dados atualizados!", "success");
+    infoMessage.value.text = "Dados atualizados";
+    infoMessage.value.v = true;
+    infoMessage.value.color = "success";
   } catch (error) {
     console.error("Error while saving changes:", error);
   }
