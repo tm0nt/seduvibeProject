@@ -30,10 +30,10 @@
         <v-avatar size="50">
           <v-img cover :src="post?.userData?.profilePicture">
             <template v-slot:placeholder>
-          <v-row align="center" class="fill-height ma-0" justify="center">
-            <v-progress-circular color="primary" indeterminate></v-progress-circular>
-          </v-row> 
-        </template>
+              <v-row align="center" class="fill-height ma-0" justify="center">
+                <v-progress-circular color="primary" indeterminate></v-progress-circular>
+              </v-row>
+            </template>
           </v-img>
         </v-avatar>
 
@@ -87,15 +87,15 @@
         <template v-slot:placeholder>
           <v-row align="center" class="fill-height ma-0" justify="center">
             <v-progress-circular color="primary" indeterminate></v-progress-circular>
-          </v-row> 
+          </v-row>
         </template>
         <template v-if="isImage(post.content)">
           <v-img :src="post?.content">
             <template v-slot:placeholder>
-          <v-row align="center" class="fill-height ma-0" justify="center">
-            <v-progress-circular color="primary" indeterminate></v-progress-circular>
-          </v-row> 
-        </template>
+              <v-row align="center" class="fill-height ma-0" justify="center">
+                <v-progress-circular color="primary" indeterminate></v-progress-circular>
+              </v-row>
+            </template>
           </v-img>
         </template>
         <template v-else-if="isVideo(post.content)">

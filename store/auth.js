@@ -10,13 +10,13 @@ export const useAuthStore = defineStore("auth", {
     snackbar: {
       show: false,
       text: "Aconteceu algum erro!",
-      color: "error",
+      color: "red",
     },
   }),
   actions: {
     async authenticateUser({ email, password }) {
       try {
-        const { data, error, loading } = await useFetch("https://api.seduvibe.com/login", {
+        const { data, error } = await useFetch("https://api.seduvibe.com/login", {
           method: "post",
           headers: { "Content-Type": "application/json" },
           body: {
@@ -24,7 +24,6 @@ export const useAuthStore = defineStore("auth", {
             password,
           },
         });
-        this.loading = loading;
         if (data.value) {
           this.showSnackbar(data.value.msg, "success");
           const token = useCookie("token");
@@ -36,7 +35,7 @@ export const useAuthStore = defineStore("auth", {
           }, 2000);
         } else if (error.value) {
           console.log(error.value.data.msg);
-          this.showSnackbar(error.value.data.msg, "error");
+          this.showSnackbar(error.value.data.msg, "red");
         }
       } catch (error) {
         //

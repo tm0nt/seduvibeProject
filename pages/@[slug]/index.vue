@@ -18,10 +18,11 @@
                 Assinar
               </VBtn>
             </VCol>
-            
           </VRow>
           <NuxtLink to="/login">
-            <v-chip variant="outlined" v-if="noLogin === true" color="primary" class="mt-2">Não autenticado, clique p/ fazer login</v-chip>
+            <v-chip variant="outlined" v-if="noLogin === true" color="primary" class="mt-2"
+              >Não autenticado, clique p/ fazer login</v-chip
+            >
           </NuxtLink>
           <v-divider class="my-3"></v-divider>
           <v-tabs color="primary" v-model="selectedTab" align-tabs="center">
@@ -119,9 +120,7 @@
                 @click="
                   paymentDialogVisible = true;
                   subscriptionList.visible = false;
-                  
                 "
-                
                 color="primary"
                 variant="tonal"
                 v-if="subscriptionValueFormatted != 'R$ 0.00'"
@@ -288,11 +287,11 @@ const subscriptionValueFormatted = computed(() => {
 });
 
 const noLoginFetch = async () => {
-  try{
-    if (idStore.auth === false){
+  try {
+    if (idStore.auth === false) {
       noLogin.value = true;
     }
-  }catch(error){
+  } catch (error) {
     //
   }
 };

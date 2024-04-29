@@ -83,7 +83,13 @@
     <v-spacer></v-spacer>
 
     <v-col cols="auto" class="text-caption mt-2 ml-n2">
-      <v-btn fab :disabled="noLogin" variant="text" color="primary" @click="toggleFavorite(profileFetch?.userData?.id)">
+      <v-btn
+        fab
+        :disabled="noLogin"
+        variant="text"
+        color="primary"
+        @click="toggleFavorite(profileFetch?.userData?.id)"
+      >
         <v-icon size="26">
           {{ isFavorite ? "mdi-heart" : "mdi-heart-outline" }}
         </v-icon></v-btn
@@ -352,11 +358,11 @@ const fetchData = async (userName) => {
 };
 
 const noLoginFetch = async () => {
-  try{
-    if (idStore.auth === false){
+  try {
+    if (idStore.auth === false) {
       noLogin.value = true;
     }
-  }catch(error){
+  } catch (error) {
     //
   }
 };

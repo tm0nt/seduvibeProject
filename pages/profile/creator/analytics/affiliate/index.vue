@@ -50,7 +50,7 @@
               </v-col>
             </v-row>
           </v-card>
-          <v-card class="rounded-xl mt-4 elevation-6 " color="background" flat>
+          <v-card class="rounded-xl mt-4 elevation-6" color="background" flat>
             <v-container class="ma-2">
               <h4>Gerencie afiliados</h4>
               <p class="text-caption text-medium-emphasis">Visualize, aprove e remova afiliados</p>

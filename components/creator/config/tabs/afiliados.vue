@@ -131,7 +131,7 @@ const setAffiliateData = async () => {
           body: JSON.stringify({ productValue: cleanedValue }),
         }
       );
-      console.log(error)
+      console.log(error);
       showSnackbar("Dados atualizados com sucesso!", "success");
     }
     if (porcentagemComissao.value) {

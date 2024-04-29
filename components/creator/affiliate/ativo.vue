@@ -4,8 +4,8 @@
     no-data-text="Você não possui afiliados"
     items-per-page-text="Afiliados"
     :items="affiliateActive && affiliateActive.length ? affiliateActive : []"
-  light="true"
-    >
+    light="true"
+  >
     <template v-slot:item.actions="{ item }">
       <v-icon class="me-2" @click="viewInfoData(item)"> mdi-info-circle </v-icon>
       <v-icon @click="deleteAffiliateData(item)"> mdi-delete </v-icon>

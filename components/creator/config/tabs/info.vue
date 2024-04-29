@@ -112,7 +112,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import { format } from "date-fns";  
+import { format } from "date-fns";
 
 const cookie = useCookie("token");
 const token = cookie.value;

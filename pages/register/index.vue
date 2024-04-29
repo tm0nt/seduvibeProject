@@ -30,7 +30,6 @@
                   v-model="registerData.name"
                   placeholder="Nome"
                   color="white"
-                  :rules="[ruleRequired]"
                   bg-color="input_color"
                   prepend-inner-icon="mdi-account"
                   persistent-clear
@@ -38,7 +37,7 @@
                   name="name"
                 />
               </div>
-              <div class="">
+              <div class="mt-n4">
                 <VTextField
                   v-model="registerData.email"
                   color="white"
@@ -46,19 +45,17 @@
                   bg-color="input_color"
                   persistent-clear
                   prepend-inner-icon="mdi-email"
-                  :rules="[ruleRequired, ruleEmail]"
                   type="email"
                   id="email"
                   name="email"
                 />
               </div>
-              <div class="">
+              <div class="mt-n4">
                 <VTextField
                   v-model="registerData.user"
                   color="white"
                   placeholder="Usuário"
                   bg-color="input_color"
-                  :rules="[ruleRequired]"
                   persistent-clear
                   prepend-inner-icon="mdi-at"
                   type="usuario"
@@ -66,14 +63,39 @@
                   name="usuario"
                 />
               </div>
-
+              <v-alert
+                type="info"
+                closable
+                border="start"
+                variant="tonal"
+                rounded="xl"
+                v-model="useRegisterStore().snackbar.show"
+                :color="useRegisterStore().snackbar.color"
+              >
+                <template v-slot:title>
+                  <p class="text-caption">{{ useRegisterStore().snackbar.text }}</p>
+                </template>
+              </v-alert>
+              <v-alert
+                type="info"
+                closable
+                border="start"
+                variant="tonal"
+                rounded="xl"
+                v-model="infoMessage"
+                color="red"
+              >
+                <template v-slot:title>
+                  <p class="text-caption">Preencha todos os campos</p>
+                </template>
+              </v-alert>
               <div>
                 <VBtn
                   type="submit"
                   append-icon="mdi-chevron-right"
                   block
                   min-height="40"
-                  class="text-capitalize"
+                  class="text-capitalize mt-2"
                   color="primary"
                   >Criar</VBtn
                 >
@@ -82,7 +104,7 @@
             <div class="mt-2">
               <VBtn
                 class="text-capitalize"
-                variant="outlined"
+                variant="tonal"
                 to="/login"
                 color="primary"
                 block
@@ -157,8 +179,12 @@
                 dialogPassword = true;
                 dialogOpen = false;
               "
+              min-height="40"
+              block
+              variant="tonal"
+              prepend-icon="mdi-chevron-right-circle"
               color="primary"
-              >Continuar</VBtn
+              >Próximo</VBtn
             >
           </VCardActions>
         </VContainer>
@@ -177,7 +203,6 @@
                 :type="showPassword ? 'text' : 'password'"
                 v-model="password_one"
                 color="white"
-                :rules="[ruleRequired, rulePassLen]"
                 placeholder="Senha"
                 bg-color="input_color"
                 persistent-clear
@@ -188,7 +213,7 @@
                 name="password"
               />
             </div>
-            <div class="">
+            <div class="mt-n4">
               <VTextField
                 :type="showPasswordConfirm ? 'text' : 'password'"
                 v-model="registerData.password"
@@ -196,7 +221,6 @@
                 placeholder="Confirmar senha"
                 bg-color="input_color"
                 prepend-inner-icon="mdi-password"
-                :rules="[ruleRequired, rulePassLen]"
                 persistent-clear
                 :append-inner-icon="showPasswordConfirm ? 'mdi-eye-off' : 'mdi-eye'"
                 @click:append-inner="togglePasswordVisibilityConfirm"
@@ -204,14 +228,28 @@
                 name="confirm_password"
               />
             </div>
+            <v-alert
+              type="info"
+              closable
+              v-if="infoMessagePassword.visible"
+              border="start"
+              variant="tonal"
+              rounded="xl"
+              color="red"
+            >
+              <template v-slot:title>
+                <p class="text-caption">{{ infoMessagePassword.text }}</p>
+              </template>
+            </v-alert>
           </VCardText>
           <VCardActions>
             <VBtn
+              variant="tonal"
+              prepend-icon="mdi-chevron-right-circle"
+              block
+              min-height="40"
               class="text-capitalize"
-              @click="
-                registerFetch();
-                dialogPassword = false;
-              "
+              @click="registerFetch()"
               color="primary"
               >Criar Conta</VBtn
             >
@@ -219,20 +257,6 @@
         </VContainer>
       </VCard>
     </VDialog>
-    <v-snackbar
-      location="center"
-      rounded="pill"
-      v-model="useRegisterStore().snackbar.show"
-      :color="useRegisterStore().snackbar.color"
-      top
-    >
-      {{ useRegisterStore().snackbar.text }}
-      <template v-slot:actions>
-        <v-btn variant="text" @click="useRegisterStore().snackbar.show = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
   </VContainer>
 </template>
 
@@ -244,7 +268,7 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const password_one = ref("");
+const password_one = ref(null);
 const showPassword = ref(false);
 const showPasswordConfirm = ref(false);
 const dialogOpen = ref(false);
@@ -252,16 +276,19 @@ const checkType = ref(null);
 const dialogPassword = ref(false);
 
 const registerData = ref({
-  user: "",
-  name: "",
-  email: "",
-  password: "",
-  creator: "",
+  user: null,
+  name: null,
+  email: null,
+  password: null,
+  creator: null,
 });
 
+const infoMessage = ref(false);
+const infoMessagePassword = ref({
+  visible: false,
+  text: "",
+});
 const registerValidade = ref(null);
-const { ruleEmail, ruleRequired, rulePassLen } = useFormRules();
-
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
@@ -275,12 +302,34 @@ const togglePasswordVisibilityConfirm = () => {
   showPasswordConfirm.value = !showPasswordConfirm.value;
 };
 const submit = async () => {
+  if (!registerData.value.user || !registerData.value.email || !registerData.value.name) {
+    infoMessage.value = true;
+    return;
+  }
   if (registerValidade.value.isValid) {
+    infoMessage.value = false;
     dialogOpen.value = true;
   }
 };
 
 const registerFetch = async () => {
+  if (!registerData.value.password || !password_one.value) {
+    infoMessagePassword.value.visible = true;
+    infoMessagePassword.value.text = "Preencha todos os campos!";
+    return;
+  }
+  if (registerData.value.password != password_one.value) {
+    infoMessagePassword.value.visible = true;
+    infoMessagePassword.value.text = "As senhas não são iguais!";
+    return;
+  }
+  if (registerData.value.password.length < 8 || password_one.value.length < 8) {
+    infoMessagePassword.value.visible = true;
+    infoMessagePassword.value.text = "A senha precisa ter no mínimo 8 caracteres!";
+    return;
+  }
+  infoMessagePassword.value = false;
+  dialogPassword = false;
   await useRegisterStore().registerUser({
     user: registerData.value.user,
     name: registerData.value.name,

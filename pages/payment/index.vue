@@ -50,25 +50,6 @@
                 </v-card>
               </template>
             </v-row>
-            <v-divider class="text-medium-emphasis mt-10"></v-divider>
-            <h2 class="mt-5">Pagamentos</h2>
-            <p class="text-caption text-medium-emphasis mt-n2 mb-4">Seus últimos pagamentos.</p>
-            <v-row class="mt-5">
-
-
-              <v-data-table
-                :loading="loading"
-                class="rounded-xl"
-                :headers="headers"
-                :items="historyTable"
-                no-data-text="Nenhum pagamento realizado"
-                items-per-page-text="Pagamento por página"
-              >
-                <template v-slot:loading>
-                  <v-skeleton-loader type="table-row@2"></v-skeleton-loader>
-                </template>
-              </v-data-table>
-            </v-row>
           </v-container>
         </v-col>
       </v-row>
@@ -76,7 +57,13 @@
     <v-dialog v-model="showDialog" persistent width="800" transition="dialog-top-transition">
       <v-card class="rounded-xl" color="background">
         <v-card-title>
-          <v-btn @click="showDialog = false; e1 = 0" variant="text" fab
+          <v-btn
+            @click="
+              showDialog = false;
+              e1 = 0;
+            "
+            variant="text"
+            fab
             ><v-icon size="x-large">mdi-close</v-icon></v-btn
           ></v-card-title
         >
@@ -136,7 +123,9 @@
                               {{ plan?.description }}
                             </p>
                             <h3 class="ma-4">
-                              {{ selectedFilter === "mensal" ? plan?.priceMensal : plan?.priceAnual }}
+                              {{
+                                selectedFilter === "mensal" ? plan?.priceMensal : plan?.priceAnual
+                              }}
                             </h3>
                           </v-card>
                         </v-col>
@@ -201,7 +190,6 @@ const payment = ref([]);
 const selectedFilter = ref("mensal");
 const infoPlanDialog = ref(false);
 const loading = ref(false);
-
 
 const showDialog = ref(false);
 const filteredPlans = computed(() => {
@@ -290,7 +278,6 @@ const historyPayment = async () => {
     console.error(error);
   }
 };
-
 
 const getSubscriptionTitle = (data) => {
   if (data.length > 0) {

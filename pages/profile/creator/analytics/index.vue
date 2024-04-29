@@ -21,7 +21,7 @@
           <v-card
             color="background"
             rounded="xl"
-            class="mt-4  elevation-6 d-flex justify-center align-center"
+            class="mt-4 elevation-6 d-flex justify-center align-center"
             flat
           >
             <v-row class="ma-2" align="center" justify="center">
@@ -59,7 +59,7 @@
               </v-col>
             </v-row>
           </v-card>
-          <v-card class="rounded-xl mt-4 elevation-6"  color="background" flat>
+          <v-card class="rounded-xl mt-4 elevation-6" color="background" flat>
             <v-container class="ma-2">
               <h4>Vendas por dia</h4>
               <p class="text-caption text-medium-emphasis">Veja seu progresso mensal.</p>

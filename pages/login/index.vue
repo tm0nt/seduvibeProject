@@ -1,27 +1,20 @@
 <template>
-  <VContainer fluid class="fill-height">
-    <VRow no-gutters align="center" justify="center" class="my-13">
+  <VContainer fluid class="fill-height my-12">
+    <VRow no-gutters align="center" justify="center" class="fill-height">
       <VCol cols="12" md="6" lg="5" sm="6">
         <VRow no-gutters align="center" justify="center">
-          <VCol cols="9" md="6" class="">
-            <VToolbar height="90" color="rgb(0,0,0,0)"></VToolbar>
-            <div class="text-surface mt-md-n15">
+          <VCol cols="9" md="6">
+            <div class="text-surface">
               <VImg
                 src="https://i.imgur.com/BrTfYSp.png"
                 width="60"
                 alt="Plataforma para vender conteúdo exclusivo"
-                class="mx-auto text-center"
+                class="mx-auto mb-10 text-center"
                 format="webp"
                 loading="lazy"
                 preload
-              >
-                <template v-slot:placeholder>
-                  <v-row align="center" class="fill-height ma-0" justify="center">
-                    <v-progress-circular color="primary" indeterminate></v-progress-circular>
-                  </v-row>
-                </template>
-              </VImg>
-              <h2 class="text-headline mt-6">Login</h2>
+              ></VImg>
+              <h2 class="text-headline mt-15">Login</h2>
               <p class="mt-n2 text-medium-emphasis text-caption mb-4">
                 Entre para apoiar seus criadores
               </p>
@@ -31,11 +24,10 @@
               <div class="mt-1">
                 <VTextField
                   placeholder="Email"
-                  label="Email"
                   v-model="user.email"
-                  :rules="[ruleRequired, ruleEmail]"
                   id="email"
                   name="email"
+                  density="compact"
                   prepend-inner-icon="mdi-email"
                   bg-color="input_color"
                   color="primary"
@@ -47,10 +39,10 @@
                 <VTextField
                   v-model="user.password"
                   placeholder="Senha"
-                  label="Senha"
+                  density="compact"
                   color="primary"
                   bg-color="input_color"
-                  :rules="[ruleRequired]"
+                  class="mt-n4"
                   prepend-inner-icon="mdi-password"
                   persistent-clear
                   :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -60,22 +52,38 @@
                   :type="showPassword ? 'text' : 'password'"
                 />
               </div>
+              <v-alert
+                type="info"
+                border="start"
+                rounded="xl"
+                closable
+                v-model="useAuthStore().snackbar.show"
+                :color="useAuthStore().snackbar.color"
+                variant="tonal"
+              >
+                <template v-slot:title>
+                  <p class="text-caption">{{ useAuthStore().snackbar.text }}</p>
+                </template>
+              </v-alert>
               <div class="mt-3">
-                <VBtn type="submit" block min-height="40" class="text-capitalize" color="primary"
+                <VBtn
+                  type="submit"
+                  prepend-icon="mdi-chevron-right-circle"
+                  block
+                  min-height="40"
+                  class="text-capitalize"
+                  color="primary"
                   >Entrar</VBtn
                 >
               </div>
 
-              <div class="mt-2 align-center text-center justify-center d-flex">
-                <VDivider class="border-opacity-75" color="grey" length="10"></VDivider>
-              </div>
               <div class="mt-2">
                 <VBtn
                   to="/register"
                   block
                   min-height="40"
                   class="text-capitalize"
-                  variant="outlined"
+                  variant="tonal"
                   color="primary"
                   >Crie sua conta</VBtn
                 >
@@ -86,20 +94,6 @@
       </VCol>
       <advertising />
     </VRow>
-    <v-snackbar
-      v-model="useAuthStore().snackbar.show"
-      :color="useAuthStore().snackbar.color"
-      top
-      location="center"
-      rounded="pill"
-    >
-      {{ useAuthStore().snackbar.text }}
-      <template v-slot:actions>
-        <v-btn variant="text" @click="useAuthStore().snackbar.show = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
   </VContainer>
 </template>
 
@@ -118,7 +112,6 @@ const user = ref({
 
 const loginValidade = ref(null);
 
-const { ruleEmail, ruleRequired } = useFormRules();
 const showPassword = ref(false);
 
 const submit = async () => {

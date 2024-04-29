@@ -4,19 +4,19 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (to.path === "/login" || to.path === "/register") {
     try {
-      const { data, error } = await useFetch("https://api.seduvibe.com/", {
+      const data = await $fetch("https://api.seduvibe.com/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (data.value) {
+      if (data) {
         return navigateTo("/profile/");
-      }
-      if (error.value) {
+      } else {
+        //
       }
     } catch (error) {
-      console.error("Error fetching creator value:", error);
+      //
     }
   } else if (!token && to.path !== "/login") {
     return navigateTo("/login");

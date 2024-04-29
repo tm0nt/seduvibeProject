@@ -97,7 +97,6 @@
                             prepend-inner-icon="mdi-coin"
                             type="number"
                             hide-spin-buttons
-        
                             variant="solo"
                             bg-color="input_color"
                             v-model="withdraw.pix.amount"

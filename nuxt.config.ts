@@ -30,7 +30,6 @@ export default defineNuxtConfig({
   ],
   app: {
     head: {
-      script: [{ src: "https://api.abmexpay.com.br/v1/js" }],
       title: "Seduvibe",
       titleTemplate: "%s | A melhor plataforma para distribuição de conteúdo exclusivo",
       link: [

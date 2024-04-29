@@ -53,25 +53,24 @@
 </template>
 
 <script setup>
+const { $locally } = useNuxtApp();
 import { ref, onMounted } from "vue";
 import { useTheme } from "vuetify";
-import nuxtStorage from "nuxt-storage";
 
 const dialogOpen = ref(false);
 const theme = useTheme();
 
 onMounted(() => {
-  const storedTheme = nuxtStorage.localStorage.getData("theme");
-  if (storedTheme) {
-    theme.global.name.value = storedTheme;
+  const storedTheme = ref($locally.getItem("theme"));
+  if (storedTheme.value) {
+    theme.global.name.value = storedTheme.value;
   } else {
     dialogOpen.value = true;
   }
 });
-
 const selectTheme = (selectedTheme) => {
   theme.global.name.value = selectedTheme;
-  nuxtStorage.localStorage.setData("theme", selectedTheme, "365", "d");
+  $locally.setItem("theme", selectedTheme);
   dialogOpen.value = false;
 };
 </script>

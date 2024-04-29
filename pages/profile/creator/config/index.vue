@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, shallowRef, defineComponent } from 'vue';
+import { ref, shallowRef, defineComponent } from "vue";
 import navbarHeader from "@/components/creator/headerCreator.vue";
 import navbarView from "@/components/navbar.vue";
 import MeuPerfil from "@/components/creator/config/tabs/perfil.vue";

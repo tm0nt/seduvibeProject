@@ -125,9 +125,7 @@ const deleteDialog = ref(false);
 const cookie = useCookie("token");
 const token = cookie.value;
 
-
 const banks = ref([]);
-
 
 const toggleCampos = () => {
   mostrarCampos.value = !mostrarCampos.value;
@@ -223,10 +221,10 @@ const downloadBanking = async () => {
     });
 
     banks.value = data.banks.map(({ code, bank }) => {
-      const formattedCode = code !== null && code !== undefined ? code.toString().padStart(3, '0') : '';
+      const formattedCode =
+        code !== null && code !== undefined ? code.toString().padStart(3, "0") : "";
       return `${formattedCode} - ${bank}`;
     });
-    
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }

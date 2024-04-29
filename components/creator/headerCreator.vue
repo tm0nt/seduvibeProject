@@ -2,9 +2,9 @@
   <VCard class="rounded-lg" flat height="150">
     <template v-slot:image>
       <VImg eager cover position="center" :src="info.coverPicture">
-          <VBtn @click="changeInfoData.cover = true" color="background" class="text-capitalize ma-4">
-            <v-icon color="primary">mdi-camera</v-icon>
-          </VBtn>
+        <VBtn @click="changeInfoData.cover = true" color="background" class="text-capitalize ma-4">
+          <v-icon color="primary">mdi-camera</v-icon>
+        </VBtn>
         <template v-slot:placeholder>
           <v-row align="center" class="fill-height ma-0" justify="center">
             <v-progress-circular color="primary" indeterminate></v-progress-circular>
@@ -18,7 +18,7 @@
       <v-btn
         fab
         color="primary"
-        :disabled="social_media.instagram === null "
+        :disabled="social_media.instagram === null"
         :href="social_media.instagram"
         variant="text"
       >
@@ -113,7 +113,13 @@
     </v-col>
     <v-spacer></v-spacer>
     <v-col cols="auto" class="text-caption mt-2">
-      <v-chip small class="text-capitalize" v-if="userSubsCount?.length !== 0" color="primary" @click="showDialogSub = true">
+      <v-chip
+        small
+        class="text-capitalize"
+        v-if="userSubsCount?.length !== 0"
+        color="primary"
+        @click="showDialogSub = true"
+      >
         <v-icon color="primary" size="26" class="ma-1">mdi-account</v-icon
         >{{ userSubsCount?.totalUsers }} subs
       </v-chip>
@@ -163,19 +169,13 @@
           prepend-inner-icon="mdi-camera"
           @change="handleUploadCover"
         ></v-file-input>
-        <v-card  class="rounded-xl elevation-0" flat  v-if="imagePreviewCover" width="300">
-          <v-img
-          aspect-ratio="1.2"
-          :src="imagePreviewCover"
-        cover
-          alt="Prévia de imagem de capa"
-        >
-          <v-btn color="background" size="small" class="ma-4" @click="imagePreviewCover = null"
-            ><v-icon color="primary">mdi-close</v-icon></v-btn
-          >
-        </v-img>
+        <v-card class="rounded-xl elevation-0" flat v-if="imagePreviewCover" width="300">
+          <v-img aspect-ratio="1.2" :src="imagePreviewCover" cover alt="Prévia de imagem de capa">
+            <v-btn color="background" size="small" class="ma-4" @click="imagePreviewCover = null"
+              ><v-icon color="primary">mdi-close</v-icon></v-btn
+            >
+          </v-img>
         </v-card>
-        
 
         <VBtn type="submit" class="text-capitalize mt-4" block color="primary" min-height="40"
           >Alterar</VBtn
@@ -205,17 +205,17 @@
           chips
           prepend-inner-icon="mdi-camera"
         ></v-file-input>
-        <v-card  class="rounded-xl elevation-0" flat  v-if="imagePreviewProfile" width="300">
-        <v-img
-          :src="imagePreviewProfile"
-          alt="Prévia de imagem de perfil"
-          cover
-          aspect-ratio="1.2"
-        >
-          <v-btn color="background" size="small" class="ma-4" @click="imagePreviewProfile = null"
-            ><v-icon color="primary">mdi-close</v-icon></v-btn
+        <v-card class="rounded-xl elevation-0" flat v-if="imagePreviewProfile" width="300">
+          <v-img
+            :src="imagePreviewProfile"
+            alt="Prévia de imagem de perfil"
+            cover
+            aspect-ratio="1.2"
           >
-        </v-img>
+            <v-btn color="background" size="small" class="ma-4" @click="imagePreviewProfile = null"
+              ><v-icon color="primary">mdi-close</v-icon></v-btn
+            >
+          </v-img>
         </v-card>
         <VBtn class="text-capitalize mt-4" type="submit" block color="primary" min-height="40"
           >Alterar</VBtn
@@ -280,7 +280,7 @@
         <h2 class="text-center">
           {{ info.nome }}<v-icon size="25" class="ma-1" color="primary">mdi-check-decagram</v-icon>
         </h2>
-        <p class="text-center mt-n2 text-medium-emphasis text-caption">
+        <p class="text-center mt-1 text-medium-emphasis text-caption">
           {{ info.bio || "Adicione uma descrição"
           }}<v-icon class="ma-1" @click="changeInfoData.bio = true"
             >mdi-dots-horizontal-circle</v-icon
@@ -345,7 +345,7 @@ const showSnackbar = (message, color) => {
 
 const shareProfile = ref({
   value: false,
-  url: "https://seduvibe.com/@"+idStore.user,
+  url: "https://seduvibe.com/@" + idStore.user,
 });
 const cookie = useCookie("token");
 const token = cookie.value;
@@ -422,7 +422,6 @@ const changeDescription = async () => {
       }),
     });
     fetchDataFromAPI();
-    showSnackbar("Sua descrição foi atualizada!", "success");
     changeInfoData.value.bio = false;
   } catch (error) {
     console.error("Error:", error);
@@ -524,14 +523,20 @@ const fetchDataFromAPI = async () => {
 
     if (data) {
       countUserSubs();
-
       const socialMediaData = data.social_media[0];
-      if (socialMediaData && socialMediaData.length !== 0) {
-        social_media.value = {
-          instagram: "https://instagram.com/" + socialMediaData.instagram,
-          telegram: "https://t.me/@" + socialMediaData.telegram,
-          twitter: "https://x.com/" + socialMediaData.twitter,
-        };
+      if (socialMediaData) {
+
+        if (socialMediaData.instagram !== null) {
+          social_media.value.instagram = "https://instagram.com/" + socialMediaData.instagram;
+        }
+
+        if (socialMediaData.telegram !== null) {
+          social_media.value.telegram = "https://t.me/@" + socialMediaData.telegram;
+        }
+
+        if (socialMediaData.twitter !== null) {
+          social_media.value.twitter = "https://twitter.com/" + socialMediaData.twitter;
+        }
       }
 
       const userData = data.users[0];
@@ -551,7 +556,6 @@ const fetchDataFromAPI = async () => {
     console.error("Erro durante a requisição:", error);
   }
 };
-
 
 fetchDataFromAPI();
 </script>

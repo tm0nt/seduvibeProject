@@ -30,7 +30,7 @@
             clear-icon="mdi-close-circle"
             placeholder="Mencione perfis"
           ></v-text-field>
-          <p class="text-caption text-medium-emphasis mt-n4 ml-2">Ex: criador1,criador2</p>
+          <p class="text-caption text-medium-emphasis mt-n5 mb-1 ml-2">Ex: criador1,criador2</p>
         </v-col>
         <v-col cols="6" class="mt-n4">
           <v-combobox
@@ -41,7 +41,6 @@
             placeholder="Público"
             :items="[
               { key: 'Assinantes', value: 1 },
-              { key: 'Afiliados', value: 2 },
               { key: 'Exclusivo', value: 3 },
             ]"
             item-title="key"
@@ -64,7 +63,7 @@
             height="120"
             flat
           >
-            <v-btn size="x-small" class="ma-1 mt-4" icon @click="removeMedia(index)">
+            <v-btn size="x-small"  class="ma-1 mt-4" icon @click="removeMedia(index)">
               <v-icon color="red" size="16">mdi-close</v-icon>
             </v-btn>
           </v-card>
@@ -81,18 +80,18 @@
           </v-card>
         </v-col>
       </v-row>
-  <v-text-field
-    bg-color="input_color"
-    rounded="xl"
-    class="mt-4"
-    clearable
-    v-model="valor"
-    prepend-inner-icon="mdi-coin"
-    v-show="publicVisible === 3" 
-    color="primary"
-    clear-icon="mdi-close-circle"
-    placeholder="Valor"
-  ></v-text-field>
+      <v-text-field
+        bg-color="input_color"
+        rounded="xl"
+        class="mt-4"
+        clearable
+        v-model="valor"
+        prepend-inner-icon="mdi-coin"
+        v-show="publicVisible === 3"
+        color="primary"
+        clear-icon="mdi-close-circle"
+        placeholder="Valor"
+      ></v-text-field>
       <v-row class="mt-n4 ml-1" align="center">
         <v-file-input
           label="Envie uma mídia"
@@ -119,8 +118,8 @@
             height="120"
             flat
           >
-            <v-btn size="x-small" class="ma-4" color="background" @click="removeFile(index)">
-              <v-icon color="primary" size="16">mdi-close</v-icon>
+            <v-btn size="small" class="ma-4" variant="tonal" color="primary" @click="removeFile(index)">
+              <v-icon size="16">mdi-close</v-icon>
             </v-btn>
           </v-card>
           <v-card
@@ -145,11 +144,19 @@
         class="mt-8 text-capitalize"
         min-height="40"
         type="submit"
+        :disabled="loading"
         color="primary"
         :loading="loading"
       >
         Publicar
       </v-btn>
+      <v-alert type="success" class="mt-2" v-model="infoMessage.visible" variant="tonal" border="start" colapse color="green"><template v-slot:title>
+        <p class="text-caption">{{infoMessage.text}}</p>
+      </template> </v-alert>
+      <v-alert type="info" class="mt-2" v-model="infoMessage.visibleError" variant="tonal" border="start" colapse  color="red">
+    <template v-slot:title>
+        <p class="text-caption">{{infoMessage.text}}</p>
+      </template> </v-alert>
     </v-form>
     <v-snackbar
       v-model="snackbar.show"
@@ -233,6 +240,11 @@ const handleMediaUpload = async (event) => {
   }
 };
 
+const infoMessage = ref({
+  visibleError: false,
+  visible: false,
+  text: "",
+})
 const handleFileSubmit = async () => {
   loading.value = true;
 
@@ -248,9 +260,6 @@ const handleFileSubmit = async () => {
         fd.append("content", file);
       });
     }
-
-    console.log("FormData before fetch:", fd);
-
     const options = {
       method: "POST",
       body: fd,
@@ -264,11 +273,12 @@ const handleFileSubmit = async () => {
     loading.value = false;
     if (data.value) {
       postStore.setPost(true);
-      showSnackbar("Você acabou de publicar!", "success");
+      infoMessage.value.text = "Postagem publicada!"
+      infoMessage.value = true;
       clearFormData();
     } else {
-      showSnackbar("Ocorreu um erro!", "error");
-      console.error("Erro ao enviar imagem:", error);
+      infoMessage.value.text = "Aconteceu algum erro!"
+      infoMessage.value.visibleError = true;
     }
   } catch (e) {
     console.error("Error during fetch:", e);

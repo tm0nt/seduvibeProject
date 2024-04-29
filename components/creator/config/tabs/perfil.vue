@@ -212,7 +212,7 @@ const saveChanges = async () => {
         wishlist: wishlist.value,
       }),
     });
-    console.log(data)
+    console.log(data);
     showSnackbar("Dados atualizados!", "success");
   } catch (error) {
     console.error("Error while saving changes:", error);

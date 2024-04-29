@@ -99,7 +99,7 @@
             min-height="40"
             color="primary"
             :disabled="pending === true"
-            @click="makePaymentPix(1);"
+            @click="makePaymentPix(1)"
             class="text-capitalize"
             ><p v-if="pending !== true">Fazer pagamento</p>
             <v-progress-circular
@@ -139,7 +139,11 @@
         <template v-if="paymentSuccessful">
           <v-icon size="64" color="primary">mdi-check-circle</v-icon>
           <p class="mb-2 mt-4">Pagamento concluído!</p>
-          <v-card-actions><v-btn @click="payPixDialog = false" variant="text" color="primary">OK</v-btn></v-card-actions>
+          <v-card-actions
+            ><v-btn @click="payPixDialog = false" variant="text" color="primary"
+              >OK</v-btn
+            ></v-card-actions
+          >
         </template>
         <template v-else>
           <p class="mb-2">Você está pagando via pix</p>
@@ -164,6 +168,9 @@
             </template>
           </v-text-field>
         </template>
+        <p class="text-center text-caption text-medium-emphasis">
+          Este código dura apenas 5 minutos.
+        </p>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -182,8 +189,7 @@
 import { useIdStorePublic } from "~/store/public";
 import { idPayment } from "~/store/payment";
 
-
-const emit = defineEmits(["closeDialog"])
+const emit = defineEmits(["closeDialog"]);
 
 const cookie = useCookie("token");
 const token = cookie.value;
@@ -219,29 +225,30 @@ const makePaymentPix = async (id) => {
     const amountInCents = (idPaymentStore.setAmount * 100).toFixed(2);
 
     const requestBody = {
-      name: idPaymentStore.setName,
-      email: idPaymentStore.setEmail,
+      name: idPaymentStore.name,
+      email: idPaymentStore.email,
       cpf: idPaymentStore.setCpf,
       amount: parseFloat(amountInCents),
       metadata: "userId:1,source:donation",
     };
 
-    const { data, pending: waiting } = await useFetch(
-      "https://payment.seduvibe.cloud/paymentProcess/pix",
-      {
-        method: "POST",
-        body: JSON.stringify(requestBody),
-      }
-    );
+    const {
+      data,
+      pending: waiting,
+      error,
+    } = await useFetch("https://payment.seduvibe.cloud/paymentProcess/pix", {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+    });
 
     pending.value = waiting.value; // Atualiza o valor de "pending" com base na resposta do servidor
-
+    console.log(error);
     if (data.value) {
       idPaymentStore.setDataReceived = data.value;
       payPixDialog.value = true;
       await checkPayment(data?.value.id, 1);
     }
-    emit("closeDialog")
+    emit("closeDialog");
   } catch (error) {
     console.error(error);
     // Trate os erros adequadamente
@@ -258,7 +265,12 @@ const checkPayment = async (paymentId, paymentMethod) => {
 
     if (data.value) {
       paymentSuccessful.value = true;
-      await successPayment(userStorePublic.id, idPaymentStore.subscriptionId, paymentMethod, idPaymentStore.setAmount);
+      await successPayment(
+        userStorePublic.id,
+        idPaymentStore.subscriptionId,
+        paymentMethod,
+        idPaymentStore.setAmount
+      );
     }
   } catch (error) {
     console.error(error);
@@ -310,13 +322,12 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
     }
   } catch (error) {
     console.error("Error when subscribing:", error);
-    // 
+    //
   }
 };
 
-
 const copyToClipboard = () => {
-  navigator.clipboard.writeText(idPaymentStore.setDataReceived.qrCode.qrcode);
+  navigator.clipboard.writeText(idPaymentStore.setDataReceived.qrCode);
   showSnackbar("Pix copia e cola copiado com sucesso!", "success");
 };
 </script>

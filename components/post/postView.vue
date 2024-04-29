@@ -1,17 +1,17 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" class="mx-auto d-flex align-center justify-center">
-    <v-chip-group
-      selected-class="primary"
-      color="primary"
-      mandatory
-      filter
-      v-model="selectedExtension"
-    >
-      <v-chip value="all"> &nbsp;Tudo&nbsp; </v-chip>
-      <v-chip value="image"> &nbsp;Imagens&nbsp; </v-chip>
-      <v-chip value="video"> &nbsp;Vídeos&nbsp; </v-chip>
-    </v-chip-group>
+      <v-chip-group
+        selected-class="primary"
+        color="primary"
+        mandatory
+        filter
+        v-model="selectedExtension"
+      >
+        <v-chip value="all"> &nbsp;Tudo&nbsp; </v-chip>
+        <v-chip value="image"> &nbsp;Imagens&nbsp; </v-chip>
+        <v-chip value="video"> &nbsp;Vídeos&nbsp; </v-chip>
+      </v-chip-group>
     </v-col>
     <v-row>
       <v-col cols="12" class="mt-2">
@@ -20,7 +20,7 @@
         </p>
       </v-col>
     </v-row>
-    
+
     <v-card
       v-for="post in filteredPosts"
       class="rounded-xl elevation-4 mt-4"

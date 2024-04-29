@@ -8,10 +8,24 @@
           class="mx-auto mb-10 text-center"
           format="webp"
           width="60"
-        ></VImg>
+        >
+          <template v-slot:placeholder>
+            <v-row align="center" class="fill-height ma-0" justify="center">
+              <v-progress-circular color="primary" indeterminate></v-progress-circular>
+            </v-row>
+          </template>
+        </VImg>
         <VCard color="background" class="elevation-8 rounded-xl mx-auto" width="400" flat>
           <VCard-text class="text-center">
-            <VAvatar size="120" :image="profile?.userData?.profilePicture"></VAvatar>
+            <VAvatar size="120">
+              <VImg :src="profile?.userData?.profilePicture" cover>
+                <template v-slot:placeholder>
+                  <v-row align="center" class="fill-height ma-0" justify="center">
+                    <v-progress-circular color="primary" indeterminate></v-progress-circular>
+                  </v-row>
+                </template>
+              </VImg>
+            </VAvatar>
             <h2 class="mt-2">{{ profile?.userData?.name }}</h2>
             <p class="text-caption text-medium-emphasis mt-1">{{ profile?.userData?.bio }}</p>
             <VSpacer></VSpacer>

@@ -10,7 +10,7 @@
       <v-btn to="/search" class="my-btn">
         <v-icon size="26">mdi-magnify</v-icon>
       </v-btn>
-      <v-btn to="/payment" class="my-btn" v-if="showPaymentButton">
+      <v-btn to="/payment" class="my-btn">
         <v-icon size="26">mdi-currency-usd</v-icon>
       </v-btn>
       <v-btn to="/profile" class="my-btn">
