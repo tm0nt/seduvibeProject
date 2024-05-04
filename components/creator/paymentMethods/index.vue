@@ -84,24 +84,23 @@
       <v-expansion-panel-text>
         <v-form class="ma-4">
           <v-text-field
-            :readonly="idPaymentStore?.setCpf?.length === 14"
+            placeholder="Digite seu CPF"
             bg-color="input_color"
-            placeholder="CPF"
-            label="CPF"
-            v-model="idPaymentStore.setCpf"
-            type="number"
+            rounded="xl"
             hide-spin-buttons
-            readonly
+            type="number"
+            v-model="idPaymentStore.cpf"
           >
           </v-text-field>
           <v-btn
             block
             min-height="40"
             color="primary"
+            variant="tonal"
             :disabled="pending === true"
             @click="makePaymentPix(1)"
             class="text-capitalize"
-            ><p v-if="pending !== true">Fazer pagamento</p>
+            ><p v-if="pending !== true">Gerar pagamento</p>
             <v-progress-circular
               v-if="pending === true"
               indeterminate
@@ -113,24 +112,8 @@
         </v-form>
       </v-expansion-panel-text>
     </v-expansion-panel>
-    <v-expansion-panel bg-color="background" class="rounded-xl">
-      <v-expansion-panel-title expand-icon="mdi-currency-btc" collapse-icon="mdi-bitcoin">
-        Criptomoeda
-      </v-expansion-panel-title>
-      <v-expansion-panel-text>
-        <v-form class="ma-4">
-          <!---      <p class="text-caption text-center text-medium-emphasis">
-            Você está pagando 0.0001456 BTC
-          </p>
-          <v-btn block min-height="40" color="primary" class="mt-2 text-capitalize"
-            >Fazer pagamento</v-btn
-          > -->
-          <p class="text-caption text-center">Ainda estamos processando este método de pagamento</p>
-        </v-form>
-      </v-expansion-panel-text>
-    </v-expansion-panel>
   </v-expansion-panels>
-  <v-dialog v-model="payPixDialog" width="800" persistent>
+  <v-dialog v-model="payPixDialog" width="400" persistent>
     <v-card class="rounded-xl elevation-6" color="background" flat>
       <v-card-title>
         <v-icon @click="payPixDialog = false">mdi-close</v-icon>
@@ -139,26 +122,22 @@
         <template v-if="paymentSuccessful">
           <v-icon size="64" color="primary">mdi-check-circle</v-icon>
           <p class="mb-2 mt-4">Pagamento concluído!</p>
-          <v-card-actions
-            ><v-btn @click="payPixDialog = false" variant="text" color="primary"
-              >OK</v-btn
-            ></v-card-actions
-          >
         </template>
         <template v-else>
-          <p class="mb-2">Você está pagando via pix</p>
-          <v-card
-            class="elevation-0 mx-auto d-flex align-center justify-center rounded-xl"
-            width="600"
-            flat
-          >
+          <v-card class="elevation-0 mx-auto d-flex align-center justify-center rounded-xl" flat>
           </v-card>
           <v-chip class="mt-2" color="primary" prepend-icon="mdi-coin">
-            R$ {{ idPaymentStore?.setDataReceived?.value / 100 }}
+            R$ {{ idPaymentStore?.amount }}
           </v-chip>
+          <v-img
+            class="mx-auto mt-4 mb-4"
+            rounded="xl"
+            :src="idPaymentStore?.dataReceived?.generateArray.imagemQrcode"
+            width="250"
+          ></v-img>
           <v-text-field
             class="mt-2"
-            v-model="idPaymentStore.setDataReceived.qrCode"
+            v-model="idPaymentStore.dataReceived.generateArray.qrcode"
             readonly
             bg-color="input_color"
             @click="copyToClipboard"
@@ -168,9 +147,20 @@
             </template>
           </v-text-field>
         </template>
-        <p class="text-center text-caption text-medium-emphasis">
-          Este código dura apenas 5 minutos.
-        </p>
+        <v-alert
+          rounded="xl"
+          variant="tonal"
+          border="start"
+          closable
+          v-model="copiaCola.v"
+          :color="copiaCola.color"
+          type="info"
+          class="mb-4 mt-n4"
+        >
+          <template v-slot:title>
+            <p class="text-caption">{{ copiaCola.text }}</p>
+          </template>
+        </v-alert>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -188,12 +178,13 @@
 <script setup>
 import { useIdStorePublic } from "~/store/public";
 import { idPayment } from "~/store/payment";
-
-const emit = defineEmits(["closeDialog"]);
+import { useIdStore } from "~/store/id";
 
 const cookie = useCookie("token");
-const token = cookie.value;
+const token = cookie.value
 
+
+const IdStored = useIdStore();
 const userStorePublic = useIdStorePublic();
 
 const snackbar = ref({
@@ -212,6 +203,18 @@ const showSnackbar = (message, color) => {
   };
 };
 
+const copiaCola = ref({
+  text: "Pix copiado com sucesso!",
+  v: false,
+  color: "success",
+});
+
+const alertMessage = ref({
+  text: "Usaremos o CPF cadastrado do seu perfil!",
+  v: true,
+  color: "primary",
+});
+
 const idPaymentStore = idPayment();
 const paymentSuccessful = ref(false);
 
@@ -220,67 +223,64 @@ const payPixDialog = ref(false);
 
 const makePaymentPix = async (id) => {
   try {
-    pending.value = true; // Configura como "pending" ao iniciar o processo de pagamento
+    if (!idPaymentStore.cpf) {
+      alertMessage.value.text = "Você não possui CPF cadastrado!";
+      alertMessage.value.v = true;
+      alertMessage.value.color = "red";
+      return;
+    }
+    pending.value = true; // 
 
-    const amountInCents = (idPaymentStore.setAmount * 100).toFixed(2);
+    const amountInCents = (idPaymentStore.amount * 100).toFixed(2);
 
     const requestBody = {
       name: idPaymentStore.name,
-      email: idPaymentStore.email,
-      cpf: idPaymentStore.setCpf,
-      amount: parseFloat(amountInCents),
-      metadata: "userId:1,source:donation",
+      cpf: idPaymentStore.cpf,
+      price: parseFloat(amountInCents),
     };
 
     const {
       data,
       pending: waiting,
       error,
-    } = await useFetch("https://payment.seduvibe.cloud/paymentProcess/pix", {
+    } = await useFetch("https://payment.seduvibe.com/create-pix", {
       method: "POST",
       body: JSON.stringify(requestBody),
     });
 
-    pending.value = waiting.value; // Atualiza o valor de "pending" com base na resposta do servidor
+    pending.value = waiting.value;
     console.log(error);
     if (data.value) {
-      idPaymentStore.setDataReceived = data.value;
+      idPaymentStore.setDataReceived(data.value);
+     await registerTxid(idPaymentStore.subscriptionId);
       payPixDialog.value = true;
-      await checkPayment(data?.value.id, 1);
+      await checkPayment(data.value.txid, 1)
     }
-    emit("closeDialog");
   } catch (error) {
     console.error(error);
-    // Trate os erros adequadamente
   } finally {
     pending.value = false; // Certifique-se de limpar o estado "pending" independentemente do resultado
   }
 };
 
-const checkPayment = async (paymentId, paymentMethod) => {
-  try {
-    const { data } = await useFetch(`https://api.seduvibe.com/gateway/check-status/${paymentId}`, {
-      method: "GET",
-    });
-
-    if (data.value) {
-      paymentSuccessful.value = true;
-      await successPayment(
-        userStorePublic.id,
-        idPaymentStore.subscriptionId,
-        paymentMethod,
-        idPaymentStore.setAmount
-      );
-    }
-  } catch (error) {
+const registerTxid = async (subsId) => {
+  try{
+    const data = await $fetch("https://api.seduvibe.com/gateway/txid", {
+      method: "post",
+      body: JSON.stringify({
+        txid: idPaymentStore.dataReceived.txid,
+        status: "waiting",
+        userId: IdStored.id,
+        subscriptionId: subsId,
+      })
+    })
+  }catch(error){
     console.error(error);
-    // Trate os erros adequadamente
   }
+
+
 };
 
-const clearDataPayment = async () => {
-  idPaymentStore.setDataReceived = null;
-};
 const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
   try {
     const makeSubscriptionRequest = async (url, data) => {
@@ -304,7 +304,6 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
         throw error;
       }
     };
-
     if (subscriptionId >= 1 && subscriptionId <= 4) {
       await makeSubscriptionRequest(`https://api.seduvibe.com/subscription/user_sub/${id}`, {
         subscriptionId,
@@ -322,12 +321,41 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
     }
   } catch (error) {
     console.error("Error when subscribing:", error);
-    //
+    // 
+  }
+};
+
+
+const checkPayment = async (paymentId, paymentMethod) => {
+  try {
+    const { data, error } = await useFetch(`https://api.seduvibe.com/gateway/check-status/${paymentId}`, {
+      method: "GET",
+    });
+    console.log(error.value);
+    if (data.value) {
+      console.log(data.value);
+      paymentSuccessful.value = true;
+      await successPayment(
+        userStorePublic.id,
+        idPaymentStore.subscriptionId,
+        paymentMethod,
+        idPaymentStore.amount
+      );
+      setTimeout(() => {
+        refreshNuxtData()
+      }, 3000);
+    
+      
+    }
+
+  } catch (error) {
+    console.error(error);
+    // Trate os erros adequadamente
   }
 };
 
 const copyToClipboard = () => {
-  navigator.clipboard.writeText(idPaymentStore.setDataReceived.qrCode);
-  showSnackbar("Pix copia e cola copiado com sucesso!", "success");
+  navigator.clipboard.writeText(idPaymentStore.dataReceived.generateArray.qrcode);
+  copiaCola.value.v = true;
 };
 </script>

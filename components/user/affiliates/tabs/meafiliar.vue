@@ -1,32 +1,23 @@
 <template>
   <v-app>
     <v-container>
-      <v-slide-group>
-        <v-slide-item v-for="(item, index) in favoriteItems" :key="index">
-          <v-col>
-            <v-card color="input_color" class="rounded-xl" width="205" @click="openDialog = true">
-              <v-img cover :src="item.imageUrl"></v-img>
-
-              <v-card-item>
-                <v-card-title>{{ item.title }}</v-card-title>
-
-                <v-card-subtitle>
-                  <span class="text-caption text-medium-emphesis me-1">{{ item.subtitle }}</span>
-                  <v-icon color="primary" icon="mdi-fire-circle" size="small"></v-icon>
-                </v-card-subtitle>
-              </v-card-item>
-
-              <v-card-text>
-                <v-row align="center" class="mx-0 ma-2">
-                  <div>
-                    {{ item.description }}
-                  </div>
-                </v-row>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-slide-item>
-      </v-slide-group>
+      <h2>Me afiliar</h2>
+      <p class="text-caption text-medium-emphasis">Para começar a se afiliar, primeiro digite o usuário da modelo.</p>
+      
+      <v-text-field class="mt-4" v-model="userSolicitado" label="Digite o usuário" bg-color="input_color" prepend-inner-icon="mdi-at"></v-text-field>
+      <v-alert
+        closable
+        v-model="infoMessage.v"
+        class="rounded-xl mb-4"
+        type="info"
+        variant="tonal"
+        :color="infoMessage.color"
+      >
+        <template v-slot:title>
+          <p class="text-caption">{{ infoMessage.text }}</p>
+        </template>
+      </v-alert>
+      <v-btn rounded="xl" color="primary" variant="tonal" min-height="40" block @click="solicitar">Solicitar</v-btn>
     </v-container>
     <v-dialog v-model="openDialog" width="600" persistent>
       <v-card class="rounded-xl elevation-6" flat>
@@ -70,13 +61,17 @@
               color="primary"
               prepend-inner-icon="mdi-at"
             ></v-text-field>
-            <v-text-field
+            <v-textarea
               label="Descrição"
               bg-color="input_color"
               class="mt-n2"
+              variant="solo"
+
+              rounded="xl"
+
               color="primary"
               prepend-inner-icon="mdi-text"
-            ></v-text-field>
+            ></v-textarea>
             <v-btn color="primary" class="text-capitalize" block>Enviar</v-btn>
           </v-form>
         </v-card-text>
@@ -86,59 +81,29 @@
 </template>
 
 <script setup>
+const infoMessage = ref({
+  v: false,
+  text: null,
+  color: null,
+});
 const openDialog = ref(false);
-</script>
-<script>
-export default {
-  data() {
-    return {
-      // Exemplo de dados para os v-cards
-      favoriteItems: [
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        {
-          imageUrl:
-            "https://uploads.metropoles.com/wp-content/uploads/2023/02/14093258/Mel-Maia-13.jpg",
-          title: "Mel Maia",
-          subtitle: "Em alta",
-          description: "Venham me conhecer meus amores <33",
-        },
-        // Adicione mais itens conforme necessário
-      ],
-    };
-  },
+const userSolicitado = ref(null);
+
+
+const solicitar = async () => {
+try{
+if(!userSolicitado.value){
+  infoMessage.value.text = "Preencha todos os campos";
+    infoMessage.value.v = true;
+    infoMessage.value.color = "red";
+    return;
+
+}
+openDialog.value = true;
+infoMessage.value.v = false;
+}catch(error){
+  console.error(error);
+}
 };
+
 </script>

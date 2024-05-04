@@ -55,7 +55,7 @@
       </v-row>
     </v-container>
     <v-dialog v-model="showDialog" persistent width="800" transition="dialog-top-transition">
-      <v-card class="rounded-xl" color="background">
+      <v-card class="rounded-xl overflow-y-hidden" color="background">
         <v-card-title>
           <v-btn
             @click="
@@ -67,7 +67,7 @@
             ><v-icon size="x-large">mdi-close</v-icon></v-btn
           ></v-card-title
         >
-        <v-card-text>
+        <v-card-text class="mt-n4">
           <v-row>
             <v-col cols="12">
               <v-stepper mobile class="elevation-0" flat bg-color="background" v-model="e1">
@@ -96,7 +96,7 @@
 
                       <v-row>
                         <v-col
-                          cols="auto"
+                          cols="6"
                           class="mx-auto"
                           v-for="plan in filteredPlans"
                           :key="plan.id"
@@ -106,7 +106,6 @@
                             :subtitle="selectedFilter === 'mensal' ? 'Mensal' : 'Anual'"
                             link
                             flat
-                            width="250"
                             variant="tonal"
                             color="primary"
                             @click="selectPlan(plan)"
@@ -133,31 +132,39 @@
                     </v-stepper-window-item>
 
                     <v-stepper-window-item value="2">
-                      <p class="text-center text-h6 mb-2">Forma de pagamento</p>
-                      <v-card
-                        prepend-icon="mdi-check"
-                        width="200"
-                        class="mx-auto rounded-xl elevation-0"
-                        variant="tonal"
-                        color="primary"
-                      >
-                        <template v-slot:title>
-                          <p class="text-subtitle-1">{{ paymentInfo?.title }}</p>
-                        </template>
-                        <template v-slot:prepend>
-                          <v-icon color="primary">mdi-check</v-icon>
-                        </template>
-                        <h3 class="ma-4 mt-n2">
-                          {{ paymentInfo?.subtitle }}
-                        </h3>
-                        <p class="text-caption text-medium-emphasis text-uppercase ma-4 mt-n4">
-                          {{ paymentInfo?.duration }}
-                        </p>
-                      </v-card>
-
-                      <v-card class="elevation-0 mx-auto rounded-xl mt-2" color="background" flat>
-                        <PaymentMethod />
-                      </v-card>
+                      <v-row>
+                        <v-col cols="12" md="4">
+                          <v-card
+                            prepend-icon="mdi-check"
+                            width="200"
+                            class="mx-auto rounded-xl elevation-0"
+                            variant="tonal"
+                            color="primary"
+                          >
+                            <template v-slot:title>
+                              <p class="text-subtitle-1">{{ paymentInfo?.title }}</p>
+                            </template>
+                            <template v-slot:prepend>
+                              <v-icon color="primary">mdi-check</v-icon>
+                            </template>
+                            <h3 class="ma-4 mt-n2">
+                              {{ paymentInfo?.subtitle }}
+                            </h3>
+                            <p class="text-caption text-medium-emphasis text-uppercase ma-4 mt-n4">
+                              {{ paymentInfo?.duration }}
+                            </p>
+                          </v-card>
+                        </v-col>
+                        <v-col cols="12" md="8">
+                          <v-card
+                            class="elevation-0 mx-auto rounded-xl mt-2"
+                            color="background"
+                            flat
+                          >
+                            <PaymentMethod />
+                          </v-card>
+                        </v-col>
+                      </v-row>
                     </v-stepper-window-item>
                   </v-stepper-window>
                 </template>
@@ -183,13 +190,10 @@ import { ref, computed } from "vue";
 import { idPayment } from "~/store/payment";
 const cookie = useCookie("token");
 const token = cookie.value;
-
 const idPaymentStore = idPayment();
-
 const payment = ref([]);
 const selectedFilter = ref("mensal");
 const infoPlanDialog = ref(false);
-const loading = ref(false);
 
 const showDialog = ref(false);
 const filteredPlans = computed(() => {
@@ -200,6 +204,8 @@ const filteredPlans = computed(() => {
 const plans = ref([
   {
     id: 1,
+    subscriptionIdAnual: 6,
+    subscriptionIdMensal: 5,
     name: "Básico",
     benefits: "Postagens limitadas (15)",
     description: "Ideal para iniciantes em criação",
@@ -208,6 +214,8 @@ const plans = ref([
   },
   {
     id: 2,
+    subscriptionIdAnual: 7,
+    subscriptionIdMensal: 8,
     name: "Premium",
     description: "Ideal para criadores consolidados",
     benefits:
@@ -260,24 +268,6 @@ const fetchData = async () => {
   }
 };
 
-const historyTable = ref(null);
-
-const historyPayment = async () => {
-  try {
-    const { data, error } = useFetch(
-      "https://api.seduvibe.com/subscription/list_all_subscriptions_creator",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    console.log(data.value);
-    historyTable.value = data.value;
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 const getSubscriptionTitle = (data) => {
   if (data.length > 0) {
@@ -299,24 +289,32 @@ const getSubscriptionSubtitle = (data) => {
 };
 
 const selectPlan = (plan) => {
+  // Define o plano selecionado
   selectedPlan.value = plan;
-  selectedPrice.value =
-    selectedFilter.value === "mensal"
-      ? plan.priceMensal.replace("R$ ", "")
-      : plan.priceAnual.replace("R$ ", "");
 
-  selectedPrice.value = selectedPrice.value.replace(",", ".");
+  // Define o preço selecionado com base na duração selecionada (mensal ou anual)
+  const selectedPriceValue = selectedFilter.value === "mensal" ? plan.priceMensal.replace("R$ ", "") : plan.priceAnual.replace("R$ ", "");
+  selectedPrice.value = selectedPriceValue.replace(",", ".");
 
+  // Define as informações de pagamento
   paymentInfo.value = {
     title: `Plano ${plan.name}`,
     subtitle: `Valor: ${selectedFilter.value === "mensal" ? plan.priceMensal : plan.priceAnual}`,
     duration: `${selectedFilter.value}`,
   };
+
+  // Define o subscriptionId com base na duração selecionada
+  const subscriptionId = selectedFilter.value === "mensal" ? plan.subscriptionIdMensal : plan.subscriptionIdAnual;
+  idPaymentStore.setSubsId(subscriptionId);
+
+  // Define a quantidade inicial como 1
   e1.value = 1;
-  idPaymentStore.setAmount = selectedPrice.value;
+
+  // Define o valor do plano no idPaymentStore
+  idPaymentStore.setAmount(selectedPrice.value);
 };
+
 fetchData();
-historyPayment();
 </script>
 <script>
 import PaymentMethod from "@/components/creator/paymentMethods/index.vue";

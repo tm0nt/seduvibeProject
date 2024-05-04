@@ -29,6 +29,16 @@
               <v-row v-if="item === 'PIX'">
                 <v-col class="ma-4">
                   <v-text-field
+                    label="CPF"
+                    type="number"
+                    hide-spin-buttons
+                    class="mb-n4"
+                    color="input_color"
+                    prepend-inner-icon="mdi-document"
+                    v-model="pix.amount"
+                    outlined
+                  ></v-text-field>
+                  <v-text-field
                     label="Valor"
                     type="number"
                     hide-spin-buttons
@@ -37,10 +47,21 @@
                     v-model="pix.amount"
                     outlined
                   ></v-text-field>
-                  <p class="text-caption mt-n2 text-medium-emphasis">
-                    Saques via pix são feitos para o cpf associado.
-                  </p>
+                  <v-alert
+        closable
+        v-model="infoMessage.v"
+        class="rounded-xl mb-4"
+        type="info"
+        variant="tonal"
+        :color="infoMessage.color"
+      >
+        <template v-slot:title>
+          <p class="text-caption">{{ infoMessage.text }}</p>
+        </template>
+      </v-alert>
                   <v-btn
+                    block
+                    variant="tonal"
                     color="primary"
                     @click="withdrawRequest(pix.id, pix.amount)"
                     class="text-capitalize mt-2"
@@ -99,6 +120,14 @@ export default {
 };
 </script>
 <script setup>
+
+const infoMessage = ref({
+  v: false,
+  text: null,
+  color: null,
+});
+
+
 const snackbar = ref({
   show: false,
   message: "",
@@ -122,6 +151,12 @@ const token = cookie.value;
 
 const withdrawRequest = async (id, amount) => {
   try {
+    if(!amount){
+      infoMessage.value.text = "Preencha todos os campos";
+    infoMessage.value.v = true;
+    infoMessage.value.color = "red";
+      return;
+    }
     const data = await $fetch("https://api.seduvibe.com/request_withdraw", {
       method: "POST",
       headers: {
@@ -133,8 +168,9 @@ const withdrawRequest = async (id, amount) => {
         amount: amount,
       }),
     });
-    console.log(data);
-    showSnackbar("Seu saque foi pedido e vai ser processado!", "success");
+    infoMessage.value.text = "Seu saque foi solicitado!";
+    infoMessage.value.v = true;
+    infoMessage.value.color = "success";
     pix.value.amount = null;
   } catch (error) {
     console.error("Erro durante a requisição:", error);

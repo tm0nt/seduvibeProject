@@ -63,11 +63,25 @@
             <v-card-actions>
               <v-row class="ma-2">
                 <v-col cols="6">
-                  <v-btn color="primary" variant="elevated" block min-height="40" @click="deletePost(post.id)">SIM</v-btn>
+                  <v-btn
+                    color="primary"
+                    variant="elevated"
+                    block
+                    min-height="40"
+                    @click="deletePost(post.id)"
+                    >SIM</v-btn
+                  >
                 </v-col>
                 <v-col cols="6">
-                  <v-btn @click="deleteDialog = false" block variant="tonal" min-height="40" color="primary">NÃO</v-btn>
-                  </v-col>
+                  <v-btn
+                    @click="deleteDialog = false"
+                    block
+                    variant="tonal"
+                    min-height="40"
+                    color="primary"
+                    >NÃO</v-btn
+                  >
+                </v-col>
               </v-row>
             </v-card-actions>
           </v-card>

@@ -76,7 +76,7 @@
         </VCol>
       </VRow>
     </VContainer>
-    <VDialog v-model="subscriptionList.visible" persistent width="600">
+    <VDialog v-model="subscriptionList.visible" persistent width="400">
       <v-card class="rounded-xl elevation-6" color="background" flat>
         <v-card-title>
           <v-icon size="small" @click="subscriptionList.visible = false">mdi-close</v-icon>
@@ -112,7 +112,7 @@
             >
               Selecione um período de assinatura acima
             </p>
-            <v-col cols="8">
+            <v-col cols="12">
               <v-card
                 link
                 class="rounded-xl mx-auto"
@@ -249,7 +249,7 @@ const guardContentRequest = async (creatorId) => {
 const noLogin = ref(false);
 
 const showBlockMessage = async () => {
-  showSnackbar("Você não possui acesso para ver este conteúdo!", "error");
+  showSnackbar("Você não possui acesso para ver este conteúdo!", "red");
 };
 const selectedPlan = ref(null);
 const paymentDialogVisible = ref(false);
@@ -297,7 +297,7 @@ const noLoginFetch = async () => {
 };
 
 watchEffect(() => {
-  idPaymentStore.setAmount = subscriptionValue.value;
+  idPaymentStore.setAmount(subscriptionValue.value);
 });
 noLoginFetch();
 fetchData(user.value);

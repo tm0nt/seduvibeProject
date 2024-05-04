@@ -82,23 +82,17 @@
     </v-col>
     <v-spacer></v-spacer>
 
-    <v-col cols="auto" class="text-caption mt-2 ml-n2">
+    <v-col cols="auto" class="text-caption mt-2">
       <v-btn
         fab
         :disabled="noLogin"
-        variant="text"
+        variant="tonal"
         color="primary"
         @click="toggleFavorite(profileFetch?.userData?.id)"
       >
-        <v-icon size="26">
+        <v-icon size="16">
           {{ isFavorite ? "mdi-heart" : "mdi-heart-outline" }}
-        </v-icon></v-btn
-      >
-      <v-btn fab variant="text" class="ml-n4" color="primary" :disabled="true"
-        ><v-icon size="26">mdi-chat</v-icon></v-btn
-      >
-      <v-btn fab variant="text" class="ml-n4" @click="donationVisible" color="primary"
-        ><v-icon size="26">mdi-gift</v-icon></v-btn
+        </v-icon>&nbsp;FAVORITAR</v-btn
       >
     </v-col>
   </v-row>
@@ -131,7 +125,7 @@
           {{ profileFetch?.userData?.name
           }}<v-icon size="25" class="ma-1" color="primary">mdi-check-decagram</v-icon>
         </h2>
-        <p class="text-center mt-n2 text-medium-emphasis text-caption">
+        <p class="text-center mt-1 text-medium-emphasis text-caption">
           {{ profileFetch?.userData?.bio }}
         </p>
       </div>
@@ -201,10 +195,8 @@ const toggleFavorite = async (id) => {
   try {
     if (isFavorite.value) {
       await removeFromFavorites(id);
-      showSnackbar("Removido dos favoritos!", "error");
     } else {
       await addToFavorites(id);
-      showSnackbar("Adicionado aos favoritos!", "success");
     }
     isFavorite.value = !isFavorite.value;
   } catch (error) {

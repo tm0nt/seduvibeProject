@@ -59,17 +59,17 @@
         Adicione o valor de 0 para <strong>NÃO</strong> adicionar um tipo de assinatura.
       </p>
       <v-alert
-            closable
-            v-model="infoMessage.v"
-            class="rounded-xl mb-4"
-            type="info"
-            variant="tonal"
-            :color="infoMessage.color"
-          >
-            <template v-slot:title>
-              <p class="text-caption">{{ infoMessage.text }}</p>
-            </template>
-          </v-alert>
+        closable
+        v-model="infoMessage.v"
+        class="rounded-xl mb-4"
+        type="info"
+        variant="tonal"
+        :color="infoMessage.color"
+      >
+        <template v-slot:title>
+          <p class="text-caption">{{ infoMessage.text }}</p>
+        </template>
+      </v-alert>
       <v-btn
         @click="validateAndSave"
         class="text-capitalize"
@@ -79,7 +79,6 @@
         :disabled="isSaveButtonDisabled"
         >Salvar</v-btn
       >
-     
     </v-form>
   </v-container>
 </template>
@@ -113,12 +112,17 @@ const infoMessage = ref({
 
 const isSaveButtonDisabled = ref(false);
 const saveSubscriptions = async () => {
-      if(!assinaturas.value.mensal.value || !assinaturas.value.trimestral.value || !assinaturas.value.anual.value || !assinaturas.value.semestral.value){
-      infoMessage.value.text = "Preencha todos os campos";
-      infoMessage.value.v = true;
-      infoMessage.value.color = "red";
-      return;
-    }
+  if (
+    !assinaturas.value.mensal.value ||
+    !assinaturas.value.trimestral.value ||
+    !assinaturas.value.anual.value ||
+    !assinaturas.value.semestral.value
+  ) {
+    infoMessage.value.text = "Preencha todos os campos";
+    infoMessage.value.v = true;
+    infoMessage.value.color = "red";
+    return;
+  }
   const subscriptionsData = {
     subscriptions: Object.keys(assinaturas.value).map((key) => ({
       value: assinaturas.value[key].value,
@@ -136,8 +140,9 @@ const saveSubscriptions = async () => {
     });
     console.log(data);
     infoMessage.value.text = "Suas assinaturas foram atualizadas!";
-      infoMessage.value.v = true;
-      infoMessage.value.color = "success";    fetchData();
+    infoMessage.value.v = true;
+    infoMessage.value.color = "success";
+    fetchData();
   } catch (error) {
     console.error("Erro durante a requisição:", error);
   }
@@ -177,8 +182,9 @@ const validateAndSave = async () => {
     saveSubscriptions();
   } else {
     infoMessage.value.text = "Aconteceu algum erro";
-      infoMessage.value.v = true;
-      infoMessage.value.color = "red";  }
+    infoMessage.value.v = true;
+    infoMessage.value.color = "red";
+  }
 };
 
 onMounted(async () => {

@@ -112,7 +112,7 @@
       </div>
     </v-col>
     <v-spacer></v-spacer>
-    <v-col cols="auto" class="text-caption mt-2">
+    <v-col cols="auto" class="text-caption mt-2 ml-12">
       <v-chip
         small
         class="text-capitalize"
@@ -121,8 +121,9 @@
         @click="showDialogSub = true"
       >
         <v-icon color="primary" size="26" class="ma-1">mdi-account</v-icon
-        >{{ userSubsCount?.totalUsers }} subs
+        >{{ userSubsCount?.totalUsers }}
       </v-chip>
+      
       <!---   <v-btn variant="text" class="ml-n2" color="primary"
         ><v-icon size="26">mdi-heart-outline</v-icon></v-btn
       > -->
@@ -252,24 +253,26 @@
       <v-card-title><v-icon @click="showDialogSub = false">mdi-close</v-icon></v-card-title>
       <v-card-text class="text-center">
         <h4 class="text-subtitle-1 mb-4 text-medium-emphasis">Lista de assinantes</h4>
-        <v-row>
-          <v-col cols="6" v-for="userName in userSubsCount.userNames">
-            <v-card
-              class="rounded-xl elevation-0"
-              width="auto"
-              flat
-              link
-              variant="tonal"
-              color="primary"
-              :title="userName"
-              prepend-icon="mdi-account"
-            ></v-card>
-          </v-col>
-        </v-row>
+        <template v-if="userSubsCount.userNames.length === 0">
+          <p class="error-message mt-4 text-caption">Não há assinantes para exibir.</p>
+        </template>
+        <template v-else>
+          <v-row>
+            <v-col cols="6" v-for="userName in userSubsCount.userNames">
+              <v-card
+                class="rounded-xl elevation-0"
+                width="auto"
+                flat
+                link
+                variant="tonal"
+                color="primary"
+                :title="userName"
+                prepend-icon="mdi-account"
+              ></v-card>
+            </v-col>
+          </v-row>
+        </template>
       </v-card-text>
-      <v-card-actions class="text-center">
-        <v-btn color="primary" @click="showDialogSub = false">OK</v-btn>
-      </v-card-actions>
     </v-card>
   </VDialog>
 

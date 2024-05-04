@@ -2,10 +2,10 @@
   <v-app>
     <v-container>
       <h2>Informações</h2>
-      <p class="text-caption text-medium-emphesis">Aqui estão suas informações</p>
+      <p class="text-caption text-medium-emphasis">Aqui estão suas informações</p>
       <v-row align="center" justify="center" class="mt-6">
         <v-col>
-          <v-form @submit.prevent="saveChanges">
+          <v-form>
             <v-text-field
               v-model="info.usuario"
               placeholder="Usuário"
@@ -22,15 +22,6 @@
               placeholder="Nome"
             ></v-text-field>
 
-            <v-text-field
-              v-model="info.cpf"
-              prepend-inner-icon="mdi-card-account-details"
-              placeholder="CPF"
-              maxlength="14"
-              bg-color="input_color"
-              type="number"
-              hide-spin-buttons
-            ></v-text-field>
 
             <v-text-field
               v-model="info.email"
@@ -52,14 +43,9 @@
             </v-text-field>
 
             <v-row>
-              <v-col cols="6">
-                <v-btn type="submit" block class="text-capitalize" min-height="40" color="primary"
-                  >Salvar alterações</v-btn
-                >
-              </v-col>
-              <v-col cols="6">
+              <v-col cols="12">
                 <v-btn
-                  variant="outlined"
+                  variant="tonal"
                   @click="changePassword = true"
                   block
                   color="primary"
@@ -126,7 +112,6 @@ const changePassword = ref(false);
 const info = ref({
   usuario: null,
   email: null,
-  cpf: null,
   phone: null,
   email_confirmed: 0,
 });
@@ -143,7 +128,6 @@ onMounted(async () => {
     info.value = {
       usuario: data.users[0]?.user,
       name: data.users[0]?.name,
-      cpf: data.data_personal[0].cpf,
       email: data.users[0]?.email,
       email_confirmed: data.users[0].emailConfirmed,
     };
@@ -167,23 +151,4 @@ const showSnackbar = (message, color) => {
   };
 };
 
-const saveChanges = async () => {
-  try {
-    const data = await $fetch("https://api.seduvibe.com/change_personal_data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        cpf: info.value.cpf,
-        phone: info.value.celular,
-      }),
-    });
-    showSnackbar("Dados atualizados!", "success");
-    console.log("Changes saved successfully:", data);
-  } catch (error) {
-    console.error("Error while saving changes:", error);
-  }
-};
 </script>

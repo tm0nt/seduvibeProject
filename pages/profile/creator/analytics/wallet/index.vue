@@ -88,6 +88,7 @@
                             :disabled="true"
                             :readonly="true"
                             type="number"
+                            v-model="cpf"
                             variant="solo"
                             hide-spin-buttons
                             bg-color="input_color"
@@ -96,13 +97,31 @@
                             label="Valor"
                             prepend-inner-icon="mdi-coin"
                             type="number"
+                            class="mt-n4"
                             hide-spin-buttons
                             variant="solo"
                             bg-color="input_color"
                             v-model="withdraw.pix.amount"
                           ></v-text-field>
+                          <v-alert
+                            type="info"
+                            rounded="xl"
+                            class="mt-2 mb-2"
+                            v-model="infoMessage.visible"
+                            variant="tonal"
+                            closable
+                            border="start"
+                            colapse
+                            :color="infoMessage.color"
+                            ><template v-slot:title>
+                              <p class="text-caption">{{ infoMessage.text }}</p>
+                            </template>
+                          </v-alert>
                           <v-btn
                             color="primary"
+                            block
+                            variant="tonal"
+                            min-height="40"
                             @click="withdrawRequest(withdraw.pix.id, withdraw.pix.amount)"
                             class="text-capitalize"
                             >Sacar</v-btn
@@ -174,15 +193,6 @@
       </v-col>
     </v-container>
     <v-toolbar flat height="50" color="rgb(0,0,0,0)"></v-toolbar>
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      rounded="pill"
-      :timeout="snackbar.timeout"
-      top
-    >
-      {{ snackbar.message }}
-    </v-snackbar>
   </v-app>
 </template>
 
@@ -190,12 +200,13 @@
 import { ref } from "vue";
 const cookie = useCookie("token");
 const token = cookie.value;
+const cpf = ref(null);
 
-const snackbar = ref({
-  show: false,
-  message: "",
-  color: "success",
-  timeout: 4000,
+const infoMessage = ref({
+  visibleError: false,
+  visible: false,
+  text: "",
+  color: "",
 });
 
 const formatRelativeTime = (dateString) => {
@@ -238,14 +249,6 @@ const getStatusLabel = (status) => {
   }
 };
 
-const showSnackbar = (message, color) => {
-  snackbar.value = {
-    show: true,
-    message,
-    color,
-    timeout: 6000,
-  };
-};
 const historyWithdraw = ref(null);
 const withdraw = ref({
   pix: { id: 1, amount: null },
@@ -273,7 +276,23 @@ const withdrawRequest = async (id, amount) => {
     const requestedAmount = amount;
 
     if (isNaN(availableBalance) || isNaN(requestedAmount) || requestedAmount > availableBalance) {
-      showSnackbar("Saldo insuficiente para realizar o saque", "error");
+      infoMessage.value.text = "Saldo insuficiente!";
+      infoMessage.value.visible = true;
+      infoMessage.value.color = "red";
+      return;
+    }
+
+    if (!cpf.value || !withdraw.value.amount) {
+      infoMessage.value.text = "Preencha todos os campos!";
+      infoMessage.value.visible = true;
+      infoMessage.value.color = "red";
+      return;
+    }
+
+    if (!cpf.value) {
+      infoMessage.value.text = "Cadastre seu cpf nas configurações de conta!";
+      infoMessage.value.visible = true;
+      infoMessage.value.color = "red";
       return;
     }
 
@@ -290,7 +309,9 @@ const withdrawRequest = async (id, amount) => {
     });
 
     withdraw.value.pix.amount = null;
-    showSnackbar("Seu saque foi pedido e vai ser processado!", "success");
+    infoMessage.value.text = "Pedido de saque concluído!";
+    infoMessage.value.visible = true;
+    infoMessage.value.color = "success";
     fetchBalance();
     fetchWithdraw();
   } catch (error) {

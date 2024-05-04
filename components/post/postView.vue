@@ -179,11 +179,11 @@
   <v-toolbar color="rgb(0,0,0,0)" height="100"></v-toolbar>
 </template>
 <script setup>
-import { useIdStorePublic } from "~/store/public";
+import { useIdStore } from "~/store/id";
 import { ref, computed } from "vue";
 
 const deleteDialogComment = ref(false);
-const idStore = useIdStorePublic();
+const idStore = useIdStore();
 const snackbar = ref({
   show: false,
   message: "",
@@ -360,8 +360,8 @@ const deleteComment = async (id) => {
 };
 
 //Fetch Post
-const fetchPosts = async (id) => {
-  const { data: postData } = await useFetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
+const fetchPosts = async () => {
+  const { data: postData } = await useFetch(`https://api.seduvibe.com/posts/list_post_subs_active`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -378,5 +378,5 @@ const isCurrentUserLiked = (likes) => {
   return likes.some((like) => like.userId === idStore.id);
 };
 
-fetchPosts(idCreatorPublic);
+fetchPosts();
 </script>

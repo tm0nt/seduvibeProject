@@ -1,19 +1,4 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-chip-group filter v-model="selectedFilter">
-      <v-chip :color="isSelectedFilter(0) ? 'purple' : ''" class="mr-2" :value="0"> Tudo </v-chip>
-      <v-chip :color="isSelectedFilter(1) ? 'purple' : ''" class="mr-2" :value="1">
-        Assinantes
-      </v-chip>
-      <v-chip :color="isSelectedFilter(2) ? 'purple' : ''" class="mr-2" :value="2">
-        Afiliados
-      </v-chip>
-      <v-chip :color="isSelectedFilter(3) ? 'purple' : ''" class="mr-2" :value="3">
-        Exclusivo
-      </v-chip>
-    </v-chip-group>
-  </v-row>
-
   <v-row v-if="hasFilteredPosts">
     <v-col v-for="n in filteredPosts" :key="n.id" class="d-flex child-flex" cols="4">
       <template v-if="isVideo(n.content)">

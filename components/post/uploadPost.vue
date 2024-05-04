@@ -41,7 +41,6 @@
             placeholder="Público"
             :items="[
               { key: 'Assinantes', value: 1 },
-              { key: 'Exclusivo', value: 3 },
             ]"
             item-title="key"
             item-value="value"

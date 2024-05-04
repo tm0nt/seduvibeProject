@@ -8,7 +8,7 @@
   <v-row align="start" no-gutters>
     <v-col cols="12">
       <div class="text-center mt-n15">
-        <v-menu width="250" height="250">
+        <v-menu width="250" height="200">
           <template v-slot:activator="{ props }">
             <VAvatar
               style="border: 4px solid background"
@@ -31,16 +31,6 @@
                   @click="toggleTheme"
                 >
                   Trocar tema
-                </v-btn>
-                <v-divider class="my-3"></v-divider>
-                <v-btn
-                  @click="toCreator = true"
-                  rounded
-                  append-icon="mdi-swap-horizontal"
-                  class="text-capitalize"
-                  variant="text"
-                >
-                  Quero ser criador
                 </v-btn>
                 <v-divider class="my-3"></v-divider>
 

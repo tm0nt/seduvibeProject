@@ -56,12 +56,13 @@ const user = ref(route.params.user);
 const donationValue = ref(null);
 
 watch(donationValue, (newValue) => {
-  idPaymentStore.setAmount = newValue;
+  idPaymentStore.setAmount(newValue)
+  console.log(newValue)
 });
 
 const fetchData = async () => {
   try {
-    idPaymentStore.setCpf = null;
+    idPaymentStore.setCpf(null);
     const { data, error } = await useFetch(`https://api.seduvibe.com/list_creator/${user.value}`, {
       method: "GET",
       headers: {

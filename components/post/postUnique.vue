@@ -328,7 +328,7 @@ const deleteComment = async (id) => {
 };
 
 //Fetch Post
-const fetchPosts = async (idStore) => {
+const fetchPosts = async () => {
   const route = useRoute();
   const id = ref(route.params.slug);
 
