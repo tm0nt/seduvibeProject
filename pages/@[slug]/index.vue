@@ -306,7 +306,7 @@ fetchData(user.value);
 <script>
 import paymentMethod from "../../components/creator/paymentMethods/index.vue";
 import headerCreator from "./headerCreator.vue";
-import navbarView from "../../components/navbar";
+import navbarView from "../../components/navbar_user";
 import Publicacoes from "../../components/post/post.vue";
 import Galeria from "../../components/post/gallery.vue";
 import Mimos from "../components/creator/public/mimos.vue";

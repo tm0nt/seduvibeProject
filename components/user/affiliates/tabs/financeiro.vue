@@ -1,5 +1,5 @@
 <template>
-  <v-card color="input_color" rounded="xl" class="mt-4 d-flex justify-center align-center" flat>
+  <v-card color="background" rounded="xl" elevation="6" class="mt-4 d-flex justify-center align-center" flat>
     <v-row class="ma-2" align="center" justify="center">
       <v-col cols="12" md="6" lg="6">
         <p class="text-caption text-medium-emphasis">Saldo disponível</p>
@@ -11,7 +11,7 @@
       </v-col>
     </v-row>
   </v-card>
-  <v-card class="rounded-xl mt-4" color="input_color" flat>
+  <v-card class="rounded-xl mt-4" elevation="6" color="background" flat>
     <v-container class="ma-2">
       <h4>Pedir um saque</h4>
       <p class="text-caption text-medium-emphasis">
@@ -25,24 +25,26 @@
       <v-window v-model="tab">
         <v-window-item v-for="item in items" :key="item" :value="item">
           <v-form>
-            <v-card color="input_color" rounded="xl" flat>
+            <v-card color="background" rounded="xl" flat>
               <v-row v-if="item === 'PIX'">
                 <v-col class="ma-4">
                   <v-text-field
                     label="CPF"
                     type="number"
+                    bg-color="input_color"
                     hide-spin-buttons
                     class="mb-n4"
-                    color="input_color"
+                    color="primary"
                     prepend-inner-icon="mdi-document"
                     v-model="pix.amount"
                     outlined
                   ></v-text-field>
                   <v-text-field
                     label="Valor"
+                    bg-color="input_color"
                     type="number"
                     hide-spin-buttons
-                    color="input_color"
+                    color="primary"
                     prepend-inner-icon="mdi-coin"
                     v-model="pix.amount"
                     outlined

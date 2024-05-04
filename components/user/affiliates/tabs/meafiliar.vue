@@ -34,35 +34,23 @@
             color="primary"
           ></v-card>
           <v-card
-            prepend-avatar="https://s2.glbimg.com/NOeJtcflf8-o3Ik_GL7XmQ5e9UI=/smart/e.glbimg.com/og/ed/f/original/2021/11/25/melissamelmaia-260929933_273406538180340_4943085334324297278_n.jpg"
-            class="mx-auto"
-            max-width="500"
-            subtitle="@melmaia"
-            title="Mel Maia"
+          elevation="0"
+          flat
+            class="mx-auto mb-4"
           >
-            <v-card-text>
-              <v-row>
-                <v-col cols="auto">
-                  <v-chip size="small" variant="outlined" color="primary">589 postagens</v-chip>
-                </v-col>
-                <v-col cols="auto">
-                  <v-chip size="small" variant="outlined" color="primary">Valor R$ 10,00</v-chip>
-                </v-col>
-                <v-col cols="auto">
-                  <v-chip size="small" variant="outlined" color="primary">Comissão 50%</v-chip>
-                </v-col>
-              </v-row>
-            </v-card-text>
+          <p>Você está enviando uma solicitação para: @{{ userSolicitado }}</p>
           </v-card>
           <v-form>
             <v-text-field
               label="Usuário para checkout"
+              v-model="userFake"
               bg-color="input_color"
               color="primary"
               prepend-inner-icon="mdi-at"
             ></v-text-field>
             <v-textarea
               label="Descrição"
+              v-model="description"
               bg-color="input_color"
               class="mt-n2"
               variant="solo"
@@ -72,7 +60,19 @@
               color="primary"
               prepend-inner-icon="mdi-text"
             ></v-textarea>
-            <v-btn color="primary" class="text-capitalize" block>Enviar</v-btn>
+            <v-alert
+        closable
+        v-model="infoMessageEnviar.v"
+        class="rounded-xl mb-4"
+        type="info"
+        variant="tonal"
+        :color="infoMessageEnviar.color"
+      >
+        <template v-slot:title>
+          <p class="text-caption">{{ infoMessageEnviar.text }}</p>
+        </template>
+      </v-alert>
+            <v-btn color="primary" class="text-capitalize" @click="enviar" block>Enviar</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
@@ -86,9 +86,52 @@ const infoMessage = ref({
   text: null,
   color: null,
 });
+const infoMessageEnviar = ref({
+  v: false,
+  text: null,
+  color: null,
+});
+const cookie = useCookie("token");
+const token = cookie.value
+
+
 const openDialog = ref(false);
 const userSolicitado = ref(null);
+const userFake = ref(null)
+const description = ref(null)
 
+const enviar = async () => {
+  try{
+    if(!userFake.value || !description.value){
+      infoMessageEnviar.value.v = true;
+      infoMessageEnviar.value.text = "Preencha todos os campos!";
+      infoMessageEnviar.value.color = "red";
+      return;
+    }
+    const data = await $fetch(`https://api.seduvibe.com/afiliates/user-affiliate-request/${userSolicitado.value}`,{
+      headers:{
+        Authorization: `Bearer ${token}`
+      },
+      method:"post",
+      body: JSON.stringify({
+        description: description.value,
+        userFake: userFake.value
+      })
+    })
+    if(data){
+      openDialog.value = false
+      infoMessage.value.v = true;
+      infoMessage.value.text = "Solicitação enviada com sucesso!";
+      infoMessage.value.color = "success";
+    }
+  }catch(error){
+    openDialog.value = false
+    infoMessage.value.v = true;
+      infoMessage.value.text = error.data.error;
+      infoMessage.value.color = "red";
+    console.error(error);
+  }
+};
 
 const solicitar = async () => {
 try{
