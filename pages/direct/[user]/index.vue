@@ -56,8 +56,7 @@ const user = ref(route.params.user);
 const donationValue = ref(null);
 
 watch(donationValue, (newValue) => {
-  idPaymentStore.setAmount(newValue)
-  console.log(newValue)
+  idPaymentStore.setAmount(donationValue.value)
 });
 
 const fetchData = async () => {
