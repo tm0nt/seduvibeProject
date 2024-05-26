@@ -73,6 +73,9 @@
 import lineChart from "../../../../../components/creator/analytics/charts/line.vue";
 import areaChart from "../../../../../components/creator/analytics/charts/area.vue";
 
+definePageMeta({
+  middleware: ["profile"],
+});
 const cookie = useCookie("token");
 const token = cookie.value;
 const metricFetch = ref({

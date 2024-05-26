@@ -134,7 +134,9 @@ import { ref } from "vue";
 const cookie = useCookie("token");
 const token = cookie.value;
 const analyticsFetch = ref(null);
-
+definePageMeta({
+  middleware: ["profile"],
+});
 const fetchData = async () => {
   try {
     const data = await $fetch("https://api.seduvibe.com/analytics", {

@@ -254,6 +254,10 @@ const withdraw = ref({
   pix: { id: 1, amount: null },
 });
 
+definePageMeta({
+  middleware: ["profile"],
+});
+
 const headers = [
   {
     title: "Identificador",

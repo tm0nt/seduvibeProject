@@ -71,6 +71,11 @@ import Afiliados from "@/components/creator/config/tabs/afiliados.vue";
 import Metas from "@/components/creator/config/tabs/metas.vue";
 import PaymentDirect from "@/components/creator/config/tabs/direct.vue";
 
+definePageMeta({
+  middleware: ["profile"],
+});
+
+
 const items = ref([
   { text: "Redes sociais", icon: "mdi-web", component: MeuPerfil },
   { text: "Informações pessoais", icon: "mdi-account-details", component: Info },

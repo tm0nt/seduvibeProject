@@ -129,6 +129,11 @@ const coin = ref({
   totalEarnings: null,
   rankingAffiliate: null,
 });
+
+definePageMeta({
+  middleware: ["profile"],
+});
+
 const fetchAffiliate = async () => {
   try {
     const data = await $fetch("https://api.seduvibe.com/analytics", {
