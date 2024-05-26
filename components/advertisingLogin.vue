@@ -6,10 +6,9 @@
           <NuxtImg
             format="webp"
             :src="item.imgSrc"
-            cover
             loading="lazy"
             preload
-            class="h-100 rounded-xl d-flex justify-center"
+            class="w-50 rounded-xl d-flex my-15 mx-auto"
           >
             <div class="ml-4 mt-4">
               <NuxtLink to="/@user"
@@ -28,14 +27,9 @@
 <script setup>
 const items = [
   {
-    name: "Martina Oliveira",
-    imgSrc:
-      "https://blogger.googleusercontent.com/img/a/AVvXsEjueTxJ1RbBynXapPXk-Xhjl5VO-1m_QAb1YL3ie5qoeuUe4WoaYdv8RNDTRRugPWbwShuallxTNXpK3b9Jsh1x0rtmmfCRVfREW1aXz-tUkO5H1K2Dc85kcLf6IzB6BpBQHYZUEeVB3ZvDvxyVP15otGe2X1eeZSWgMDNRW-A2BeCCX7BJBjGduFdrOYIk",
-  },
-  {
     name: "Mel Maia",
     imgSrc:
-      "https://s2.glbimg.com/AfFpPzL8spkb7_IR21nsdbf80FQ=/e.glbimg.com/og/ed/f/original/2020/02/10/mel-maia.jpg",
+      "./adv.png",
   },
 ];
 </script>

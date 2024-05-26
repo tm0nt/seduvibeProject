@@ -11,6 +11,7 @@
                 alt="Plataforma para vender conteúdo exclusivo"
                 class="mx-auto mb-10 text-center"
                 format="webp"
+                
                 loading="lazy"
                 preload
               ></VImg>
