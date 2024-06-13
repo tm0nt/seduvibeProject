@@ -159,7 +159,7 @@ const headers = [
 const fetchAffiliates = async () => {
   try {
     const data = await $fetch(
-      "https://api.seduvibe.com/afiliates/list-aproved-affiliate-requests",
+      "https://api.seduvibe.com.br/afiliates/list-aproved-affiliate-requests",
       {
         method: "GET",
         headers: {
@@ -177,7 +177,7 @@ const fetchAffiliates = async () => {
 
 const deleteAffiliateRequest = async (item) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/afiliates/remove-affiliate/${item}`, {
+    const data = await $fetch(`https://api.seduvibe.com.br/afiliates/remove-affiliate/${item}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

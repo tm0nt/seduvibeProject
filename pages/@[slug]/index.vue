@@ -231,7 +231,7 @@ const token = cookie.value;
 const guardContentRequest = async (creatorId) => {
   try {
     const data = await $fetch(
-      `https://api.seduvibe.com/subscription/subs_users_active_unique/${creatorId}`,
+      `https://api.seduvibe.com.br/subscription/subs_users_active_unique/${creatorId}`,
       {
         method: "GET",
         headers: {
@@ -255,7 +255,7 @@ const selectedPlan = ref(null);
 const paymentDialogVisible = ref(false);
 const fetchData = async (userName) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/list_creator/${userName}`, {
+    const data = await $fetch(`https://api.seduvibe.com.br/list_creator/${userName}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

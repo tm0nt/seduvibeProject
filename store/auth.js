@@ -16,7 +16,7 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async authenticateUser({ email, password }) {
       try {
-        const { data, error } = await useFetch("https://api.seduvibe.com/login", {
+        const { data, error } = await useFetch("https://api.seduvibe.com.br/login", {
           method: "post",
           headers: { "Content-Type": "application/json" },
           body: {

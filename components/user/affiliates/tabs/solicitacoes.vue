@@ -55,7 +55,7 @@ const affiliateRequests = ref(null);
 
 onMounted(async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/afiliates/user-affiliate-requests", {
+    const data = await $fetch("https://api.seduvibe.com.br/afiliates/user-affiliate-requests", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

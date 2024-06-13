@@ -62,7 +62,7 @@ watch(donationValue, (newValue) => {
 const fetchData = async () => {
   try {
     idPaymentStore.setCpf(null);
-    const { data, error } = await useFetch(`https://api.seduvibe.com/list_creator/${user.value}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com.br/list_creator/${user.value}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -9,7 +9,7 @@ try {
   const token = cookie.value;
 
   const { data: creator } = await useAsyncData("id", () =>
-    $fetch("https://api.seduvibe.com", {
+    $fetch("https://api.seduvibe.com.br", {
       headers: { Authorization: `Bearer ${token}` },
     })
   );

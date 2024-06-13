@@ -295,7 +295,7 @@ const handleFileSubmit = async () => {
       },
     };
 
-    const { data, error } = await useFetch("https://api.seduvibe.com/posts/create_post", options);
+    const { data, error } = await useFetch("https://api.seduvibe.com.br/posts/create_post", options);
 
     loading.value = false;
     if (data.value) {

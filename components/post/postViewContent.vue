@@ -87,7 +87,7 @@ const {
   pending,
   error,
   refresh,
-} = await useFetch("https://api.seduvibe.com/posts/list_post_subs_active", {
+} = await useFetch("https://api.seduvibe.com.br/posts/list_post_subs_active", {
   headers: {
     Authorization: `Bearer ${token}`,
   },

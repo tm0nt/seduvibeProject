@@ -128,7 +128,7 @@ const formatarMoeda = (valor) => {
 
 const deleteObjective = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/delete_objective/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com.br/delete_objective/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -166,7 +166,7 @@ const saveData = async () => {
   }
 
   try {
-    const response = await fetch("https://api.seduvibe.com/create_objective", {
+    const response = await fetch("https://api.seduvibe.com.br/create_objective", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -190,7 +190,7 @@ const saveData = async () => {
 
 const fetchMetaData = async () => {
   try {
-    const { data: metaData } = await useFetch("https://api.seduvibe.com/list_objectives", {
+    const { data: metaData } = await useFetch("https://api.seduvibe.com.br/list_objectives", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -59,7 +59,7 @@ const idStore = useIdStorePublic();
 const creatorIdPublic = idStore.id;
 const selectedFilter = ref(0);
 const { data: post } = await useFetch(
-  `https://api.seduvibe.com/posts/list_all/${creatorIdPublic}`,
+  `https://api.seduvibe.com.br/posts/list_all/${creatorIdPublic}`,
   {
     headers: {
       Authorization: `Bearer ${token}`,

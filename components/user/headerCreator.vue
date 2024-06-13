@@ -141,7 +141,7 @@ const logout = () => {
 
 const changeCreatorId = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/updateCreator", {
+    const data = await $fetch("https://api.seduvibe.com.br/updateCreator", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -162,7 +162,7 @@ const changeCreatorId = async () => {
 
 const fetchDataFromAPI = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/list_users", {
+    const data = await $fetch("https://api.seduvibe.com.br/list_users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -77,7 +77,7 @@ const headers = [
 
 const fetchWithdraw = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/withdraw_list", {
+    const data = await $fetch("https://api.seduvibe.com.br/withdraw_list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

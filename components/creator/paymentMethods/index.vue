@@ -243,7 +243,7 @@ const makePaymentPix = async (id) => {
       data,
       pending: waiting,
       error,
-    } = await useFetch("https://payment.seduvibe.com/create-pix", {
+    } = await useFetch("https://payment.seduvibe.com.br/create-pix", {
       method: "POST",
       body: JSON.stringify(requestBody),
     });
@@ -265,7 +265,7 @@ const makePaymentPix = async (id) => {
 
 const registerTxid = async (subsId) => {
   try{
-    const data = await $fetch("https://api.seduvibe.com/gateway/txid", {
+    const data = await $fetch("https://api.seduvibe.com.br/gateway/txid", {
       method: "post",
       body: JSON.stringify({
         txid: idPaymentStore.dataReceived.txid,
@@ -305,17 +305,17 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
       }
     };
     if (subscriptionId >= 1 && subscriptionId <= 4) {
-      await makeSubscriptionRequest(`https://api.seduvibe.com/subscription/user_sub/${id}`, {
+      await makeSubscriptionRequest(`https://api.seduvibe.com.br/subscription/user_sub/${id}`, {
         subscriptionId,
         paymentMethodId,
       });
     } else if (subscriptionId >= 5 && subscriptionId <= 8) {
-      await makeSubscriptionRequest(`https://api.seduvibe.com/subscription/creator_sub`, {
+      await makeSubscriptionRequest(`https://api.seduvibe.com.br/subscription/creator_sub`, {
         subscriptionId,
         paymentMethodId,
       });
     } else {
-      await makeSubscriptionRequest(`https://api.seduvibe.com/donate/${id}`, {
+      await makeSubscriptionRequest(`https://api.seduvibe.com.br/donate/${id}`, {
         amount,
       });
     }
@@ -328,7 +328,7 @@ const successPayment = async (id, subscriptionId, paymentMethodId, amount) => {
 
 const checkPayment = async (paymentId, paymentMethod) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/gateway/check-status/${paymentId}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com.br/gateway/check-status/${paymentId}`, {
       method: "GET",
     });
     console.log(error.value);

@@ -43,7 +43,7 @@ const cookie = useCookie("token");
 const token = cookie.value;
 
 const selectedFilter = ref(0);
-const { data: post } = await useFetch(`https://api.seduvibe.com/posts/list_all/${idUser}`, {
+const { data: post } = await useFetch(`https://api.seduvibe.com.br/posts/list_all/${idUser}`, {
   headers: {
     Authorization: `Bearer ${token}`,
   },

@@ -122,7 +122,7 @@ const setAffiliateData = async () => {
     if (valorAssinatura.value) {
       const cleanedValue = valorAssinatura.value.replace(/[^\d.,]/g, "");
       const { data, error } = await useFetch(
-        "https://api.seduvibe.com/afiliates/set-affiliate-product-value",
+        "https://api.seduvibe.com.br/afiliates/set-affiliate-product-value",
         {
           method: "PUT",
           headers: {
@@ -139,7 +139,7 @@ const setAffiliateData = async () => {
     }
     if (porcentagemComissao.value) {
       const { data } = await useFetch(
-        "https://api.seduvibe.com/afiliates/set-my-affiliate-commission",
+        "https://api.seduvibe.com.br/afiliates/set-my-affiliate-commission",
         {
           method: "PUT",
           headers: {
@@ -162,7 +162,7 @@ const setAffiliateData = async () => {
 const fetchData = async () => {
   try {
     const { data, error } = await useFetch(
-      "https://api.seduvibe.com/afiliates/affiliate-creator-data",
+      "https://api.seduvibe.com.br/afiliates/affiliate-creator-data",
       {
         method: "GET",
         headers: {

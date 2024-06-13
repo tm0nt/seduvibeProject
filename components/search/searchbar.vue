@@ -87,7 +87,7 @@ const filteredUsers = ref([]);
 
 const fetchUsers = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/find_creator");
+    const data = await $fetch("https://api.seduvibe.com.br/find_creator");
     users.value = data.users;
     filterUsers();
   } catch (error) {

@@ -398,7 +398,7 @@ const userSubsCount = ref(null);
 
 const countUserSubs = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/subscription/subs_users_count/", {
+    const data = await $fetch("https://api.seduvibe.com.br/subscription/subs_users_count/", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -414,7 +414,7 @@ const countUserSubs = async () => {
 
 const changeDescription = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/change_user_data", {
+    const data = await $fetch("https://api.seduvibe.com.br/change_user_data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -470,7 +470,7 @@ async function handleFileSubmitCover() {
       Authorization: `Bearer ${token}`,
     },
   };
-  const data = await $fetch("https://api.seduvibe.com/uploadCover", options);
+  const data = await $fetch("https://api.seduvibe.com.br/uploadCover", options);
 
   if (data) {
     changeInfoData.value.cover = false;
@@ -497,7 +497,7 @@ async function handleFileSubmitPicture() {
       Authorization: `Bearer ${token}`,
     },
   };
-  const data = await $fetch("https://api.seduvibe.com/uploadPicture", options);
+  const data = await $fetch("https://api.seduvibe.com.br/uploadPicture", options);
 
   if (data) {
     changeInfoData.value.profile = false;
@@ -516,7 +516,7 @@ const copyToClipboard = () => {
 };
 const fetchDataFromAPI = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/creator_list", {
+    const data = await $fetch("https://api.seduvibe.com.br/creator_list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

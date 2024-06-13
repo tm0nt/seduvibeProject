@@ -144,7 +144,7 @@ const DonationMeta = (item) => {
 const fetchData = async () => {
   try {
     const { data: metaData, error } = await useFetch(
-      `https://api.seduvibe.com/list_creator/${user._rawValue}`,
+      `https://api.seduvibe.com.br/list_creator/${user._rawValue}`,
       {
         method: "GET",
         headers: {

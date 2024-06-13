@@ -130,7 +130,7 @@ const saveSubscriptions = async () => {
     })),
   };
   try {
-    const data = await $fetch("https://api.seduvibe.com/subscription/choose_subscriptions", {
+    const data = await $fetch("https://api.seduvibe.com.br/subscription/choose_subscriptions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -150,7 +150,7 @@ const saveSubscriptions = async () => {
 
 const fetchData = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/subscription/list_values_subs", {
+    const data = await $fetch("https://api.seduvibe.com.br/subscription/list_values_subs", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (token) {
     try {
-      const data = await $fetch("https://api.seduvibe.com/", {
+      const data = await $fetch("https://api.seduvibe.com.br/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

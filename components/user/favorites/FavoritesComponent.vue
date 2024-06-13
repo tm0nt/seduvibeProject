@@ -52,7 +52,7 @@ const favorites = ref(null);
 
 onMounted(async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/favorites", {
+    const data = await $fetch("https://api.seduvibe.com.br/favorites", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

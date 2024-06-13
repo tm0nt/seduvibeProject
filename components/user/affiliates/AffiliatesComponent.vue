@@ -46,7 +46,7 @@ const subscriptionCreator = ref(null);
 onMounted(async () => {
   try {
     const data = await $fetch(
-      "https://api.seduvibe.com/subscription/list_subscriptions_users_active",
+      "https://api.seduvibe.com.br/subscription/list_subscriptions_users_active",
       {
         method: "GET",
         headers: {

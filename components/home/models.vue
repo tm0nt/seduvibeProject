@@ -56,11 +56,11 @@ const selectedTribeIds = ref([]);
 
 const getData = async () => {
   try {
-    const creators = await $fetch("https://api.seduvibe.com/find_creator");
+    const creators = await $fetch("https://api.seduvibe.com.br/find_creator");
     seduvibe.value = creators.users || [];
     console.log(creators._rawValue);
 
-    const tribesData = await $fetch("https://api.seduvibe.com/list_tribos");
+    const tribesData = await $fetch("https://api.seduvibe.com.br/list_tribos");
     tribes.value = tribesData.tribos || [];
 
     selectedTribeIds.value = tribes.value.map((tribe) => tribe.id);
@@ -81,8 +81,8 @@ const filterUsers = async (ids) => {
   try {
     const url =
       ids.length === 0
-        ? "https://api.seduvibe.com/find_creator"
-        : "https://api.seduvibe.com/filter";
+        ? "https://api.seduvibe.com.br/find_creator"
+        : "https://api.seduvibe.com.br/filter";
     const filteredUsers = await $fetch(url, {
       method: "POST",
       body: JSON.stringify({ tribeIds: ids }),

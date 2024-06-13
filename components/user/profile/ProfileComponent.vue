@@ -118,7 +118,7 @@ const info = ref({
 
 onMounted(async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/list_users", {
+    const data = await $fetch("https://api.seduvibe.com.br/list_users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

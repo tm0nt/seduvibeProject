@@ -181,7 +181,7 @@ const formattedDataNascimento = (data) => {
 
 onMounted(async () => {
   try {
-    const { data: fetchData } = await useFetch("https://api.seduvibe.com/creator_list", {
+    const { data: fetchData } = await useFetch("https://api.seduvibe.com.br/creator_list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -218,7 +218,7 @@ const submitForm = async () => {
       infoMessage.value.color = "red";
       return;
     }
-    const { data: saveData } = await useFetch("https://api.seduvibe.com/change_personal_data", {
+    const { data: saveData } = await useFetch("https://api.seduvibe.com.br/change_personal_data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

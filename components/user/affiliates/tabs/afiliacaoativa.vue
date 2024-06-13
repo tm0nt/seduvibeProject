@@ -57,7 +57,7 @@ const affiliateActive = ref([]);
 onMounted(async () => {
   try {
     const data = await $fetch(
-      "https://api.seduvibe.com/afiliates/user-affiliate-requests-approved",
+      "https://api.seduvibe.com.br/afiliates/user-affiliate-requests-approved",
       {
         method: "GET",
         headers: {

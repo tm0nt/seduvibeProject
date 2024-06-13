@@ -16,7 +16,7 @@ export const useRegisterStore = defineStore("register", {
   actions: {
     async registerUser({ user, name, email, password, creator }) {
       try {
-        const { data, error, loading } = await useFetch("https://api.seduvibe.com/register", {
+        const { data, error, loading } = await useFetch("https://api.seduvibe.com.br/register", {
           method: "post",
           headers: { "Content-Type": "application/json" },
           body: {

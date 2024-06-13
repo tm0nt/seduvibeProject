@@ -108,7 +108,7 @@ const enviar = async () => {
       infoMessageEnviar.value.color = "red";
       return;
     }
-    const data = await $fetch(`https://api.seduvibe.com/afiliates/user-affiliate-request/${userSolicitado.value}`,{
+    const data = await $fetch(`https://api.seduvibe.com.br/afiliates/user-affiliate-request/${userSolicitado.value}`,{
       headers:{
         Authorization: `Bearer ${token}`
       },

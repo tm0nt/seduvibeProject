@@ -160,7 +160,7 @@ const wishlist = ref(null);
 
 const fetchCreatorList = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/creator_list", {
+    const data = await $fetch("https://api.seduvibe.com.br/creator_list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -197,7 +197,7 @@ const saveChanges = async () => {
       infoMessage.value.color = "red";
       return;
     }
-    const data = await $fetch("https://api.seduvibe.com/change_social_media", {
+    const data = await $fetch("https://api.seduvibe.com.br/change_social_media", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

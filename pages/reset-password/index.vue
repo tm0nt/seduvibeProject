@@ -83,7 +83,7 @@ const submit = async () => {
 
 const sendMail = async () => {
   try {
-    const { data } = await useFetch("https://api.seduvibe.com/forgot_password", {
+    const { data } = await useFetch("https://api.seduvibe.com.br/forgot_password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

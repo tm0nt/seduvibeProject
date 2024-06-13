@@ -163,7 +163,7 @@ const openDeleteDialog = () => {
 
 const deleteAccount = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/delete_banking_account", {
+    const data = await $fetch("https://api.seduvibe.com.br/delete_banking_account", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -202,7 +202,7 @@ const registrarConta = async () => {
       infoMessage.value.color = "red";
       return;
     }
-    const data = await $fetch("https://api.seduvibe.com/register_banking_data", {
+    const data = await $fetch("https://api.seduvibe.com.br/register_banking_data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -222,7 +222,7 @@ const registrarConta = async () => {
 };
 const fetchData = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/get_banking_data", {
+    const data = await $fetch("https://api.seduvibe.com.br/get_banking_data", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -239,7 +239,7 @@ const fetchData = async () => {
 
 const downloadBanking = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/show-bank", {
+    const data = await $fetch("https://api.seduvibe.com.br/show-bank", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

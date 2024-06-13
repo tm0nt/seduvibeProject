@@ -54,7 +54,7 @@ onMounted(async () => {
 
 const addTribos = async (addedTribosIds) => {
   try {
-    const { data, error } = await useFetch("https://api.seduvibe.com/choose_tribos", {
+    const { data, error } = await useFetch("https://api.seduvibe.com.br/choose_tribos", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +74,7 @@ const addTribos = async (addedTribosIds) => {
 
 const listTribosAvaliables = async () => {
   try {
-    const { data: fetchData } = await useFetch("https://api.seduvibe.com/list_tribos", {
+    const { data: fetchData } = await useFetch("https://api.seduvibe.com.br/list_tribos", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const listTribosAvaliables = async () => {
 
 const listMyTribes = async () => {
   try {
-    const { data } = await useFetch("https://api.seduvibe.com/list_user_tribos/", {
+    const { data } = await useFetch("https://api.seduvibe.com.br/list_user_tribos/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -109,7 +109,7 @@ const tribosNames = computed(() => listTribos.value.map((tribo) => tribo.name));
 
 const removeTribos = async (triboId) => {
   try {
-    const { data } = await useFetch(`https://api.seduvibe.com/delete_user_tribos/${triboId}`, {
+    const { data } = await useFetch(`https://api.seduvibe.com.br/delete_user_tribos/${triboId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

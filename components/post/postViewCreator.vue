@@ -291,7 +291,7 @@ const videoPosts = ref(0);
 
 // Share
 const sharePublication = (id) => {
-  navigator.clipboard.writeText(`https://seduvibe.com/post/${id}`);
+  navigator.clipboard.writeText(`https://seduvibe.com.br/post/${id}`);
   showSnackbar("Publicação copiada com sucesso!", "success");
 };
 
@@ -335,7 +335,7 @@ const newComment = async (id) => {
   });
   try {
     console.log(comment_payload);
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/create_comment`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com.br/posts/create_comment`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -354,7 +354,7 @@ const newComment = async (id) => {
 
 const newLike = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/like/${id}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com.br/posts/like/${id}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -372,7 +372,7 @@ const newLike = async (id) => {
 // Delete
 const deleteLike = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/unlike/${id}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com.br/posts/unlike/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -386,7 +386,7 @@ const deleteLike = async (id) => {
 };
 const deletePost = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/delete_post/${id}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com.br/posts/delete_post/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -402,7 +402,7 @@ const deletePost = async (id) => {
 };
 const deleteComment = async (id) => {
   try {
-    const { data, error } = await useFetch(`https://api.seduvibe.com/posts/delete_comment/${id}`, {
+    const { data, error } = await useFetch(`https://api.seduvibe.com.br/posts/delete_comment/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -418,7 +418,7 @@ const deleteComment = async (id) => {
 };
 //Fetch Post
 const fetchPosts = async (id) => {
-  const { data: postData } = await useFetch(`https://api.seduvibe.com/posts/list_all/${id}`, {
+  const { data: postData } = await useFetch(`https://api.seduvibe.com.br/posts/list_all/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

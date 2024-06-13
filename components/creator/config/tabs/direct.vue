@@ -41,7 +41,7 @@ const infoMessage = ref({
   color: null,
 });
 const user = idStore.user;
-const directLink = ref(`https://seduvibe.com/direct/${user}`);
+const directLink = ref(`https://seduvibe.com.br/direct/${user}`);
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(directLink.value);

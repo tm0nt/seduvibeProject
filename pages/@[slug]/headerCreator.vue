@@ -207,7 +207,7 @@ const toggleFavorite = async (id) => {
 // Remover
 const removeFromFavorites = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/unlike/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com.br/unlike/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -226,7 +226,7 @@ const donationVisible = async () => {
 // Adicionar
 const addToFavorites = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/like/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com.br/like/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -240,7 +240,7 @@ const addToFavorites = async (id) => {
 // Verificar
 const checkFavorites = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/is_favorite/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com.br/is_favorite/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -332,7 +332,7 @@ const profileFetch = ref(null);
 
 const fetchData = async (userName) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/list_creator/${userName}`, {
+    const data = await $fetch(`https://api.seduvibe.com.br/list_creator/${userName}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

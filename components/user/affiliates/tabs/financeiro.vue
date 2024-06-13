@@ -159,7 +159,7 @@ const withdrawRequest = async (id, amount) => {
     infoMessage.value.color = "red";
       return;
     }
-    const data = await $fetch("https://api.seduvibe.com/request_withdraw", {
+    const data = await $fetch("https://api.seduvibe.com.br/request_withdraw", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

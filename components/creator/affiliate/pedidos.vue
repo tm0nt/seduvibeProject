@@ -92,7 +92,7 @@ const viewRequestId = ref({
 
 const approvedRequest = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/afiliates/accept-affiliate-request/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com.br/afiliates/accept-affiliate-request/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -111,7 +111,7 @@ const approvedRequest = async (id) => {
 
 const rejectRequest = async (id) => {
   try {
-    const data = await $fetch(`https://api.seduvibe.com/afiliates/reject-affiliate-request/${id}`, {
+    const data = await $fetch(`https://api.seduvibe.com.br/afiliates/reject-affiliate-request/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -144,7 +144,7 @@ const headers = [
 const fetchAffiliates = async () => {
   try {
     const data = await $fetch(
-      "https://api.seduvibe.com/afiliates/list-pending-affiliate-requests",
+      "https://api.seduvibe.com.br/afiliates/list-pending-affiliate-requests",
       {
         method: "GET",
         headers: {
