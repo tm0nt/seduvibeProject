@@ -29,7 +29,7 @@ const items = [
   {
     name: "Mel Maia",
     imgSrc:
-      "./adv.png",
+      "https://i.imgur.com/F7Tkkp1.png",
   },
 ];
 </script>
