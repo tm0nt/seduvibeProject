@@ -254,9 +254,6 @@ const withdraw = ref({
   pix: { id: 1, amount: null },
 });
 
-definePageMeta({
-  middleware: ["profile"],
-});
 
 const headers = [
   {
@@ -300,7 +297,7 @@ const withdrawRequest = async (id, amount) => {
       return;
     }
 
-    const { data, error } = await $fetch("https://api.seduvibe.com/request_withdraw", {
+    const { data, error } = await $fetch("https://api.seduvibe.com.br/request_withdraw", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -325,7 +322,7 @@ const withdrawRequest = async (id, amount) => {
 
 const fetchWithdraw = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/withdraw_list", {
+    const data = await $fetch("https://api.seduvibe.com.br/withdraw_list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -341,7 +338,7 @@ const fetchWithdraw = async () => {
 
 const fetchBalance = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/analytics", {
+    const data = await $fetch("https://api.seduvibe.com.br/analytics", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

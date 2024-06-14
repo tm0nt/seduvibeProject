@@ -26,7 +26,7 @@ const seriesKey = ref(0);
 
 const fetchData = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/analytics", {
+    const data = await $fetch("https://api.seduvibe.com.br/analytics", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -302,10 +302,8 @@ const toggleLike = async (post) => {
   try {
     if (hasLiked) {
       await deleteLike(post.id);
-      showSnackbar("Você descurtiu a postagem!", "success");
     } else {
       await newLike(post.id);
-      showSnackbar("Você curtiu a postagem!", "success");
     }
 
     fetchPosts(idUser);
@@ -343,7 +341,6 @@ const newComment = async (id) => {
       body: comment_payload,
     });
     comment.value.content = null;
-    showSnackbar("Comentário feito com sucesso!", "success");
     fetchPosts(idUser);
     console.log(data);
     console.log(error);
@@ -360,7 +357,6 @@ const newLike = async (id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    showSnackbar("Vocẽ curtiu uma postagem!", "success");
     fetchPosts(idUser);
     console.log(data);
     console.log(error);
@@ -409,7 +405,6 @@ const deleteComment = async (id) => {
       },
     });
     deleteDialogComment.value = false;
-    showSnackbar("Comentário deletado com sucesso!", "success");
     fetchPosts(idUser);
     console.log(data);
   } catch {

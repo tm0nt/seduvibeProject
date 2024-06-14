@@ -73,9 +73,6 @@
 import lineChart from "../../../../../components/creator/analytics/charts/line.vue";
 import areaChart from "../../../../../components/creator/analytics/charts/area.vue";
 
-definePageMeta({
-  middleware: ["profile"],
-});
 const cookie = useCookie("token");
 const token = cookie.value;
 const metricFetch = ref({
@@ -85,7 +82,7 @@ const metricFetch = ref({
 
 const fetchMetric = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/posts/metric", {
+    const data = await $fetch("https://api.seduvibe.com.br/posts/metric", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +97,7 @@ const fetchMetric = async () => {
 
 const fetchMetricView = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/get_views_profile", {
+    const data = await $fetch("https://api.seduvibe.com.br/get_views_profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

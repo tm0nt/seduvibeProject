@@ -36,9 +36,7 @@
 </template>
 
 <script setup>
-definePageMeta({
-  middleware: ["profile"],
-});
+
 </script>
 <script>
 import HeaderCreator from "../../../components/user/headerCreator";

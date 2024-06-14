@@ -95,7 +95,7 @@ const fetchData = async () => {
   const token = cookie.value;
 
   try {
-    const data = await $fetch("https://api.seduvibe.com/list_notifications", {
+    const data = await $fetch("https://api.seduvibe.com.br/list_notifications", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

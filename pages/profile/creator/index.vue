@@ -38,9 +38,6 @@
   </VApp>
 </template>
 <script setup>
-definePageMeta({
-  middleware: ["profile"],
-});
 
 </script>
 <script>

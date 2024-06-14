@@ -62,7 +62,7 @@
               <v-window v-model="tab">
                 <v-window-item v-for="item in items" :key="item" :value="item">
                   <v-form>
-                    <v-card color="input_color" rounded="xl" flat>
+                    <v-card color="rgb(0,0,0,0)" rounded="xl" flat>
                       <v-row v-if="item === 'ATIVO'" class="ma-1">
                         <ativoAffiliate />
                       </v-row>
@@ -130,13 +130,10 @@ const coin = ref({
   rankingAffiliate: null,
 });
 
-definePageMeta({
-  middleware: ["profile"],
-});
 
 const fetchAffiliate = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/analytics", {
+    const data = await $fetch("https://api.seduvibe.com.br/analytics", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -151,7 +148,7 @@ const fetchAffiliate = async () => {
 };
 const totalEarnings = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/afiliates/total_affiliate_earnings", {
+    const data = await $fetch("https://api.seduvibe.com.br/afiliates/total_affiliate_earnings", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -167,7 +164,7 @@ const totalEarnings = async () => {
 
 const rankingAffiliate = async () => {
   try {
-    const data = await $fetch("https://api.seduvibe.com/afiliates/top_affiliate_earnings", {
+    const data = await $fetch("https://api.seduvibe.com.br/afiliates/top_affiliate_earnings", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

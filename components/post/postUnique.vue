@@ -222,10 +222,8 @@ const toggleLike = async (post) => {
   try {
     if (hasLiked) {
       await deleteLike(post.id);
-      showSnackbar("Você descurtiu a postagem!", "success");
     } else {
       await newLike(post.id);
-      showSnackbar("Você curtiu a postagem!", "success");
     }
 
     fetchPosts();

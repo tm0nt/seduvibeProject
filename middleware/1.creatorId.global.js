@@ -24,7 +24,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         storeId.setId(id);
         storeId.setUser(data.users[0].user);
         storeId.setAuth(true);
-        console.log(data);
       } else {
         storeId.setAuth(false);
       }
