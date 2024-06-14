@@ -63,9 +63,16 @@
             <v-container class="ma-2">
               <h4>Vendas por dia</h4>
               <p class="text-caption text-medium-emphasis">Veja seu progresso mensal.</p>
-              <ClientOnly>
-                <lineChart />
-              </ClientOnly>
+              <lineChart
+                title=""
+                :xCategories="daysOfMonth"
+                yTitle=""
+                :seriesData="monthlySalesData"
+                seriesName="Vendas"
+                backgroundColor="transparent"
+                lineColor="#A020F0"
+                labelColor="#c1c1c1"
+              />
             </v-container>
           </v-card>
           <v-row>
@@ -129,8 +136,12 @@
     <v-toolbar flat height="50" color="rgb(0,0,0,0)"></v-toolbar>
   </v-app>
 </template>
+
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import lineChart from "../../components/creator/analytics/charts/line.vue";
+import SideBar from "../../components/creator/analytics/SidebarView.vue";
+
 const cookie = useCookie("token");
 const token = cookie.value;
 const analyticsFetch = ref(null);
@@ -151,10 +162,20 @@ const fetchData = async () => {
 };
 
 fetchData();
+
+// Computar os dias do mês
+const daysOfMonth = computed(() => {
+  // Supondo 30 dias no mês. Você pode ajustar isso conforme necessário.
+  return Array.from({ length: 30 }, (_, i) => i + 1);
+});
+
+// Computar os dados das vendas mensais
+const monthlySalesData = computed(() => {
+  return analyticsFetch.value?.monthSubscriptions || [];
+});
 </script>
+
 <script>
-import lineChart from "../../components/creator/analytics/charts/line.vue";
-import SideBar from "../../components/creator/analytics/SidebarView.vue";
 export default {
   components: {
     SideBar,

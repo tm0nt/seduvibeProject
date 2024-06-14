@@ -1,88 +1,110 @@
 <template>
   <div>
-    <!--  <apexchart
-      :key="seriesKey"
-      height="200"
-      width="100%"
-      :options="options"
-      :series="series"
-    ></apexchart> -->
-    <v-progress-circular
-      class="mx-auto d-flex align-center justify-center mt-4"
-      color="primary"
-      size="small"
-      indeterminate
-    ></v-progress-circular>
+    <highchart class="mt-2" :options="computedChartOptions" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { computed } from "vue";
 
-const cookie = useCookie("token");
-const token = cookie.value;
-const analyticsFetch = ref(null);
-const seriesKey = ref(0);
-
-const fetchData = async () => {
-  try {
-    const data = await $fetch("https://api.seduvibe.com.br/analytics", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    analyticsFetch.value = data.apexSeries.map((value, index) => value);
-
-    console.log(analyticsFetch.value);
-    seriesKey.value += 1;
-  } catch (error) {
-    console.error("Erro durante a requisição:", error);
+// Defina as props que o componente aceitará
+const props = defineProps({
+  title: String,
+  xCategories: Array,
+  yTitle: String,
+  seriesData: Array,
+  seriesName: String,
+  backgroundColor: {
+    type: String,
+    default: 'transparent'
+  },
+  lineColor: {
+    type: String,
+    default: '#A020F0'
+  },
+  labelColor: {
+    type: String,
+    default: '#c1c1c1'
   }
-};
+});
 
-const options = ref({
+// Computar as opções do gráfico com base nas props
+const computedChartOptions = computed(() => ({
   chart: {
-    type: "line",
+    type: "spline",
+    backgroundColor: props.backgroundColor,
   },
-  theme: {
-    mode: "light",
+  title: {
+    text: props.title,
   },
-  grid: {
-    show: true,
-    borderColor: "#90A4AE",
-  },
-  // ... (outras opções)
-});
-
-const series = ref([
-  {
-    name: "Vendas",
-    data: [],
-  },
-]);
-
-const updateChart = () => {
-  options.value = {
-    ...options.value,
-    xaxis: {
-      categories: Array.from({ length: analyticsFetch.value.length }, (_, i) => `${i + 1}`),
+  lang: {
+        noData: 'Nenhum dado para exibir'
     },
-  };
-
-  series.value = [
+    noData: {
+        style: {
+            fontWeight: 'bold',
+            fontSize: '10px',
+            color: '#303030'
+        }
+    },
+  xAxis: {
+    categories: props.xCategories,
+    labels: {
+      style: {
+        color: props.labelColor
+      }
+    }
+  },
+  yAxis: {
+    title: {
+      text: props.yTitle,
+    },
+    gridLineWidth: 0,
+    visible: false,
+  },
+  plotOptions: {
+    spline: {
+      marker: {
+        radius: 3,
+        enable: false,
+      },
+    },
+    line: {
+      dataLabels: {
+        enabled: true,
+      },
+      enableMouseTracking: true,
+      color: props.lineColor,
+    },
+    pie: {
+      borderWidth: 0,
+    },
+  },
+  legend: {
+    itemStyle: {
+      color: props.lineColor,
+    },
+  },
+  credits: {
+    enabled: false,
+  },
+  tooltip: {
+    enabled: true,
+    formatter: function () {
+      return `<b>${this.series.name}</b><br>${this.x}: ${this.y}`;
+    },
+  },
+  dataLabels: {
+    style: {
+      color: "#f0f0f0",
+    },
+  },
+  series: [
     {
-      name: "Vendas",
-      data: analyticsFetch.value,
+      name: props.seriesName,
+      data: props.seriesData,
+      color: props.lineColor,
     },
-  ];
-};
-
-onMounted(() => {
-  fetchData();
-});
-
-// ...
+  ],
+}));
 </script>

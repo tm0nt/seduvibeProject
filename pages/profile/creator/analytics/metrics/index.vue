@@ -49,9 +49,16 @@
               <p class="text-caption text-medium-emphasis">
                 Veja sua progressão com seus assinantes
               </p>
-              <ClientOnly>
-                <lineChart />
-              </ClientOnly>
+              <lineChart
+                title=""
+                :xCategories="daysOfMonth"
+                yTitle=""
+                :seriesData="monthlySalesData"
+                seriesName="Assinantes"
+                backgroundColor="transparent"
+                lineColor="#A020F0"
+                labelColor="#c1c1c1"
+              />
             </v-container>
           </v-card>
           <v-card class="rounded-xl mt-4 elevation-6" color="background" flat>
@@ -60,7 +67,16 @@
               <p class="text-caption text-medium-emphasis">
                 Acompanhe a progressão do seu faturamento
               </p>
-              <areaChart />
+              <lineChart
+                title=""
+                :xCategories="daysOfMonth"
+                yTitle=""
+                :seriesData="monthlySalesData"
+                seriesName="Faturamento"
+                backgroundColor="transparent"
+                lineColor="#A020F0"
+                labelColor="#c1c1c1"
+              />
             </v-container>
           </v-card>
         </v-container>
@@ -71,7 +87,6 @@
 </template>
 <script setup>
 import lineChart from "../../../../../components/creator/analytics/charts/line.vue";
-import areaChart from "../../../../../components/creator/analytics/charts/area.vue";
 
 const cookie = useCookie("token");
 const token = cookie.value;
@@ -79,6 +94,7 @@ const metricFetch = ref({
   item: null,
   views: null,
 });
+const analyticsFetch = ref(null)
 
 const fetchMetric = async () => {
   try {
@@ -92,6 +108,22 @@ const fetchMetric = async () => {
     metricFetch.value.item = data;
   } catch (error) {
     console.error(error);
+  }
+};
+
+const fetchData = async () => {
+  try {
+    const data = await $fetch("https://api.seduvibe.com.br/analytics", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    analyticsFetch.value = data;
+    console.log(data)
+  } catch (error) {
+    console.error("Erro durante a requisição:", error);
   }
 };
 
@@ -110,6 +142,7 @@ const fetchMetricView = async () => {
   }
 };
 fetchMetricView();
+fetchData();
 fetchMetric();
 </script>
 <script>

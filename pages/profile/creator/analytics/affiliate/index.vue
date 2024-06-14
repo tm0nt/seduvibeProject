@@ -82,9 +82,16 @@
             <v-container class="ma-2">
               <h4>Sua comissão</h4>
               <p class="text-caption text-medium-emphasis">Acompanhe o volume de suas comissões.</p>
-              <ClientOnly>
-                <lineChart />
-              </ClientOnly>
+              <lineChart
+                title=""
+                :xCategories="daysOfMonth"
+                yTitle=""
+                :seriesData="monthlySalesData"
+                seriesName="Comissão"
+                backgroundColor="transparent"
+                lineColor="#A020F0"
+                labelColor="#c1c1c1"
+              />
             </v-container>
           </v-card>
           <v-row>
@@ -129,7 +136,6 @@ const coin = ref({
   totalEarnings: null,
   rankingAffiliate: null,
 });
-
 
 const fetchAffiliate = async () => {
   try {
