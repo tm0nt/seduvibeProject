@@ -51,15 +51,16 @@
           <p>{{ post?.description }}</p>
           <v-spacer></v-spacer>
           <v-divider class="mt-2"></v-divider>
-          <template v-if="post?.mention && post?.mention.length > 0">
-            <NuxtLink
-              v-for="(mention, index) in post?.mention.split(',')"
-              :key="index"
-              :to="`/@${mention.trim()}`"
-            >
-              <v-chip color="primary" class="mr-2 mt-2"> @{{ mention.trim() }} </v-chip>
-            </NuxtLink>
-          </template>
+          <template v-if="post?.mention !== 'null' && post?.mention.trim().length > 0">
+  <NuxtLink
+    v-for="(mention, index) in post?.mention.split(',')"
+    :key="index"
+    :to="`/@${mention.trim()}`"
+  >
+    <v-chip color="primary" class="mr-2 mt-2"> @{{ mention.trim() }} </v-chip>
+  </NuxtLink>
+</template>
+
         </div>
       </v-card-text>
       <v-img width="100%" class="cursor-pointer mb-n10">
@@ -331,7 +332,7 @@ const fetchPosts = async () => {
   const id = ref(route.params.slug);
 
   const { data: postData, error } = await useFetch(
-    `https://api.seduvibe.com/posts/list_posts_unique/${id.value}`,
+    `https://api.seduvibe.com.br/posts/list_posts_unique/${id.value}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -339,7 +340,7 @@ const fetchPosts = async () => {
     }
   );
 
-  console.log(postData?._rawValue);
+  console.log(postData);
   posts.value = postData?._rawValue || [];
 };
 

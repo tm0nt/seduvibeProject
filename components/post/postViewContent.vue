@@ -72,15 +72,15 @@
           <p>{{ post?.description }}</p>
           <v-spacer></v-spacer>
           <v-divider class="mt-2"></v-divider>
-          <template v-if="post?.mention && post?.mention.length > 0">
-            <NuxtLink
-              v-for="(mention, index) in post?.mention.split(',')"
-              :key="index"
-              :to="`/@${mention.trim()}`"
-            >
-              <v-chip color="primary" class="mr-2 mt-2"> @{{ mention.trim() }} </v-chip>
-            </NuxtLink>
-          </template>
+          <template v-if="post?.mention !== 'null' && post?.mention.trim().length > 0">
+  <NuxtLink
+    v-for="(mention, index) in post?.mention.split(',')"
+    :key="index"
+    :to="`/@${mention.trim()}`"
+  >
+    <v-chip color="primary" class="mr-2 mt-2"> @{{ mention.trim() }} </v-chip>
+  </NuxtLink>
+</template>
         </div>
       </v-card-text>
       <v-card width="100%" class="cursor-pointer mb-n10" v-if="post?.content !== null">
@@ -366,7 +366,7 @@ const fetchPosts = async () => {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(postData)
+  console.log(idStore.id)
   posts.value = postData?._rawValue?.posts?.reverse() || [];
   totalPosts.value = posts?.value?.length;
   imagePosts.value = posts.value.filter((post) => post?.content?.endsWith(".jpg")).length || [];

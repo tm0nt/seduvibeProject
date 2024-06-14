@@ -92,15 +92,15 @@
           <p>{{ post?.description }}</p>
           <v-spacer></v-spacer>
           <v-divider class="mt-2"></v-divider>
-          <template v-if="post?.mention && post?.mention.length > 0">
-            <NuxtLink
-              v-for="(mention, index) in post?.mention.split(',')"
-              :key="index"
-              :to="`/@${mention.trim()}`"
-            >
-              <v-chip color="primary" class="mr-2 mt-2"> @{{ mention.trim() }} </v-chip>
-            </NuxtLink>
-          </template>
+          <template v-if="post?.mention !== 'null' && post?.mention.trim().length > 0">
+  <NuxtLink
+    v-for="(mention, index) in post?.mention.split(',')"
+    :key="index"
+    :to="`/@${mention.trim()}`"
+  >
+    <v-chip color="primary" class="mr-2 mt-2"> @{{ mention.trim() }} </v-chip>
+  </NuxtLink>
+</template>
         </div>
       </v-card-text>
       <v-img width="100%" class="cursor-pointer mb-n10">
