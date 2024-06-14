@@ -180,10 +180,12 @@
 </template>
 <script setup>
 import { useIdStore } from "~/store/id";
+import { useIdStorePublic } from "~/store/public";
 import { ref, computed } from "vue";
 
 const deleteDialogComment = ref(false);
 const idStore = useIdStore();
+const IdPublic = useIdStorePublic()
 const snackbar = ref({
   show: false,
   message: "",
@@ -358,8 +360,8 @@ const deleteComment = async (id) => {
 };
 
 //Fetch Post
-const fetchPosts = async () => {
-  const { data: postData } = await useFetch(`https://api.seduvibe.com.br/posts/list_post_subs_active`, {
+const fetchPosts = async (id) => {
+  const { data: postData } = await useFetch(`https://api.seduvibe.com.br/posts/list_all/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -376,5 +378,5 @@ const isCurrentUserLiked = (likes) => {
   return likes.some((like) => like.userId === idStore.id);
 };
 
-fetchPosts();
+fetchPosts(IdPublic.id);
 </script>

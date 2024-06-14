@@ -29,7 +29,7 @@
 </template>
 <script>
 import SideBar from "../../components/navbar.vue";
-import FeedPostView from "../../components/post/postView.vue";
+import FeedPostView from "../../components/post/postViewContent.vue";
 import ModelosView from "../../components/home/models.vue";
 
 export default {

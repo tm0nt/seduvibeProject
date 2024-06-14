@@ -254,7 +254,7 @@ const fetchData = async () => {
 
   try {
     const { data } = await useFetch(
-      "https://api.seduvibe.com/subscription/list_subscriptions_creator_active",
+      "https://api.seduvibe.com.br/subscription/list_subscriptions_creator_active",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -272,7 +272,7 @@ const fetchData = async () => {
 const getSubscriptionTitle = (data) => {
   if (data.length > 0) {
     const name = data[0].subscriptionData.name.split("-")[0].trim();
-    return `Plano ${name}`;
+    return `${name}`;
   }
   return "";
 };

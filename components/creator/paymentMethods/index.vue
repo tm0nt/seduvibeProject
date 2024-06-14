@@ -121,7 +121,7 @@
       <v-card-text class="text-center">
         <template v-if="paymentSuccessful">
           <v-icon size="64" color="primary">mdi-check-circle</v-icon>
-          <p class="mb-2 mt-4">Pagamento concluído!</p>
+          <p class="mb-8 mt-4">Pagamento concluído!</p>
         </template>
         <template v-else>
           <v-card class="elevation-0 mx-auto d-flex align-center justify-center rounded-xl" flat>
